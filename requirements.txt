@@ -1,0 +1,6 @@
+# Runtime for combine.py and the Streamlit builder.
+# On the lab host these live in ~/proposal-builder/venv (system python3), not in Hermes's venv.
+streamlit==1.63.0
+python-docx==1.2.0
+lxml==6.1.2
+pillow==12.3.0

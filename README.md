@@ -49,6 +49,13 @@ Before saving, `combine.py` scans the finished document (body, tables, headers, 
 
 See `references/module_authoring.md`. In short: metadata header closed by `---`, body in plain Markdown, bid-team guidance as whole-paragraph `*[...]*` notes, `(for the bid team)` in a heading for internal sections, `<!-- -->` comments for image guidance (never rendered).
 
+## Runtime on the lab host
+
+- Python: its own venv at `~/proposal-builder/venv` (system `python3`, packages pinned in `requirements.txt`). It does not use Hermes's venv, so `hermes update` cannot break the builder.
+- Service: systemd user unit `proposal-builder` (`scripts/proposal-builder.service`), port 8501, independent of the Hermes gateway.
+- Code: deployed to `~/.hermes/skills/proposal-template` so Hermes (bid-orchestrator) can still find the skill; the builder does not call Hermes.
+- Review tools (apt): LibreOffice Writer, pandoc, poppler-utils, Carlito font — used for table-of-contents page numbers and page renders.
+
 ## Tests and deploy
 
 ```bash

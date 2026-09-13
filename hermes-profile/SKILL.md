@@ -53,7 +53,7 @@ From the terminal (only when Basem asks):
 
 ```
 cd /home/hermes/.hermes/skills/proposal-template
-/home/hermes/.hermes/hermes-agent/venv/bin/python combine.py \
+/home/hermes/proposal-builder/venv/bin/python combine.py \
     --values <values.json> --modules <token,token,...> \
     --logo assets/vertowave_logo.png [--issue] --out <output.docx>
 ```

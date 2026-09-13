@@ -2,10 +2,10 @@
 # Deploy this repo to the Hermes lab host.
 #
 # 1. Copies the working tree (tracked + untracked, minus .gitignore) to ~/proposal-template-staging
-# 2. Runs the test suite there with the Hermes venv python
+# 2. Makes sure ~/proposal-builder/venv exists with requirements.txt installed, then runs the tests with it
 # 3. Swaps it into ~/.hermes/skills/proposal-template (previous copy kept in ~/proposal-template-previous)
 # 4. Copies hermes-profile/SKILL.md + references into the bid-orchestrator profile
-# 5. Restarts the proposal-builder user unit and checks it answers
+# 5. Installs scripts/proposal-builder.service as the user unit, restarts it and checks it answers
 #
 # Usage: scripts/deploy.sh [--test-only]
 set -euo pipefail
@@ -15,7 +15,8 @@ LIVE='.hermes/skills/proposal-template'
 PROFILE_SKILL='.hermes/profiles/bid-orchestrator/skills/proposal-template'
 STAGE='proposal-template-staging'
 PREVIOUS='proposal-template-previous'
-PY='.hermes/hermes-agent/venv/bin/python'
+VENV='proposal-builder/venv'
+PY="$VENV/bin/python"
 
 cd "$(dirname "$0")/.."
 
@@ -24,6 +25,10 @@ ssh "$HOST" "rm -rf ~/$STAGE && mkdir -p ~/$STAGE"
 git ls-files -z --cached --others --exclude-standard \
   | tar --null -T - -cf - \
   | ssh "$HOST" "tar -xf - -C ~/$STAGE"
+
+echo "== checking the builder's Python environment (~/$VENV)"
+ssh "$HOST" "set -e; test -x ~/$PY || python3 -m venv ~/$VENV
+  ~/$PY -m pip install -q -r ~/$STAGE/requirements.txt"
 
 echo "== running tests on the host"
 ssh "$HOST" "cd ~/$STAGE && ~/$PY -B -m unittest discover -s tests"
@@ -42,11 +47,14 @@ ssh "$HOST" "set -e
   cp ~/$STAGE/hermes-profile.tmp/SKILL.md ~/$PROFILE_SKILL/SKILL.md
   cp ~/$STAGE/hermes-profile.tmp/references/*.md ~/$PROFILE_SKILL/references/
   rm -rf ~/$STAGE/hermes-profile.tmp
+  mkdir -p ~/.config/systemd/user
+  cp ~/.config/systemd/user/proposal-builder.service ~/$PREVIOUS/proposal-builder.service 2>/dev/null || true
+  install -m 644 ~/$STAGE/scripts/proposal-builder.service ~/.config/systemd/user/proposal-builder.service
   rm -rf ~/$LIVE.new && mv ~/$STAGE ~/$LIVE.new
   rm -rf ~/$LIVE && mv ~/$LIVE.new ~/$LIVE"
 
 echo "== restarting proposal-builder"
-ssh "$HOST" "systemctl --user restart proposal-builder && sleep 4 \
+ssh "$HOST" "systemctl --user daemon-reload && systemctl --user restart proposal-builder && sleep 4 \
   && systemctl --user is-active proposal-builder \
   && curl -fsS -o /dev/null -w 'builder HTTP %{http_code}\n' http://127.0.0.1:8501/_stcore/health"
 
