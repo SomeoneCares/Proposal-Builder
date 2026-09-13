@@ -35,15 +35,19 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import shutil
+import subprocess
 import sys
+import tempfile
+import unicodedata
 from pathlib import Path
 
 try:
     from docx import Document
-    from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_COLOR_INDEX
+    from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_COLOR_INDEX, WD_TAB_ALIGNMENT, WD_TAB_LEADER
     from docx.oxml import OxmlElement
     from docx.oxml.ns import qn
-    from docx.shared import Inches, Pt, RGBColor
+    from docx.shared import Inches, Mm, Pt, RGBColor
 except ImportError as exc:
     print("ERROR: python-docx is required. Install with: pip install python-docx", file=sys.stderr)
     raise SystemExit(2) from exc
@@ -71,6 +75,12 @@ SEPARATOR_CELL_RE = re.compile(r":?-{3,}:?")
 TO_CONFIRM_RE = re.compile(r"\[TO CONFIRM: ([A-Za-z0-9_]+)\]")
 
 NOTE_GREY = RGBColor(0x59, 0x59, 0x59)
+
+# Table of contents: entries are written at build time with a placeholder page
+# number, which fill_toc_page_numbers() replaces after a LibreOffice render.
+TOC_PLACEHOLDER = "000"
+TOC_LINE_RE = re.compile(r"(?:\.\s*){3,}000$|\s000$")
+TOC_TAB_POSITION = Mm(160)  # right edge of the A4 text area set in build_base_template
 
 
 # ---------------------------------------------------------------------------
@@ -328,14 +338,16 @@ class Renderer:
                     continue
                 self.doc.add_heading(plain(block["text"]), level=level)
                 continue
+            if kind == "pagebreak":
+                # Page breaks survive even inside a removed bid-team section.
+                self.doc.add_page_break()
+                continue
             if skip_level is not None:
                 continue
             in_note = note_level is not None
 
             if kind == "title":
                 self.doc.add_heading(plain(block["text"]), level=0)
-            elif kind == "pagebreak":
-                self.doc.add_page_break()
             elif kind == "paragraph":
                 raw = block["text"]
                 if LOGO_MARKER in raw:
@@ -369,8 +381,8 @@ class Renderer:
         self.doc.add_paragraph()
 
 
-def add_toc(doc, draft: bool) -> None:
-    """Insert a 'Table of Contents' title and a Word TOC field (headings 1-3)."""
+def add_toc(doc, draft: bool):
+    """Add the 'Table of Contents' title; return an anchor paragraph for write_toc_field()."""
     title = doc.add_paragraph()
     run = title.add_run("Table of Contents")
     run.bold = True
@@ -379,24 +391,142 @@ def add_toc(doc, draft: bool) -> None:
     if draft:
         add_inline(
             doc.add_paragraph(),
-            "[If the table below is empty, right-click it in Word and choose Update Field → Update entire table.]",
+            "[Page numbers are filled in at build time; Word refreshes the table when the file is opened.]",
             note=True,
         )
-    fld_begin = OxmlElement("w:fldChar")
-    fld_begin.set(qn("w:fldCharType"), "begin")
-    instr_text = OxmlElement("w:instrText")
-    instr_text.set(qn("xml:space"), "preserve")
-    instr_text.text = ' TOC \\o "1-3" \\h \\z \\u '
-    fld_separate = OxmlElement("w:fldChar")
-    fld_separate.set(qn("w:fldCharType"), "separate")
-    placeholder = OxmlElement("w:t")
-    placeholder.set(qn("xml:space"), "preserve")
-    placeholder.text = "Right-click and choose \"Update Field\" to build the Table of Contents."
-    fld_end = OxmlElement("w:fldChar")
-    fld_end.set(qn("w:fldCharType"), "end")
-    run = doc.add_paragraph().add_run()
-    for element in (fld_begin, instr_text, fld_separate, placeholder, fld_end):
-        run._r.append(element)
+    return doc.add_paragraph()
+
+
+def collect_headings(doc, anchor) -> list[tuple[int, str, bool]]:
+    """(level, text, comes after the TOC) for every Heading 1-3 paragraph, in order."""
+    entries = []
+    after = False
+    for p in doc.paragraphs:
+        if p._p is anchor._p:
+            after = True
+            continue
+        match = re.fullmatch(r"Heading ([1-3])", p.style.name if p.style is not None else "")
+        if match and p.text.strip():
+            entries.append((int(match.group(1)), p.text.strip(), after))
+    return entries
+
+
+def _field_char(run, kind: str) -> None:
+    element = OxmlElement("w:fldChar")
+    element.set(qn("w:fldCharType"), kind)
+    run._r.append(element)
+
+
+def _toc_instruction(run) -> None:
+    element = OxmlElement("w:instrText")
+    element.set(qn("xml:space"), "preserve")
+    element.text = ' TOC \\o "1-3" \\h \\z \\u '
+    run._r.append(element)
+
+
+def write_toc_field(doc, anchor, entries: list[tuple[int, str, bool]]) -> dict:
+    """Replace the anchor with a Word TOC field whose result lists the entries.
+
+    Each entry gets a placeholder page number; the returned runs let
+    fill_toc_page_numbers() set the real ones. Without entries the field shows
+    Word's usual "Update Field" prompt.
+    """
+    runs = []
+    if not entries:
+        p = anchor.insert_paragraph_before()
+        start = p.add_run()
+        _field_char(start, "begin")
+        _toc_instruction(start)
+        _field_char(start, "separate")
+        p.add_run('Right-click and choose "Update Field" to build the Table of Contents.')
+        _field_char(p.add_run(), "end")
+    for i, (level, text, _after) in enumerate(entries):
+        p = anchor.insert_paragraph_before()
+        fmt = p.paragraph_format
+        fmt.left_indent = Inches(0.25 * (level - 1))
+        fmt.space_after = Pt(2)
+        fmt.tab_stops.add_tab_stop(TOC_TAB_POSITION, WD_TAB_ALIGNMENT.RIGHT, WD_TAB_LEADER.DOTS)
+        if i == 0:
+            start = p.add_run()
+            _field_char(start, "begin")
+            _toc_instruction(start)
+            _field_char(start, "separate")
+        p.add_run(text).bold = True if level == 1 else None
+        p.add_run("\t")
+        runs.append(p.add_run(TOC_PLACEHOLDER))
+        if i == len(entries) - 1:
+            _field_char(p.add_run(), "end")
+    _delete_paragraph(anchor)
+    return {"entries": entries, "runs": runs}
+
+
+def _normalise(text: str) -> str:
+    return re.sub(r"\s+", " ", unicodedata.normalize("NFKC", text)).strip()
+
+
+def find_heading_pages(entries: list[tuple[int, str, bool]], pages: list[str]) -> list[int | None]:
+    """Page number (1-based) of each heading in the rendered text, searched in document order."""
+    page_lines = [[_normalise(line) for line in page.splitlines()] for page in pages]
+    toc_pages = [i for i, lines in enumerate(page_lines) if any(TOC_LINE_RE.search(l) for l in lines)]
+    toc_end = max(toc_pages) if toc_pages else -1
+    numbers: list[int | None] = []
+    cursor = 0
+    for _level, text, after_toc in entries:
+        if after_toc:
+            cursor = max(cursor, toc_end + 1)
+        target = _normalise(text)
+        found = None
+        for i in range(cursor, len(page_lines)):
+            for line in page_lines[i]:
+                if not line or TOC_LINE_RE.search(line):
+                    continue
+                if line == target or (len(line) >= 12 and target.startswith(line)):
+                    found = i
+                    break
+            if found is not None:
+                break
+        numbers.append(found + 1 if found is not None else None)
+        if found is not None:
+            cursor = found
+    return numbers
+
+
+def fill_toc_page_numbers(doc) -> tuple[bool, str]:
+    """Render the document with LibreOffice and put real page numbers in the TOC entries.
+
+    The .docx itself is never round-tripped through LibreOffice; only the page
+    numbers are read from a temporary PDF. Returns (all numbers found, message).
+    """
+    toc = getattr(doc, "_vw_toc", None)
+    if not toc or not toc["runs"]:
+        return True, "no table of contents entries"
+    soffice = shutil.which("soffice") or shutil.which("libreoffice")
+    pdftotext = shutil.which("pdftotext")
+    if not soffice or not pdftotext:
+        return False, "page numbers not filled — LibreOffice or pdftotext is not installed"
+    with tempfile.TemporaryDirectory(prefix="vw_toc_") as tmp:
+        tmp_path = Path(tmp)
+        docx_path = tmp_path / "toc-pass.docx"
+        doc.save(docx_path)
+        try:
+            subprocess.run(
+                [soffice, f"-env:UserInstallation={(tmp_path / 'lo-profile').as_uri()}",
+                 "--headless", "--convert-to", "pdf", "--outdir", str(tmp_path), str(docx_path)],
+                capture_output=True, timeout=240, check=True,
+            )
+            text = subprocess.run(
+                [pdftotext, "-layout", str(tmp_path / "toc-pass.pdf"), "-"],
+                capture_output=True, text=True, timeout=120, check=True,
+            ).stdout
+        except (subprocess.SubprocessError, OSError) as exc:
+            return False, f"page numbers not filled — render failed: {exc}"
+    numbers = find_heading_pages(toc["entries"], text.split("\f"))
+    for run, number in zip(toc["runs"], numbers):
+        run.text = str(number) if number else ""
+    missing = [entry[1] for entry, number in zip(toc["entries"], numbers) if number is None]
+    if missing:
+        return False, f"page numbers not found for {len(missing)} headings: {', '.join(missing[:5])}"
+    return True, f"table of contents filled with {len(numbers)} page numbers"
 
 
 def set_update_fields_on_open(doc) -> None:
@@ -532,11 +662,12 @@ def assemble_complete_document(
         add_module(token)
     if front:
         doc.add_page_break()
-    add_toc(doc, draft=not issue)
+    toc_anchor = add_toc(doc, draft=not issue)
     for token in rest:
         doc.add_page_break()
         add_module(token)
 
+    doc._vw_toc = write_toc_field(doc, toc_anchor, collect_headings(doc, toc_anchor))
     warnings.append("logo: " + embed_logo(doc, logo_path, draft=not issue))
     set_update_fields_on_open(doc)
     return doc, warnings
@@ -561,7 +692,7 @@ def assemble_template_document(
         "Pricing is excluded by design and attached separately."
     )
     run.italic = True
-    add_toc(doc, draft=True)
+    write_toc_field(doc, add_toc(doc, draft=True), [])
 
     doc_control = resolve_module_file("section_document_control", index, root)
     if doc_control is not None:
@@ -614,6 +745,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     p.add_argument("--out", required=True, help="Output .docx path")
     p.add_argument("--index", default=None, help="Path to module_index.json (default: next to this script)")
     p.add_argument("--logo", default=None, help="Logo image (PNG/JPG) for the cover page")
+    p.add_argument("--no-toc-pages", action="store_true",
+                   help="Skip the LibreOffice render that fills in table-of-contents page numbers")
     return p.parse_args(argv)
 
 
@@ -670,6 +803,10 @@ def main(argv: list[str] | None = None) -> int:
             print(f"ERROR: {problem}", file=sys.stderr)
         print("ERROR: build refused — nothing was written.", file=sys.stderr)
         return EXIT_CHECK_FAILED
+
+    if args.mode == "complete" and not args.no_toc_pages:
+        filled, message = fill_toc_page_numbers(doc)
+        print(f"TOC: {message}" if filled else f"WARNING: {message}", file=sys.stdout if filled else sys.stderr)
 
     out_path = Path(args.out)
     out_path.parent.mkdir(parents=True, exist_ok=True)

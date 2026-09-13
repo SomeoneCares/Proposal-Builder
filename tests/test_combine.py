@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import json
 import re
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -112,6 +113,13 @@ class CompleteBuildTests(unittest.TestCase):
         self.assertLess(paragraphs.index("Table of Contents"), paragraphs.index("SD-WAN"))
         self.assertNotIn("Cover Page & Executive Summary", paragraphs)
 
+    def test_executive_summary_starts_on_a_new_page(self):
+        for doc in (self.draft, self.issue):
+            paragraphs = doc.paragraphs
+            idx = next(i for i, p in enumerate(paragraphs)
+                       if p.text == "Executive Summary" and p.style.name == "Heading 1")
+            self.assertIn('w:type="page"', paragraphs[idx - 1]._p.xml)
+
     def test_issue_copy_drops_bid_team_material(self):
         for phrase in ("Figure placeholder", "for the bid team", "This module is a reusable building block",
                        "Author per bid", "SECONDARY LOGO"):
@@ -125,6 +133,42 @@ class CompleteBuildTests(unittest.TestCase):
 
     def test_module_references_become_names(self):
         self.assertIn("StackX SOC Operations", self.draft_text)
+
+
+class PageAndTocTests(unittest.TestCase):
+    def test_pages_are_a4(self):
+        doc, _problems, _ = build(full_values(), tokens=["section_validity"], issue=True)
+        section = doc.sections[0]
+        self.assertEqual((round(section.page_width.mm), round(section.page_height.mm)), (210, 297))
+
+    def test_toc_lists_every_heading_once(self):
+        doc, _problems, _ = build(full_values(), issue=True)
+        headings = [p.text for p in doc.paragraphs if p.style.name in ("Heading 1", "Heading 2", "Heading 3")]
+        self.assertEqual([e[1] for e in doc._vw_toc["entries"]], headings)
+        self.assertTrue(any(e[2] for e in doc._vw_toc["entries"]))
+        self.assertFalse(doc._vw_toc["entries"][0][2], "front-matter headings come before the TOC")
+
+    def test_find_heading_pages_skips_toc_lines(self):
+        entries = [(1, "Executive Summary", False), (1, "SD-WAN", True), (2, "Key Capabilities", True)]
+        pages = [
+            "Cover",
+            "Executive Summary\nText",
+            "Table of Contents\nExecutive Summary ........ 000\nSD-WAN ........ 000\nKey Capabilities ..... 000",
+            "SD-WAN\nIntro\nKey Capabilities\n- item",
+        ]
+        self.assertEqual(combine.find_heading_pages(entries, pages), [2, 4, 4])
+
+    @unittest.skipUnless(shutil.which("soffice") and shutil.which("pdftotext"), "LibreOffice not installed")
+    def test_toc_page_numbers_filled_from_a_render(self):
+        tokens = ["section_cover_execsummary", "section_document_control", "module_sdwan", "section_validity"]
+        doc, problems, _ = build(full_values(), tokens=tokens, issue=True)
+        self.assertEqual(problems, [])
+        filled, message = combine.fill_toc_page_numbers(doc)
+        self.assertTrue(filled, message)
+        numbers = [int(run.text) for run in doc._vw_toc["runs"]]
+        self.assertEqual(numbers, sorted(numbers))
+        toc_page = next(n for n, e in zip(numbers, doc._vw_toc["entries"]) if e[2])
+        self.assertGreater(toc_page, numbers[0])
 
 
 class CheckTests(unittest.TestCase):

@@ -33,7 +33,9 @@ python combine.py --values values-example.json --mode template --out out/templat
 - **Draft** (default): bid-team notes, figure placeholders and `(for the bid team)` sections stay in, highlighted yellow; blank values show as `[TO CONFIRM: key]`.
 - **Issue copy** (`--issue`): all of that is removed, and the build is refused while any value used by the selected modules is blank.
 
-Order in the document: cover and executive summary, document control, table of contents, then DeviceX/SDX, StackX and the remaining cross-cutting sections, each starting on a new page.
+Order in the document: cover and executive summary, document control, table of contents, then DeviceX/SDX, StackX and the remaining cross-cutting sections, each starting on a new page. Pages are A4 with 25 mm margins.
+
+The table of contents is written with every Heading 1–3. Where LibreOffice and `pdftotext` are installed (the lab host), each build renders a temporary PDF to read the page numbers and fills them in; the .docx itself is not converted. Word still refreshes the table on open. Skip the render with `--no-toc-pages`.
 
 ## Checks on every build
 

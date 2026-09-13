@@ -23,7 +23,7 @@ try:
     from docx.enum.text import WD_ALIGN_PARAGRAPH
     from docx.oxml import OxmlElement
     from docx.oxml.ns import qn
-    from docx.shared import Pt, RGBColor
+    from docx.shared import Mm, Pt, RGBColor
 except ImportError as exc:
     print("ERROR: python-docx is required. pip install python-docx", file=sys.stderr)
     raise SystemExit(2) from exc
@@ -149,8 +149,12 @@ def new_document(
     subject: str = "DeviceX/SDX & StackX technical proposal",
     keywords: str = "DeviceX, SDX, StackX, VertoWave, technical proposal",
 ):
-    """Return an empty, styled document ready for the Markdown renderer."""
+    """Return an empty, styled A4 document ready for the Markdown renderer."""
     doc = Document()
+    section = doc.sections[0]
+    section.page_width, section.page_height = Mm(210), Mm(297)
+    for side in ("left_margin", "right_margin", "top_margin", "bottom_margin"):
+        setattr(section, side, Mm(25))
     configure_base_styles(doc)
     add_header_footer(doc, footer_label)
     set_core_properties(doc, title, author, subject, "Technical Proposal", keywords)
