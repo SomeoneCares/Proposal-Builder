@@ -50,20 +50,6 @@ The most important outcomes of this stage are:
 - Confirmed project management deliverables
 
 ## Stage 3 — Building (Deployment, Stabilization and Testing)
----
-
-## Figure — Delivery Phasing / Project Stages Diagram
-
-<!-- IMAGE PLACEMENT GUIDANCE — insert approved generic image here -->
-<!-- Recommended image: a generic delivery-phasing / project-stages diagram showing the phases (from the delivery phasing subsection: Phase 1 … through optional Phase 6 managed ops) and the 5-stage PMI-mapped PM methodology + RAID log. No customer-specific milestone names, no customer-specific dates, no customer site names. -->
-<!-- Suggested source: EGYCash "Fig. 1. Verto Wave Project Management Stages" — use only as a composition reference for the PM stages shape; genericise labels; strip any customer-specific milestone names/dates. -->
-<!-- Generic-only rule: do not insert any image that names or depicts the customer's specific environment, architecture, site names, or branding. Replace customer-specific labels before use. -->
-<!-- To embed: place the approved image file at this location in the final docx (deferred — combine.py is text-only for now). -->
-
-*[Figure placeholder — insert approved generic delivery-phasing / project-stages diagram here. See image-placement guidance notes.]*
-
----
-
 
 This stage is focused on completing the work defined in the Project Plan, which is completed and approved by the stakeholders at the end of the project planning stage. It involves coordinating all the resources to get the work done efficiently and effectively so that the project keeps delivering the promised objective.
 
@@ -72,6 +58,19 @@ This stage is where most of the work is carried out, and where products and deli
 The most important output here is the Deliverable, which is produced in line with the defined Project Plan.
 
 During this stage, Changes will also be implemented but only those which are Approved by the management or change control board or by the steering committee.
+
+---
+
+## Figure — Delivery Phasing / Project Stages Diagram
+
+<!-- IMAGE PLACEMENT GUIDANCE — insert approved generic image here -->
+<!-- Recommended image: a generic delivery-phasing / project-stages diagram showing the phases (from the delivery phasing subsection: Phase 1 … through optional Phase 6 managed ops) and the 5-stage PMI-mapped PM methodology + RAID log. No customer-specific milestone names, no customer-specific dates, no customer site names. -->
+<!-- Generic-only rule: do not insert any image that names or depicts the customer's specific environment, architecture, site names, or branding. Replace customer-specific labels before use. -->
+<!-- To embed: place the approved image file at this location in the final docx (deferred — combine.py is text-only for now). -->
+
+*[Figure placeholder — insert approved generic delivery-phasing / project-stages diagram here. See image-placement guidance notes.]*
+
+---
 
 ## Stage 4 — Monitoring & Controlling
 
@@ -94,7 +93,7 @@ At this stage, the handover and acceptance activities outlined in the scope docu
 
 ## Change Procedures
 
-Change management is handled per the Change Management Procedure section of this proposal. See `{{section_change_mgmt}}`.
+Change management is handled per the Change Management Procedure section of this proposal.
 
 ## Delivery Phasing (separate from the PM methodology above)
 

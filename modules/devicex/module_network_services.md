@@ -16,6 +16,7 @@ The DeviceX On-Demand Services encompass an ever-growing catalog of essential br
 - **DHCP** — Dynamic Host Configuration Protocol for IP address management
 - **LDAP** — Lightweight Directory Access Protocol for directory services
 - **RADIUS** — Remote Authentication Dial-In User Service for network access control
+
 ---
 
 ## Figure — Network Services Topology (DNS / NTP / DHCP / Edge Services)
@@ -29,7 +30,6 @@ The DeviceX On-Demand Services encompass an ever-growing catalog of essential br
 *[Figure placeholder — insert approved generic network-services topology diagram here. See image-placement guidance notes.]*
 
 ---
-
 
 ## Value
 

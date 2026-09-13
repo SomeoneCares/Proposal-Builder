@@ -38,13 +38,13 @@ The following call-flow patterns illustrate the kinds of behaviour the platform 
 | Trigger | Behaviour |
 |---------|-----------|
 | A user needs an opinion | A single soft-key or IVR selection routes the call to the relevant queue at the remote site. The call presents with site identity so the responder has context on answer. It overflows to a secondary responder or on-call group if unanswered. |
+
 ---
 
 ## Figure — IP-PBX Call Flows / Telephony Topology
 
 <!-- IMAGE PLACEMENT GUIDANCE — insert approved generic image here -->
 <!-- Recommended image: a generic IP-PBX call-flow diagram showing the four standard flows (scheduled / on-demand / urgent / inter-site) and local survivability (site continues on local services when the wide-area link is down). No customer-specific extension numbers, no customer site names, no customer-specific telephony licensing/numbering details. -->
-<!-- Suggested source: Telemedicine proposal §3.4 (Clinical Communication Flows, 4 flows) — genericise the diagram and labels. -->
 <!-- Alternative: a PBX topology diagram showing endpoints, trunks, voicemail, and survivability path. -->
 <!-- Generic-only rule: do not insert any image that names or depicts the customer's specific environment, architecture, site names, or branding. Replace customer-specific labels before use. -->
 <!-- To embed: place the approved image file at this location in the final docx (deferred — combine.py is text-only for now). -->
@@ -52,7 +52,6 @@ The following call-flow patterns illustrate the kinds of behaviour the platform 
 *[Figure placeholder — insert approved generic IP-PBX call-flow / topology diagram here. See image-placement guidance notes.]*
 
 ---
-
 
 ### Urgent Escalation
 

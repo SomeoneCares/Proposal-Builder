@@ -17,6 +17,14 @@ This module's content is to be authored from the source material for StackX Call
 ## Typical scope areas (to be confirmed from source)
 
 Call Center Management capability areas typically include:
+
+- Call routing, queuing and distribution across available agents
+- Interactive Voice Response (IVR) design and administration
+- Agent and supervisor dashboards and real-time monitoring
+- Call recording, retention and playback
+- Workforce management and scheduling support
+- Integration with platform telephony and ITSM for service-driven call handling
+
 ---
 
 ## Figure — Call-Center Architecture / Call Flow
@@ -30,14 +38,6 @@ Call Center Management capability areas typically include:
 *[Figure placeholder — insert approved generic call-center architecture / call-flow diagram here. See image-placement guidance notes.]*
 
 ---
-
-
-- Call routing, queuing and distribution across available agents
-- Interactive Voice Response (IVR) design and administration
-- Agent and supervisor dashboards and real-time monitoring
-- Call recording, retention and playback
-- Workforce management and scheduling support
-- Integration with platform telephony and ITSM for service-driven call handling
 
 ## Out-of-Scope (explicitly)
 

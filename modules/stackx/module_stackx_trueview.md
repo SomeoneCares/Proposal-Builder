@@ -9,6 +9,7 @@
 ## Overview
 
 *[Placeholder — module to be authored from source material describing StackX TrueView.]*
+
 ---
 
 ## Figure — TrueView Dashboard / Visualisation
@@ -22,7 +23,6 @@
 *[Figure placeholder — insert approved generic TrueView dashboard / visualisation diagram here. See image-placement guidance notes.]*
 
 ---
-
 
 ## To be authored
 

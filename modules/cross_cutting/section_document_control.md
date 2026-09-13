@@ -12,6 +12,7 @@
 | :--- | :--- |
 | Document Title | {{engagement_name}} — Technical Proposal |
 | Prepared for | {{customer_name}} |
+| Customer Contact | {{customer_primary_contact}} |
 | Prepared by | {{prepared_by}} |
 | Proposal Date | {{proposal_date}} |
 | Proposal Reference | {{rfp_reference}} |
@@ -29,6 +30,18 @@
 *[Maintain this change-history table for each revision. Each new version is a new entry. Do not overwrite prior approved/submitted versions — preserve automatic document versioning.]*
 
 ## Deliverables by Phase
+
+The following deliverables are provided for each phase of the engagement. They are shown as a reusable template; the exact deliverable set, format and acceptance criteria are confirmed per bid.
+
+| Phase | Activity | Deliverable |
+| :--- | :--- | :--- |
+| Envisioning & Design | Envisioning & Design | Design document for each solution. Site profile and class assignment per site. Traffic classification, QoS and security segmentation model. Security baseline: integrity policy, certificate lifetimes and measurement baselines. Access service validation record per site. Numbering plan and session/call flow design. |
+| Build | Build Activities | In-scope build activities (core + sites). Per-site acceptance test record. |
+| Optional Managed Operations (where selected) | Operations Activities | Delivered only if the managed operations option is selected. Operations activities per the managed operations section. OLA. Operations reports and enhancement recommendations. |
+| Training & Handover | Training and Handover | Training activities. Training documentation and recorded session. Operational handover pack. |
+
+*[The deliverables table above is a generic reusable format. Confirm the actual deliverable set, format, and acceptance criteria per bid — do not issue a deliverables list copied verbatim from a prior proposal without validation.]*
+
 ---
 
 ## Figure — <Insert approved generic diagram / screenshot here>
@@ -41,18 +54,6 @@
 *[Figure placeholder — insert approved generic image here. See image-placement guidance notes.]*
 
 ---
-
-
-The following deliverables are provided for each phase of the engagement. They are shown as a reusable template; the exact deliverable set, format and acceptance criteria are confirmed per bid.
-
-| Phase | Activity | Deliverable |
-| :--- | :--- | :--- |
-| Envisioning & Design | Envisioning & Design | Design document for each solution. Site profile and class assignment per site. Traffic classification, QoS and security segmentation model. Security baseline: integrity policy, certificate lifetimes and measurement baselines. Access service validation record per site. Numbering plan and session/call flow design. |
-| Build | Build Activities | In-scope build activities (core + sites). Per-site acceptance test record. |
-| Optional Managed Operations (where selected) | Operations Activities | Delivered only if the managed operations option is selected. Operations activities per the managed operations section. OLA. Operations reports and enhancement recommendations. |
-| Training & Handover | Training and Handover | Training activities. Training documentation and recorded session. Operational handover pack. |
-
-*[The deliverables table above is a generic reusable format. Confirm the actual deliverable set, format, and acceptance criteria per bid — do not issue a deliverables list copied verbatim from a prior proposal without validation.]*
 
 ## Reference Screenshots Guidance (for the bid team)
 
@@ -67,7 +68,7 @@ Where a module references platform screenshots to illustrate the underlying tech
 
 - This document is confidential and proprietary to Verto Wave.
 - Distribution is limited to authorized recipients.
-- Any changes to scope, assumptions, or deliverables after issuance must be handled through the Change Management Procedure (`{{section_change_mgmt}}`).
+- Any changes to scope, assumptions, or deliverables after issuance must be handled through the Change Management Procedure.
 - This is a technical proposal. Pricing is excluded from this document and attached separately, outside this proposal template.
 
 ---

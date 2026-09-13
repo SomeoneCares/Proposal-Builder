@@ -23,13 +23,13 @@ The DeviceX Virtualization/Container Platform provides a secure, reliable, and h
 - Persistent storage management
 - Network policy enforcement
 - Monitoring and logging integration
+
 ---
 
 ## Figure — Virtualization Architecture / Workload Placement
 
 <!-- IMAGE PLACEMENT GUIDANCE — insert approved generic image here -->
 <!-- Recommended image: a generic virtualization architecture diagram showing the hypervisor stack, virtual machines / containers, and per-site workload placement, with a continuity-by-design note (local survivability, workload counts per site as a variable). No customer-specific VM names, no customer-specific application names, no customer site names. -->
-<!-- Suggested source: Telemedicine proposal DeviceX Virtualization section (§3.3.1) — genericise the diagram. -->
 <!-- Alternative: a workload-capacity / per-site workload-count diagram (generic — show N workloads per site as a variable). -->
 <!-- Generic-only rule: do not insert any image that names or depicts the customer's specific environment, architecture, site names, or branding. Replace customer-specific labels before use. -->
 <!-- To embed: place the approved image file at this location in the final docx (deferred — combine.py is text-only for now). -->
@@ -37,7 +37,6 @@ The DeviceX Virtualization/Container Platform provides a secure, reliable, and h
 *[Figure placeholder — insert approved generic virtualization / workload-placement diagram here. See image-placement guidance notes.]*
 
 ---
-
 
 ## Continuity by Design
 

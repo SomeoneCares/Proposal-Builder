@@ -29,20 +29,19 @@ This solution continuously monitors core system health indicators including CPU 
 - **Centralized Data Aggregation:** A lightweight, single-agent solution for collecting and shipping data from all your servers and network devices.
 - **Real-time Analytics Engine:** A distributed and highly resilient search and analytics engine that indexes your data for lightning-fast querying and analysis.
 - **Intuitive Visualization:** A flexible and extensible user interface for creating dynamic dashboards, interactive charts, and custom reports that provide a clear "single pane of glass" view of your entire infrastructure.
+
 ---
 
 ## Figure — Observability / APM Dashboards & Traces
 
 <!-- IMAGE PLACEMENT GUIDANCE — insert approved generic image here -->
 <!-- Recommended image: a generic observability/APM dashboard image showing metrics, logs, traces, alerting, and dashboard-oriented visibility — aligned to the "how many apps monitored" scope-number slot ({{services_apps_monitored}}) in the Professional Services module. No customer-specific application names, no customer-specific metric labels that reveal the customer's business, no customer site names. -->
-<!-- Suggested source: Telemedicine proposal §3.12 (StackX Observability) + EGYCash "Figure 1: Change-Correlated Performance Views" — use only as a composition reference; strip any customer-specific labels; produce or source a generic / Verto-Wave-branded equivalent for the final proposal. -->
 <!-- Generic-only rule: do not insert any image that names or depicts the customer's specific environment, architecture, site names, or branding. Replace customer-specific labels before use. -->
 <!-- To embed: place the approved image file at this location in the final docx (deferred — combine.py is text-only for now). -->
 
 *[Figure placeholder — insert approved generic observability/APM dashboard diagram here. See image-placement guidance notes.]*
 
 ---
-
 
 ## APM Capabilities
 
@@ -68,4 +67,4 @@ StackX Observability and APM is part of the broader StackX platform and integrat
 
 ---
 
-*This module is a reusable building block, derived from the a source material describing StackX Observability and APM. Confirm per bid which environments (on-prem physical/virtual, OpenShift/Kubernetes, AWS/Azure) and which telemetry sources are in scope.*
+*This module is a reusable building block, derived from source material describing StackX Observability and APM. Confirm per bid which environments (on-prem physical/virtual, OpenShift/Kubernetes, AWS/Azure) and which telemetry sources are in scope.*

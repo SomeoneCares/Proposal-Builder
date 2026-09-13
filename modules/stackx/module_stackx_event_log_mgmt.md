@@ -24,6 +24,7 @@ StackX Event and Log Management serves as the primary SIEM ingestion hub to pars
 - Dynamic retention tiers for cost-optimized storage and compliance availability
 - Distributed search and analytics engine for fast querying across large historical datasets
 - Real-time correlation rules with MITRE ATT&CK mapping
+
 ---
 
 ## Figure — Event Log Management Architecture / Log Flow
@@ -37,7 +38,6 @@ StackX Event and Log Management serves as the primary SIEM ingestion hub to pars
 *[Figure placeholder — insert approved generic event-log-management architecture / log-flow diagram here. See image-placement guidance notes.]*
 
 ---
-
 
 ## Integration Context
 

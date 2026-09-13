@@ -33,6 +33,11 @@ The solution's user-friendly interface and intuitive workflows empower IT admini
 ## Orchestration
 
 At the heart of StackX Orchestration lies the ability to define, execute, and monitor end-to-end workflows that span across multiple IT domains, including infrastructure, applications, and services. Through a user-friendly visual interface, organizations can easily create and customize workflow templates, ensuring consistent and repeatable processes that adapt to changing business requirements.
+
+The solution's robust orchestration engine leverages advanced algorithms and integration capabilities to coordinate the execution of tasks, manage dependencies, and handle error recovery, ensuring the successful completion of complex workflows. This level of orchestration enables organizations to streamline processes, reduce manual interventions, and minimize the risk of human errors, ultimately enhancing overall operational reliability and resilience.
+
+Built from the ground up as a true vendor-agnostic management and operations stack, StackX is shipped with an integration builder console. This agent is designed to allow network and system engineers to add actions, workflows and integrate vendors with ease and without any coding knowledge required, allowing rapid integration and flexible operations.
+
 ---
 
 ## Figure — Automation & Orchestration Pipeline / Workflow
@@ -46,11 +51,6 @@ At the heart of StackX Orchestration lies the ability to define, execute, and mo
 *[Figure placeholder — insert approved generic automation/orchestration pipeline diagram here. See image-placement guidance notes.]*
 
 ---
-
-
-The solution's robust orchestration engine leverages advanced algorithms and integration capabilities to coordinate the execution of tasks, manage dependencies, and handle error recovery, ensuring the successful completion of complex workflows. This level of orchestration enables organizations to streamline processes, reduce manual interventions, and minimize the risk of human errors, ultimately enhancing overall operational reliability and resilience.
-
-Built from the ground up as a true vendor-agnostic management and operations stack, StackX is shipped with an integration builder console. This agent is designed to allow network and system engineers to add actions, workflows and integrate vendors with ease and without any coding knowledge required, allowing rapid integration and flexible operations.
 
 ## Orchestration Capabilities
 
@@ -81,4 +81,4 @@ StackX Automation and Orchestration is part of the broader StackX platform and i
 
 ---
 
-*This module is a reusable building block, derived from the a source material describing StackX Automation and Orchestration. Confirm per bid which orchestration capabilities (CLI/API/REST, no-code workflow builder, multi-vendor scaling) and which vendor integrations are in scope.*
+*This module is a reusable building block, derived from source material describing StackX Automation and Orchestration. Confirm per bid which orchestration capabilities (CLI/API/REST, no-code workflow builder, multi-vendor scaling) and which vendor integrations are in scope.*

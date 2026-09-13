@@ -17,6 +17,14 @@ This module's content is to be authored from the source material for StackX Appl
 ## Typical scope areas (to be confirmed from source)
 
 Application Lifecycle Management (ALM) Enterprise Management capability areas typically include:
+
+- Application lifecycle governance from requirements through retirement
+- Requirement tracking and traceablity across the application portfolio
+- Release planning and go/no-go governance for application changes
+- Application change advisory and impact assessment
+- Integration with ITSM for application-related changes, incidents and problems
+- Application portfolio inventory and rationalisation support
+
 ---
 
 ## Figure — Asset Lifecycle / Asset Inventory Dashboard
@@ -30,14 +38,6 @@ Application Lifecycle Management (ALM) Enterprise Management capability areas ty
 *[Figure placeholder — insert approved generic asset-lifecycle / asset-inventory diagram here. See image-placement guidance notes.]*
 
 ---
-
-
-- Application lifecycle governance from requirements through retirement
-- Requirement tracking and traceablity across the application portfolio
-- Release planning and go/no-go governance for application changes
-- Application change advisory and impact assessment
-- Integration with ITSM for application-related changes, incidents and problems
-- Application portfolio inventory and rationalisation support
 
 ## Out-of-Scope (explicitly)
 

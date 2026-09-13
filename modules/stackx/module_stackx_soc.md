@@ -48,20 +48,19 @@ Every security capability in this section is delivered in one of three ways. The
 - Maintain full packet capture (PCAP) storage and conduct TLS/SSL decryption analysis to detect lateral movement, beaconing, or data exfiltration attempts
 - Aggregate structured threat data (STIX/TAXII) from open-source, commercial, and industry feeds through the StackX Threat Intelligence Platform (TIP)
 - Automate Indicator of Compromise (IoC) lifecycle management, profile threat actors, and seamlessly distribute blocklists to firewalls and endpoints
+
 ---
 
 ## Figure — SOC Architecture / Security Operations Workflow
 
 <!-- IMAGE PLACEMENT GUIDANCE — insert approved generic image here -->
 <!-- Recommended image: a generic SOC architecture diagram showing the security-operations delivery model (Native / Integrated / Assured), security services areas, monitoring, detection, triage, investigation, response, and escalation — plus a SOC tiers / shift-model diagram where relevant. No customer-specific SOC tooling names beyond what is agreed, no customer-specific threat intel feeds, no customer site names. -->
-<!-- Suggested source: Telemedicine proposal §3.7 (StackX Security) + the security-model-at-a-glance concept — genericise the diagram; strip any "clinic", "Dubai management plane", or site-specific labels. -->
 <!-- Generic-only rule: do not insert any image that names or depicts the customer's specific environment, architecture, site names, or branding. Replace customer-specific labels before use. -->
 <!-- To embed: place the approved image file at this location in the final docx (deferred — combine.py is text-only for now). -->
 
 *[Figure placeholder — insert approved generic SOC architecture / security-operations-workflow diagram here. See image-placement guidance notes.]*
 
 ---
-
 
 ## Behavioural Analytics and Vulnerability Management
 

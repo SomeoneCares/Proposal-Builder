@@ -49,6 +49,7 @@ This is particularly important for customer-facing services where poor performan
 ### Business Validation and UAT Governance
 
 One of the most important controls in the framework is formal Business Validation and UAT Governance. Business owners must confirm that the service functions as intended, user journeys are validated, expected outputs are correct, and acceptance criteria are met before a release proceeds to production.
+
 ---
 
 ## Figure — DevOps Pipeline / CI-CD Flow
@@ -62,7 +63,6 @@ One of the most important controls in the framework is formal Business Validatio
 *[Figure placeholder — insert approved generic DevOps pipeline / CI-CD flow diagram here. See image-placement guidance notes.]*
 
 ---
-
 
 ### Go-Live Readiness and Controlled Deployment
 
@@ -112,4 +112,4 @@ Embedding security practices into the DevOps lifecycle, ensuring that all servic
 
 ---
 
-*This module is a reusable building block, derived from the a source material describing the DevOps Framework. Confirm per bid whether the DevOps framework is required for the customer's hosted services, which environments (Dev/Staging/Prod) are in VertoWave scope, and which practices (CI/CD, IaC, DevSecOps) apply.*
+*This module is a reusable building block, derived from source material describing the DevOps Framework. Confirm per bid whether the DevOps framework is required for the customer's hosted services, which environments (Dev/Staging/Prod) are in VertoWave scope, and which practices (CI/CD, IaC, DevSecOps) apply.*

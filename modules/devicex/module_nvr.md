@@ -39,13 +39,15 @@ This module has two variants. Select the variant that matches the current custom
 ## Operating Pattern
 
 ### Local recording and retention (default)
+
+Surveillance is recorded locally at the edge, with retention policy and alert forwarding configured to the central platform. Recording locally means surveillance does not compete with priority wide-area traffic for the link — a key property for deployments where the wide-area link also carries sensitive real-time traffic.
+
 ---
 
 ## Figure — NVR Recording & Monitoring Architecture
 
 <!-- IMAGE PLACEMENT GUIDANCE — insert approved generic image here -->
 <!-- Recommended image: a generic NVR architecture diagram showing camera streams recorded locally on the appliance, with only alerts/metadata/thumbnails/operator-requested playback traversing the wide-area link to a central monitoring array. No customer-specific camera names, no site names, no customer-specific retention figures. -->
-<!-- Suggested source: Telemedicine proposal NVR section (local recording as default, centralised monitoring array as design input, NVR bandwidth consideration) — genericise the diagram. -->
 <!-- Alternative: a camera layout / per-site camera-count diagram (generic — show N cameras per site as a variable, not a fixed customer number). -->
 <!-- Generic-only rule: do not insert any image that names or depicts the customer's specific environment, architecture, site names, or branding. Replace customer-specific labels before use. -->
 <!-- To embed: place the approved image file at this location in the final docx (deferred — combine.py is text-only for now). -->
@@ -53,9 +55,6 @@ This module has two variants. Select the variant that matches the current custom
 *[Figure placeholder — insert approved generic NVR architecture / camera-layout diagram here. See image-placement guidance notes.]*
 
 ---
-
-
-Surveillance is recorded locally at the edge, with retention policy and alert forwarding configured to the central platform. Recording locally means surveillance does not compete with priority wide-area traffic for the link — a key property for deployments where the wide-area link also carries sensitive real-time traffic.
 
 ### Centralised monitoring array (optional, where required)
 

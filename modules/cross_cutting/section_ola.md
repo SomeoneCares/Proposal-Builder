@@ -62,19 +62,6 @@ Verto Wave commits to providing operations services 8x5 (Sunday to Thursday, 9am
 ## Authority Matrix
 
 The following authority matrix outlines the roles and responsibilities for incident management and escalation:
----
-
-## Figure — <Insert approved generic diagram / screenshot here>
-
-<!-- IMAGE PLACEMENT GUIDANCE — insert approved generic image here -->
-<!-- Recommended image: a generic diagram or screenshot relevant to this section's content (architecture, flow, dashboard, or topology as appropriate). No customer-specific names, environment, architecture, site names, or branding. -->
-<!-- Generic-only rule: do not insert any image that names or depicts the customer's specific environment, architecture, site names, or branding. Replace customer-specific labels before use. -->
-<!-- To embed: place the approved image file at this location in the final docx (deferred — combine.py is text-only for now). -->
-
-*[Figure placeholder — insert approved generic image here. See image-placement guidance notes.]*
-
----
-
 
 ### L1 Operations Engineer
 
@@ -114,6 +101,19 @@ Leads the L3 Operations team, focusing on strategic IT initiatives, complex prob
 ### Technical Account Manager
 
 Customer-facing role focusing on managing and supporting the technical aspects and relationship with its clients.
+
+---
+
+## Figure — <Insert approved generic diagram / screenshot here>
+
+<!-- IMAGE PLACEMENT GUIDANCE — insert approved generic image here -->
+<!-- Recommended image: a generic diagram or screenshot relevant to this section's content (architecture, flow, dashboard, or topology as appropriate). No customer-specific names, environment, architecture, site names, or branding. -->
+<!-- Generic-only rule: do not insert any image that names or depicts the customer's specific environment, architecture, site names, or branding. Replace customer-specific labels before use. -->
+<!-- To embed: place the approved image file at this location in the final docx (deferred — combine.py is text-only for now). -->
+
+*[Figure placeholder — insert approved generic image here. See image-placement guidance notes.]*
+
+---
 
 ## RACI Model
 

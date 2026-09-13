@@ -1,8 +1,7 @@
 # Module Authoring Contract
 
-<!--skill: proposal-template-->
-
-Quick reference for authoring a new module `.md` under `modules/<group>/`.
+How to write a module `.md` under `modules/<group>/` so `combine.py` renders it
+correctly. `write_module.py` creates a file in this shape and registers it.
 
 ## File structure
 
@@ -10,45 +9,83 @@ Quick reference for authoring a new module `.md` under `modules/<group>/`.
 # <Human-readable Module Title>
 
 **Token:** `{{module_<token>}}`
-**Group:** <group label, matches module_index.json>
-**Required:** Yes | No (<notes, e.g. "optional add-on">)
-<optional extra labels: Present in / To be authored / Note / etc.>
+**Group:** <group label>
+**Required:** Yes | No (<when to include it>)
+<optional: **Note:** / **Present in:** / **To be authored:** ...>
+
 ---
-<body content>
+
+<body>
 ```
 
-- The metadata block (title + `**Token:**` / `**Group:**` / `**Required:**` lines) is REQUIRED.
-- Close the metadata block with a `---` line. Nothing substantive goes between the title and the `---` — it will be stripped in complete mode.
-- After `---`, write the proposal body in clean markdown.
+- The title line and the metadata block are required. The block ends at the first
+  `---` line; everything in it is dropped from the proposal.
+- The `# Title` becomes the module's Heading 1 (the cover module hides it via
+  `"show_title": false` in `module_index.json`).
+- Other `---` lines are horizontal rules in the source only; they are not rendered.
 
-## Metadata labels the script strips
+## What the converter renders
 
-`Token`, `Group`, `Required` — core.
+| Markdown | In the .docx |
+| --- | --- |
+| `#`, `##`, `###` | Heading 1–3 (these build the table of contents) |
+| `#! text` | Title style — cover page only |
+| `\newpage` alone on a line | Page break |
+| `- item` / indented `- item` | Bullets, two levels |
+| `1. item` | Indented numbered line (the number is kept as written) |
+| `| a | b |` tables | Word table; a `| --- |` separator row marks the first row as a bold header |
+| `**bold**`, `*italic*`, `` `code` `` | Bold, italic, plain text |
+| `> text` | Plain paragraph |
+| `<!-- ... -->` | Never rendered (use for image guidance and author comments) |
 
-Also stripped (use for notes/placeholders): `Present in`, `To be authored`, `Sub-components`, `Note`, `Format`, `Duration`, `Attendees`, `Audience`, `Focus`, `Overview`.
+Links, images, nested tables and deeper list levels are not supported.
 
-## Recommended module sections
+## Bid-team material
 
-1. **Solution Overview** — what the module delivers, in proposal language.
-2. **Key Capabilities** — bullet list of capabilities.
-3. **Value / How it fits** — why the customer cares, where it sits in the architecture.
-4. **Deployment / Build notes** — how it is delivered or configured (if relevant).
-5. **Per-bid notes** — `*[Note: …]*` paragraphs flagging what must be confirmed for the current bid.
-6. **Out-of-Scope (explicitly)** — scope boundary list, drawn from the relevant prior proposal.
+Content meant for the bid team, not the customer, must be marked so that an issue copy
+removes it (a draft keeps it, highlighted yellow):
 
-## Inline formatting
+- **Notes:** a whole paragraph in italics — `*[Note: confirm the response times per bid.]*`
+  or a closing `*This module is a reusable building block ...*` line. A whole
+  paragraph in `**[...]**` also counts.
+- **Sections:** a heading containing `(for the bid team)`, e.g.
+  `## Logo Placement Notes (for the bid team)`; everything under it up to the next
+  heading of the same or higher level is bid-team material.
+- **Figure placeholders:** a `## Figure — <name>` heading followed by `<!-- -->`
+  guidance and a `*[Figure placeholder — ...]*` note. Place it at a section boundary,
+  never between a heading or a "the following ...:" sentence and its content.
 
-- The converter strips `**bold**` markers (text becomes clean, not bold). Do not rely on inline bold for meaning in assembled output.
-- Use headings or labeled paragraphs for emphasis that matters.
+Never write customer-facing text in italics as a whole paragraph — it would be removed
+from the issue copy.
+
+## Values and cross-references
+
+- `{{slot}}` is filled from the proposal values. Every slot used in a module must exist
+  in `module_index.json` → `customer_slots` and in `values-example.json` (the tests
+  enforce this). Blank values render as `[TO CONFIRM: slot]` in a draft and block an
+  issue copy.
+- `{{module_...}}` / `{{section_...}}` in body text renders as that module's name.
+  Prefer writing the name in plain words.
+- Only letters, digits and underscores inside `{{ }}`; `{{training_*}}`-style
+  wildcards are not tokens and will block the build.
+
+## Keeping modules generic
+
+- No prior-customer names, sites, sectors or dates anywhere in the file — comments
+  included. `banned_terms` in `module_index.json` lists the known ones; the tests scan
+  every module line and every build scans the finished document.
+- Final italic notes say when to include the module, not where the text came from.
+- Do not duplicate another module's capability list; write from this module's layer.
+- End each module with an `## Out-of-Scope (explicitly)` list that mirrors
+  `modules/cross_cutting/section_out_of_scope.md`.
 
 ## Placeholder modules
 
-If the MOE appendix content hasn't been authored yet, ship the module as a placeholder with `**Present in**` and `**To be authored**` metadata, and an explicit out-of-scope / to-be-authored body. Do NOT include a placeholder in a live proposal without completing the content and an SME review.
+A module whose content is not authored yet carries `"placeholder": true` in
+`module_index.json`. The builder labels it and warns when it is selected. Remove the flag
+only after the content is written and SME-reviewed.
 
-## Per-bid validation rule
+## After editing
 
-Every module must carry enough "confirm per bid" notes that a reviewer can tell what was assumed vs. confirmed. Do not issue a module verbatim from a prior proposal without validating it against the current customer's RFP/ITB.
-
-## Example module skeleton
-
-See `templates/module_skeleton.md`.
+Run `scripts/deploy.sh --test-only` (tests on the host) and build a draft of the modules
+you touched to read the result.

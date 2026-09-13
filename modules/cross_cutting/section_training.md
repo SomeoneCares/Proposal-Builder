@@ -14,9 +14,9 @@ Training is delivered remotely and covers platform administration, site provisio
 
 *[Author per bid: confirm the training audience, delivery mode (remote/in-person), session duration, and number of attendees against the customer's staffing model and operating-hours constraints. Do not copy a prior training matrix verbatim without validation.]*
 
-## Example Training Matrix (format reference — tailor per bid)
+## Training Matrix
 
-The following is an example matrix format only. It shows the level of detail typically provided; the actual courses, durations and attendee counts are set per engagement. Replace the `{{training_*}}` slots with the figures agreed for the current engagement, or remove courses that are not in scope.
+*[Author per bid: the matrix below is a format example. Set the courses, attendee numbers and durations agreed for the current engagement, and remove courses that are not in scope.]*
 
 | Course | Typical Attendees | Session Duration |
 | :--- | :--- | :--- |
@@ -28,6 +28,9 @@ The following is an example matrix format only. It shows the level of detail typ
 | StackX Orchestration | Up to ~5 technical staff | ~2 days |
 | StackX ITSM | Up to ~5 technical staff | ~3 days |
 | StackX Endpoint Management | Up to ~5 technical staff | ~2 days |
+
+*[The matrix above is a format example; do not present these specific courses as a default catalogue. Adjust or remove courses as appropriate for the current engagement.]*
+
 ---
 
 ## Figure — Training Programme / Training Matrix Visual
@@ -42,9 +45,6 @@ The following is an example matrix format only. It shows the level of detail typ
 
 ---
 
-
-*[The matrix above is a format example; do not present these specific courses as a default catalogue. Replace the `{{training_*}}` slots or remove courses as appropriate for the current engagement.]*
-
 ## Training Scope Notes
 
 - Administration training covers platform administration, site provisioning, policy management, monitoring and log review, call flow administration, NVR administration and first-line troubleshooting.
@@ -58,4 +58,4 @@ The following is an example matrix format only. It shows the level of detail typ
 
 ---
 
-*This section is a reusable building block. Training is a standalone included module. Confirm the course set, audience size, delivery mode and duration per bid. The example matrix is a format reference only — replace the `{{training_*}}` slots or remove courses as appropriate for the current engagement.*
+*This section is a reusable building block. Training is a standalone included module. Confirm the course set, audience size, delivery mode and duration per bid. The example matrix is a format reference only — adjust or remove courses as appropriate for the current engagement.*

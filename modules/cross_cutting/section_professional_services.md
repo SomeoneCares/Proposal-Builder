@@ -10,32 +10,32 @@
 
 This section defines the professional services engagement for architecture, design, implementation, and roll-out. It is a standalone services engagement and is defined independently of the platform modules it supports.
 
-*[Author per bid: fill all `{{services_*}}` slots with the figures confirmed for the current engagement. Do not carry forward numbers from a prior engagement without validation against the current customer's environment and requirements. The in-scope and out-of-scope below are drafted to complete each other — every in-scope line has a matching out-of-scope boundary.]*
+*[Author per bid: fill every Professional Services scope number in the proposal values with the figures confirmed for the current engagement. Do not carry forward numbers from a prior engagement without validation against the current customer's environment and requirements. The in-scope and out-of-scope below are drafted to complete each other — every in-scope line has a matching out-of-scope boundary.]*
 
 ## Master Scope-Numbers Table
 
-All slots below are mandatory for now. Fill every slot for the current engagement; each number tightens the scope.
+*[All figures below are mandatory. Fill every one for the current engagement; each number tightens the scope.]*
 
-| # | Dimension | Slot | Confirmed figure |
-| :--- | :--- | :--- | :--- |
-| 1 | Number of branches / sites | `{{services_branches}}` | |
-| 2 | Network devices to be monitored | `{{services_network_devices}}` | |
-| 3 | Applications to be monitored | `{{services_apps_monitored}}` | |
-| 4 | Automation & orchestration workflows | `{{services_workflows}}` | |
-| 5 | Endpoints to roll out | `{{services_endpoints}}` | |
-| 6 | NVR cameras | `{{services_nvr_cameras}}` | |
-| 7 | IoT devices | `{{services_iot_devices}}` | |
-| 8 | SD-WAN tunnels / overlay connections | `{{services_tunnels}}` | |
-| 9 | Firewall policies | `{{services_firewall_policies}}` | |
-| 10 | PBX extensions | `{{services_pbx_extensions}}` | |
-| 11 | Virtualisation workloads | `{{services_virtualization_workloads}}` | |
-| 12 | Integration points | `{{services_integrations}}` | |
-| 13 | User personas / roles | `{{services_roles}}` | |
-| 14 | Training attendees | `{{services_training_attendees}}` | |
-| 15 | Training sessions | `{{services_training_sessions}}` | |
-| 16 | Acceptance-test sites | `{{services_acceptance_sites}}` | |
-| 17 | Architecture / design workshops | `{{services_arch_workshops}}` | |
-| 18 | Architecture diagrams to be produced | `{{services_arch_diagrams}}` | |
+| # | Dimension | Confirmed figure |
+| :--- | :--- | :--- |
+| 1 | Number of branches / sites | {{services_branches}} |
+| 2 | Network devices to be monitored | {{services_network_devices}} |
+| 3 | Applications to be monitored | {{services_apps_monitored}} |
+| 4 | Automation & orchestration workflows | {{services_workflows}} |
+| 5 | Endpoints to roll out | {{services_endpoints}} |
+| 6 | NVR cameras | {{services_nvr_cameras}} |
+| 7 | IoT devices | {{services_iot_devices}} |
+| 8 | SD-WAN tunnels / overlay connections | {{services_tunnels}} |
+| 9 | Firewall policies | {{services_firewall_policies}} |
+| 10 | PBX extensions | {{services_pbx_extensions}} |
+| 11 | Virtualisation workloads | {{services_virtualization_workloads}} |
+| 12 | Integration points | {{services_integrations}} |
+| 13 | User personas / roles | {{services_roles}} |
+| 14 | Training attendees | {{services_training_attendees}} |
+| 15 | Training sessions | {{services_training_sessions}} |
+| 16 | Acceptance-test sites | {{services_acceptance_sites}} |
+| 17 | Architecture / design workshops | {{services_arch_workshops}} |
+| 18 | Architecture diagrams to be produced | {{services_arch_diagrams}} |
 
 ---
 
@@ -43,20 +43,20 @@ All slots below are mandatory for now. Fill every slot for the current engagemen
 
 ### In-scope
 
-- Conduct `{{services_arch_workshops}}` architecture / envisioning workshops.
-- Produce a high-level architecture design covering `{{services_branches}}` branches.
-- Produce the monitoring architecture design covering `{{services_apps_monitored}}` applications and `{{services_network_devices}}` network devices.
-- Produce the automation / orchestration framework design for `{{services_workflows}}` workflows.
-- Produce the endpoint rollout architecture for `{{services_endpoints}}` endpoints.
-- Produce the NVR architecture design for `{{services_nvr_cameras}}` cameras.
-- Produce the IoT device integration architecture for `{{services_iot_devices}}` IoT devices.
-- Produce the SD-WAN overlay topology design for `{{services_tunnels}}` tunnels.
-- Produce the firewall policy architecture design for `{{services_firewall_policies}}` policies.
-- Produce the PBX numbering-plan and call-flow design for `{{services_pbx_extensions}}` extensions.
-- Produce the virtualisation workload architecture for `{{services_virtualization_workloads}}` workloads.
-- Produce the integration design for `{{services_integrations}}` integration points.
-- Produce the user-persona / role and access model design covering `{{services_roles}}` roles.
-- Produce `{{services_arch_diagrams}}` architecture diagrams.
+- Conduct {{services_arch_workshops}} architecture / envisioning workshops.
+- Produce a high-level architecture design covering {{services_branches}} branches.
+- Produce the monitoring architecture design covering {{services_apps_monitored}} applications and {{services_network_devices}} network devices.
+- Produce the automation / orchestration framework design for {{services_workflows}} workflows.
+- Produce the endpoint rollout architecture for {{services_endpoints}} endpoints.
+- Produce the NVR architecture design for {{services_nvr_cameras}} cameras.
+- Produce the IoT device integration architecture for {{services_iot_devices}} IoT devices.
+- Produce the SD-WAN overlay topology design for {{services_tunnels}} tunnels.
+- Produce the firewall policy architecture design for {{services_firewall_policies}} policies.
+- Produce the PBX numbering-plan and call-flow design for {{services_pbx_extensions}} extensions.
+- Produce the virtualisation workload architecture for {{services_virtualization_workloads}} workloads.
+- Produce the integration design for {{services_integrations}} integration points.
+- Produce the user-persona / role and access model design covering {{services_roles}} roles.
+- Produce {{services_arch_diagrams}} architecture diagrams.
 - Hold an architecture review and obtain sign-off.
 
 ### Out-of-scope
@@ -73,7 +73,7 @@ All slots below are mandatory for now. Fill every slot for the current engagemen
 ### Deliverables
 
 - Architecture design document.
-- `{{services_arch_diagrams}}` architecture diagrams.
+- {{services_arch_diagrams}} architecture diagrams.
 - Architecture review sign-off record.
 
 ---
@@ -82,18 +82,18 @@ All slots below are mandatory for now. Fill every slot for the current engagemen
 
 ### In-scope
 
-- Produce the detailed design for `{{services_branches}}` branches / sites.
-- Produce the detailed monitoring design for `{{services_apps_monitored}}` applications and `{{services_network_devices}}` network devices.
-- Produce the detailed automation / orchestration design for `{{services_workflows}}` workflows.
-- Produce the detailed endpoint rollout design for `{{services_endpoints}}` endpoints.
-- Produce the detailed NVR design for `{{services_nvr_cameras}}` cameras.
-- Produce the detailed IoT design for `{{services_iot_devices}}` devices.
-- Produce the detailed SD-WAN design for `{{services_tunnels}}` tunnels.
-- Produce the detailed firewall design for `{{services_firewall_policies}}` policies.
-- Produce the detailed PBX design for `{{services_pbx_extensions}}` extensions.
-- Produce the detailed virtualisation design for `{{services_virtualization_workloads}}` workloads.
-- Produce the detailed design for `{{services_integrations}}` integrations.
-- Produce the detailed access / role design for `{{services_roles}}` roles.
+- Produce the detailed design for {{services_branches}} branches / sites.
+- Produce the detailed monitoring design for {{services_apps_monitored}} applications and {{services_network_devices}} network devices.
+- Produce the detailed automation / orchestration design for {{services_workflows}} workflows.
+- Produce the detailed endpoint rollout design for {{services_endpoints}} endpoints.
+- Produce the detailed NVR design for {{services_nvr_cameras}} cameras.
+- Produce the detailed IoT design for {{services_iot_devices}} devices.
+- Produce the detailed SD-WAN design for {{services_tunnels}} tunnels.
+- Produce the detailed firewall design for {{services_firewall_policies}} policies.
+- Produce the detailed PBX design for {{services_pbx_extensions}} extensions.
+- Produce the detailed virtualisation design for {{services_virtualization_workloads}} workloads.
+- Produce the detailed design for {{services_integrations}} integrations.
+- Produce the detailed access / role design for {{services_roles}} roles.
 - Produce configuration and policy design documents per component.
 
 ### Out-of-scope
@@ -106,6 +106,14 @@ All slots below are mandatory for now. Fill every slot for the current engagemen
 - Any detailed design, configuration, or policy document for components not listed in the Phase 2 in-scope above.
 
 ### Deliverables
+
+- Detailed design documents — per site and per component.
+- Configuration and policy design documents.
+- Integration design documents.
+- Design sign-off record.
+
+---
+
 ---
 
 ## Figure — Architecture & Engagement Diagram (Design Phase Input)
@@ -120,32 +128,24 @@ All slots below are mandatory for now. Fill every slot for the current engagemen
 
 ---
 
-
-- Detailed design documents — per site and per component.
-- Configuration and policy design documents.
-- Integration design documents.
-- Design sign-off record.
-
----
-
 ## Phase 3 — Implementation & Roll-out
 
 ### In-scope
 
-- Implement and roll out the architecture and design across `{{services_branches}}` branches / sites.
-- Deploy monitoring for `{{services_apps_monitored}}` applications and `{{services_network_devices}}` network devices.
-- Implement `{{services_workflows}}` automation / orchestration workflows.
-- Roll out `{{services_endpoints}}` endpoints.
-- Deploy NVR for `{{services_nvr_cameras}}` cameras.
-- Integrate `{{services_iot_devices}}` IoT devices.
-- Deploy the SD-WAN overlay for `{{services_tunnels}}` tunnels.
-- Implement `{{services_firewall_policies}}` firewall policies.
-- Deploy the PBX for `{{services_pbx_extensions}}` extensions.
-- Deploy `{{services_virtualization_workloads}}` virtualisation workloads.
-- Implement `{{services_integrations}}` integrations.
-- Implement the access / role model for `{{services_roles}}` roles.
+- Implement and roll out the architecture and design across {{services_branches}} branches / sites.
+- Deploy monitoring for {{services_apps_monitored}} applications and {{services_network_devices}} network devices.
+- Implement {{services_workflows}} automation / orchestration workflows.
+- Roll out {{services_endpoints}} endpoints.
+- Deploy NVR for {{services_nvr_cameras}} cameras.
+- Integrate {{services_iot_devices}} IoT devices.
+- Deploy the SD-WAN overlay for {{services_tunnels}} tunnels.
+- Implement {{services_firewall_policies}} firewall policies.
+- Deploy the PBX for {{services_pbx_extensions}} extensions.
+- Deploy {{services_virtualization_workloads}} virtualisation workloads.
+- Implement {{services_integrations}} integrations.
+- Implement the access / role model for {{services_roles}} roles.
 - Test and validate each branch / site.
-- Execute acceptance testing at `{{services_acceptance_sites}}` sites.
+- Execute acceptance testing at {{services_acceptance_sites}} sites.
 
 ### Out-of-scope
 
@@ -161,9 +161,9 @@ All slots below are mandatory for now. Fill every slot for the current engagemen
 
 ### Deliverables
 
-- Implemented and deployed solution across `{{services_branches}}` branches.
+- Implemented and deployed solution across {{services_branches}} branches.
 - Test and validation reports — per site.
-- Acceptance test records for `{{services_acceptance_sites}}` sites.
+- Acceptance test records for {{services_acceptance_sites}} sites.
 - As-built documentation.
 
 ---
@@ -227,4 +227,4 @@ All slots below are mandatory for now. Fill every slot for the current engagemen
 
 ---
 
-*This section is a reusable standalone services module. Include when professional services (architecture, design, implementation, and roll-out) are offered as a standalone engagement. Fill all `{{services_*}}` slots per bid — every number tightens the scope. The in-scope and out-of-scope are written to complete each other; confirm with Legal/Solution that no additional inclusions or exclusions are needed for the current bid. This section is separate from the platform capability modules (e.g. `{{module_sdwan}}`, `{{module_firewall}}`, `{{module_nvr}}`, `{{module_ipbx}}`, `{{module_virtualization}}`, `{{module_stackx_observability_apm}}`, `{{module_stackx_automation_orchestration}}`, `{{module_stackx_endpoint_mgmt}}`); include both where a customer requires platform capability and professional services together.*
+*This section is a reusable standalone services module. Include when professional services (architecture, design, implementation, and roll-out) are offered as a standalone engagement. Fill every scope number per bid — every number tightens the scope. The in-scope and out-of-scope are written to complete each other; confirm with Legal/Solution that no additional inclusions or exclusions are needed for the current bid. This section is separate from the platform capability modules (e.g. SD-WAN, Firewall, NVR, IP-PBX, Virtualization, Observability & APM, Automation & Orchestration, Endpoint Management); include both where a customer requires platform capability and professional services together.*

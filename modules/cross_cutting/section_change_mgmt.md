@@ -21,6 +21,11 @@ Verto Wave's change request process is a formalized approach to managing change 
 2. **Impact Assessment:** Verto Wave will conduct an initial Impact Assessment to evaluate any potential positive or negative effects on project deliverables, resources, budget, and timelines. This assessment helps determine the feasibility of the change and its alignment with project goals.
 
 3. **Approve or Reject Change Requests:** After assessment, Verto Wave will decide whether to approve or reject the change request. This decision will consider the overall project context, stakeholder input, and alignment with organizational objectives. If the change affects the services schedule or costs, Verto Wave will obtain customer approval before proceeding with a full analysis.
+
+4. **Prioritize Change Requests:** Not all change requests hold the same significance. Verto Wave, in collaboration with the customer, will prioritize change requests based on urgency, impact, and strategic importance. Some changes may require immediate attention, while others can be scheduled for later implementation.
+
+5. **Execution and Reporting:** Once approved, Verto Wave will implement the change according to the agreed-upon plan. The status of the Change Request will be included in the Progress Reports.
+
 ---
 
 ## Figure — Change Request Process Flow
@@ -34,11 +39,6 @@ Verto Wave's change request process is a formalized approach to managing change 
 *[Figure placeholder — insert approved generic change-request process-flow diagram here. See image-placement guidance notes.]*
 
 ---
-
-
-4. **Prioritize Change Requests:** Not all change requests hold the same significance. Verto Wave, in collaboration with the customer, will prioritize change requests based on urgency, impact, and strategic importance. Some changes may require immediate attention, while others can be scheduled for later implementation.
-
-5. **Execution and Reporting:** Once approved, Verto Wave will implement the change according to the agreed-upon plan. The status of the Change Request will be included in the Progress Reports.
 
 ## Review and Approval
 

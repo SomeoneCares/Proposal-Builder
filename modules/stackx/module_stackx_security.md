@@ -44,25 +44,24 @@ Every security capability in this section is delivered in one of three ways. The
 - Automate Indicator of Compromise (IoC) lifecycle management, profile threat actors and distribute blocklists to firewalls and endpoints.
 
 ## UEBA and Vulnerability Management
+
+- Leverage StackX UEBA unsupervised machine-learning algorithms to build mathematical baselines of normal activity for every user, device and service account over a 30-to-60-day period.
+- Perform continuous peer-group analysis, track anomalous logins, monitor excessive privilege usage and assign automated risk scores to uncover malicious insiders or compromised credentials.
+- Conduct active and passive scanning to identify missing patches, default passwords and insecure configurations across the internal network and external attack surface.
+- Prioritise vulnerabilities based on active exploitation trends and generate automated compliance reporting for standards such as CIS and PCI-DSS.
+
 ---
 
 ## Figure — Security Architecture / Defence-in-Depth
 
 <!-- IMAGE PLACEMENT GUIDANCE — insert approved generic image here -->
 <!-- Recommended image: a generic defence-in-depth / layered security architecture diagram showing the security capability layers (external boundary, internal visibility & control, identity shield, data & system integrity, continuity & recovery, assurance & oversight) and the delivery-mode framing (Native / Integrated / Assured). No customer-specific control names that reveal the customer's regulatory regime beyond what is agreed, no customer site names. -->
-<!-- Suggested source: Telemedicine proposal §3.7 (StackX Security) + the security-model-at-a-glance concept — genericise the diagram; strip any "clinic", "Dubai management plane", or site-specific labels. -->
 <!-- Generic-only rule: do not insert any image that names or depicts the customer's specific environment, architecture, site names, or branding. Replace customer-specific labels before use. -->
 <!-- To embed: place the approved image file at this location in the final docx (deferred — combine.py is text-only for now). -->
 
 *[Figure placeholder — insert approved generic security / defence-in-depth architecture diagram here. See image-placement guidance notes.]*
 
 ---
-
-
-- Leverage StackX UEBA unsupervised machine-learning algorithms to build mathematical baselines of normal activity for every user, device and service account over a 30-to-60-day period.
-- Perform continuous peer-group analysis, track anomalous logins, monitor excessive privilege usage and assign automated risk scores to uncover malicious insiders or compromised credentials.
-- Conduct active and passive scanning to identify missing patches, default passwords and insecure configurations across the internal network and external attack surface.
-- Prioritise vulnerabilities based on active exploitation trends and generate automated compliance reporting for standards such as CIS and PCI-DSS.
 
 ## Incident Triage and Unified Case Management
 

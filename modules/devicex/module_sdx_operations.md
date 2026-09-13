@@ -48,21 +48,6 @@ The operational result is that a new site is brought into service by a non-techn
 Before shipping, the public portion of each appliance's hardware endorsement key certificate — permanently signed by the silicon manufacturer — is imported into the central inventory as a pre-authorised hardware unit.
 
 **Stage 2 — First Boot and Attestation**
----
-
-## Figure — Zero-Touch Provisioning Flow / Attestation & Credentials
-
-<!-- IMAGE PLACEMENT GUIDANCE — insert approved generic image here -->
-<!-- Recommended image: a generic zero-touch provisioning sequence diagram showing the four stages — pre-registration, first boot & attestation, certificate issuance, mesh join — and an attestation / short-lived-credentials flow showing compromise-response scenarios. No customer-specific registration-service names, no customer-specific CA names, no customer site names. -->
-<!-- Suggested source: Telemedicine proposal §3.6 / §3.6.1 (Centralized Management And Zero-Touch Provisioning, ZTP in a multi-country deployment) — genericise the diagram and labels; strip any country/site names. -->
-<!-- Alternative: a device-adoption / mesh-join diagram showing a new site brought into service by a non-technical person connecting power and a network cable. -->
-<!-- Generic-only rule: do not insert any image that names or depicts the customer's specific environment, architecture, site names, or branding. Replace customer-specific labels before use. -->
-<!-- To embed: place the approved image file at this location in the final docx (deferred — combine.py is text-only for now). -->
-
-*[Figure placeholder — insert approved generic ZTP / attestation flow diagram here. See image-placement guidance notes.]*
-
----
-
 
 On power-up the node locates the central registration service and generates an attestation key inside its hardware root of trust. The central service issues a challenge encrypted specifically to that node's endorsement key. Only the genuine hardware can decrypt it, proving physical possession of the registered hardware.
 
@@ -73,6 +58,20 @@ With identity proven, the node generates its operational private keys inside the
 **Stage 4 — Mesh Join**
 
 The node establishes its IPsec tunnels using certificate authentication and enters service under its assigned policy template. The private keys never leave the hardware root of trust at any point — not during generation, not during renewal, not during signing.
+
+---
+
+## Figure — Zero-Touch Provisioning Flow / Attestation & Credentials
+
+<!-- IMAGE PLACEMENT GUIDANCE — insert approved generic image here -->
+<!-- Recommended image: a generic zero-touch provisioning sequence diagram showing the four stages — pre-registration, first boot & attestation, certificate issuance, mesh join — and an attestation / short-lived-credentials flow showing compromise-response scenarios. No customer-specific registration-service names, no customer-specific CA names, no customer site names. -->
+<!-- Alternative: a device-adoption / mesh-join diagram showing a new site brought into service by a non-technical person connecting power and a network cable. -->
+<!-- Generic-only rule: do not insert any image that names or depicts the customer's specific environment, architecture, site names, or branding. Replace customer-specific labels before use. -->
+<!-- To embed: place the approved image file at this location in the final docx (deferred — combine.py is text-only for now). -->
+
+*[Figure placeholder — insert approved generic ZTP / attestation flow diagram here. See image-placement guidance notes.]*
+
+---
 
 ## Attestation and Short-Lived Credentials
 

@@ -17,6 +17,14 @@ This module's content is to be authored from the source material for StackX Oper
 ## Typical scope areas (to be confirmed from source)
 
 Operations Monitoring & Configuration Management Enterprise Management capability areas typically include:
+
+- Configuration Management Database (CMDB) design and maintenance
+- Configuration item (CI) discovery, reconciliation, and relationship mapping
+- Continuous configuration monitoring and drift detection
+- Change and release configuration control
+- Compliance and configuration baseline enforcement
+- Integration with ITSM change/incident/problem management
+
 ---
 
 ## Figure — Configuration Management Workflow / Change Flow
@@ -30,14 +38,6 @@ Operations Monitoring & Configuration Management Enterprise Management capabilit
 *[Figure placeholder — insert approved generic configuration-management / change-flow diagram here. See image-placement guidance notes.]*
 
 ---
-
-
-- Configuration Management Database (CMDB) design and maintenance
-- Configuration item (CI) discovery, reconciliation, and relationship mapping
-- Continuous configuration monitoring and drift detection
-- Change and release configuration control
-- Compliance and configuration baseline enforcement
-- Integration with ITSM change/incident/problem management
 
 ## Out-of-Scope (explicitly)
 

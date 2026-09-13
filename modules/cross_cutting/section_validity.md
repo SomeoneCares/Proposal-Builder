@@ -11,6 +11,9 @@
 *[Note: The validity clause below is a reusable frame based on a prior VertoWave proposal. The default period and effective-date logic must be confirmed per bid and reviewed by Legal before issuance.]*
 
 If no engagement end date is specified in this Agreement, the terms and conditions of this proposal will expire **{{validity_period_months}} months** from the Effective Date.
+
+If either party wishes to extend it, both parties must mutually agree to the extension at least **three (3) months** before the expiration date. If the expiration date has passed, a new and independent contractual agreement must be created and agreed upon by both parties.
+
 ---
 
 ## Figure — <Insert approved generic diagram / screenshot here>
@@ -23,9 +26,6 @@ If no engagement end date is specified in this Agreement, the terms and conditio
 *[Figure placeholder — insert approved generic image here. See image-placement guidance notes.]*
 
 ---
-
-
-If either party wishes to extend it, both parties must mutually agree to the extension at least **three (3) months** before the expiration date. If the expiration date has passed, a new and independent contractual agreement must be created and agreed upon by both parties.
 
 ## Effective Date
 

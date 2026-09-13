@@ -40,20 +40,19 @@ The following workflow shows how event telemetry is converted into managed incid
 | Ticket creation or enrichment | StackX ITSM creates or updates an incident and includes the event ID, timestamps, affected CI, evidence link, and current condition. |
 | Assignment and escalation | Rules assign to the correct location, network, security, platform or service team and apply the appropriate OLA. |
 | Resolution and closure | The resolver records action, service restoration time, root cause where known, workaround, and closure code; major incidents receive a review. |
+
 ---
 
 ## Figure — ITSM Service Desk / Incident & Request Workflow
 
 <!-- IMAGE PLACEMENT GUIDANCE — insert approved generic image here -->
 <!-- Recommended image: a generic ITSM service-desk dashboard image showing ticket counts, open-ticket lists, navigation structure, and dashboard-oriented visibility — plus an incident-to-resolution workflow diagram (monitoring → alert → triage → investigation → resolution → closure) and a request-fulfilment / change / major-incident operating workflow. No customer-specific service-desk configuration, no customer-specific category/workflow/asset names, no customer site names. -->
-<!-- Suggested source: Telemedicine proposal §3.9 (StackX ITSM) "Figure 2. STACKX product overview reference image" and "Figure 3. STACKX ticket timeline reference screenshot" — these are explicit "official STACKX reference screenshots"; use only as a composition reference, and produce or source a generic / Verto-Wave-branded equivalent configured with the customer's entities for the final proposal. Also EGYCash "Figure 1: Smart Service Desk" — composition reference only. -->
 <!-- Generic-only rule: do not insert any image that names or depicts the customer's specific environment, architecture, site names, or branding. Replace customer-specific labels before use. -->
 <!-- To embed: place the approved image file at this location in the final docx (deferred — combine.py is text-only for now). -->
 
 *[Figure placeholder — insert approved generic ITSM service-desk / incident-workflow diagram here. See image-placement guidance notes.]*
 
 ---
-
 
 ## Operating Workflows
 
@@ -71,7 +70,7 @@ A change is raised against one or more configuration items and services. The cha
 
 A major incident creates a coordinated response record with incident commander, technical workstreams, communications owner, customer-impact statement, update cadence, decision log, and recovery milestones. For an active service outage, the response should prioritise service restoration, preserve evidence, coordinate platform and carrier investigations, and trigger a problem record when the incident is closed.
 
-## Reference Screenshots Note
+## Reference Screenshots Note (for the bid team)
 
 The following note is provided for the bid team on how to handle third-party reference screenshots in an ITSM section:
 

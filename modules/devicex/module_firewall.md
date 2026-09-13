@@ -41,21 +41,19 @@ When the Enhanced NGFW variant is selected, the firewall platform additionally p
   - DNS security and sinkholing
 - VPN inspection and policy enforcement
 - Encrypted traffic visibility (TLS inspection — optional)
+
 ---
 
 ## Figure — Firewall Security Zones / In-Site Micro-Segmentation
 
 <!-- IMAGE PLACEMENT GUIDANCE — insert approved generic image here -->
 <!-- Recommended image: a generic in-site micro-segmentation diagram showing distinct security zones (e.g. untrusted/guest, user/application, peripheral/device, surveillance/camera, voice, management) with explicit allow-list boundaries and no unwanted egress between zones. No customer-specific device names, no customer site names, no customer IP addressing. -->
-<!-- Suggested source: Telemedicine proposal §4.3.3 (in-clinic micro-segmentation, 6 segments) — reuse only the generic zone model; strip any "telemedicine room", "consultation station", "medical device", "examination camera" labels before use. -->
-<!-- Alternative: a network-perimeter firewall policy / zone-based firewall diagram (e.g.Guest Wi-Fi vs Corporate Core) — EGYCash-style zone-based firewall concept, genericised. -->
 <!-- Generic-only rule: do not insert any image that names or depicts the customer's specific environment, architecture, site names, or branding. Replace customer-specific labels before use. -->
 <!-- To embed: place the approved image file at this location in the final docx (deferred — combine.py is text-only for now). -->
 
 *[Figure placeholder — insert approved generic firewall / micro-segmentation diagram here. See image-placement guidance notes.]*
 
 ---
-
 
 ## Firewall Template Deployment
 

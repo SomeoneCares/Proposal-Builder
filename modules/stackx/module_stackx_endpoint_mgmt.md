@@ -65,20 +65,19 @@ Management actions Endpoint Management offers include:
 - Remotely access an endpoint's desktop (without additional third-party tools)
 - Apply policies to control printing per user quota, specific printers or colour/BW options
 - Define different role-based administrator privileges
+
 ---
 
 ## Figure — Endpoint Management Dashboard / Endpoint Topology
 
 <!-- IMAGE PLACEHOLDER — insert approved generic image here -->
 <!-- Recommended image: a generic endpoint-management dashboard or endpoint-topology diagram showing managed endpoints, device status, policy compliance, and alerting. Vendor names cleaned to "major vendor platforms" in the text already; the image must likewise be generic — no specific vendor product screenshot unless approved for the current bid, no customer-specific endpoint names, no customer site names. -->
-<!-- Suggested source: EGYCash/Telemedicine "Endpoint Management" screenshot references — these are vendor UI screenshots; use only as a composition reference, and produce or source a generic / Verto-Wave-branded equivalent for the final proposal. -->
 <!-- Generic-only rule: do not insert any image that names or depicts the customer's specific environment, architecture, site names, or branding. Replace customer-specific labels before use. -->
 <!-- To embed: place the approved image file at this location in the final docx (deferred — combine.py is text-only for now). -->
 
 *[Figure placeholder — insert approved generic endpoint-management dashboard / topology diagram here. See image-placement guidance notes.]*
 
 ---
-
 
 ## Analytics
 
@@ -127,4 +126,4 @@ Endpoint Management is part of the StackX Operations Monitoring & Configuration 
 
 ---
 
-*This module is a reusable building block, derived from a source material describing StackX Endpoint Management and Analytics. Confirm per bid which sub-capabilities (e.g., Print Management, remote desktop, UBA, bandwidth shaping, idle-application policies) are in scope, whether on-prem vs virtual deployment is the intended model, and whether specific third-party platform names are appropriate for the current customer.*
+*This module is a reusable building block, derived from source material describing StackX Endpoint Management and Analytics. Confirm per bid which sub-capabilities (e.g., Print Management, remote desktop, UBA, bandwidth shaping, idle-application policies) are in scope, whether on-prem vs virtual deployment is the intended model, and whether specific third-party platform names are appropriate for the current customer.*

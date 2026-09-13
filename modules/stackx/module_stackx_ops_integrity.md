@@ -28,6 +28,15 @@ Operational integrity capabilities typically include:
 ### DeviceX SASE & ZTNA Framework
 
 Zero Trust Network Access (ZTNA) and SASE framework capabilities typically include:
+
+- Device visibility and profiling for policy-driven access
+- Zero Trust enforcement for access to internal assets
+- On-prem edge ZTNA technology
+- LAN/WAN conditional secure access controls
+- Device health assessment for access decisions
+- User authentication integration against common identity technologies
+- Protection of internal assets through ZTNA policy
+
 ---
 
 ## Figure — Operations Integrity / Integrity-Check Flow
@@ -41,15 +50,6 @@ Zero Trust Network Access (ZTNA) and SASE framework capabilities typically inclu
 *[Figure placeholder — insert approved generic operations-integrity / integrity-check-flow diagram here. See image-placement guidance notes.]*
 
 ---
-
-
-- Device visibility and profiling for policy-driven access
-- Zero Trust enforcement for access to internal assets
-- On-prem edge ZTNA technology
-- LAN/WAN conditional secure access controls
-- Device health assessment for access decisions
-- User authentication integration against common identity technologies
-- Protection of internal assets through ZTNA policy
 
 ### Integrated Security Controls & Case Management
 

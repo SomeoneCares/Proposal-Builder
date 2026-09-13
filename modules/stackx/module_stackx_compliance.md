@@ -17,6 +17,14 @@ This module's content is to be authored from the source material for StackX Comp
 ## Typical scope areas (to be confirmed from source)
 
 Compliance Assurance capability areas typically include:
+
+- Compliance dashboard usage for regulatory and standards alignment (e.g., CIS, PCI-DSS, and other relevant frameworks)
+- Monitoring where data resides and ensuring encryption-at-rest compliance
+- Automated compliance reporting for standards and regulatory requirements
+- Compliance evidence collection and reporting for audits
+- Contextual compliance views for the customer's applicable regulations where relevant
+- Integration with configuration management and security controls for compliance posture
+
 ---
 
 ## Figure — Compliance Framework / Audit-Trail Diagram
@@ -30,14 +38,6 @@ Compliance Assurance capability areas typically include:
 *[Figure placeholder — insert approved generic compliance-framework / audit-trail diagram here. See image-placement guidance notes.]*
 
 ---
-
-
-- Compliance dashboard usage for regulatory and standards alignment (e.g., CIS, PCI-DSS, and other relevant frameworks)
-- Monitoring where data resides and ensuring encryption-at-rest compliance
-- Automated compliance reporting for standards and regulatory requirements
-- Compliance evidence collection and reporting for audits
-- Contextual compliance views for the customer's applicable regulations where relevant
-- Integration with configuration management and security controls for compliance posture
 
 ## Out-of-Scope (explicitly)
 

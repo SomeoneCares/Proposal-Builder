@@ -23,6 +23,7 @@ The DeviceX Business Workloads Hosting Platform provides a secure, reliable, and
 - Run mission-critical applications and services at the branch edge
 - Focus on strategic priorities rather than infrastructure concerns
 - Enterprise-grade reliability at the branch location
+
 ---
 
 ## Figure — Business Workload Architecture / Application Placement
@@ -36,7 +37,6 @@ The DeviceX Business Workloads Hosting Platform provides a secure, reliable, and
 *[Figure placeholder — insert approved generic business-workload / application-placement diagram here. See image-placement guidance notes.]*
 
 ---
-
 
 ## Build Activities
 

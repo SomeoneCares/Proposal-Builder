@@ -53,13 +53,15 @@ The following targets are representative reference values for prioritised real-t
 | Session video | {{ola_video_target}} | Sufficient fidelity for visual assessment at the primary session camera. |
 | Overlay failover | < {{ola_failover_target}} | A path change is perceived as a brief quality dip, not a dropped session. |
 | Site bring-up (zero-touch) | ≤ {{ola_bringup_target}} | From power-on to adopted, policy-compliant and in service. |
+
+*[Enter the service-quality targets agreed for the current engagement in the proposal values, or remove this table where the customer has not specified quality targets.]*
+
 ---
 
 ## Figure — SD-WAN Architecture (Hub-and-Spoke / Mesh Overlay)
 
 <!-- IMAGE PLACEMENT GUIDANCE — insert approved generic image here -->
 <!-- Recommended image: a generic SD-WAN topology showing a central hub (or dual hubs) with multiple remote/branch sites connected over an encrypted overlay, with diverse underlays (fiber, DSL, cellular) converging at each site. Transport-agnostic — no carrier branding, no customer site names, no customer-specific IP addressing. -->
-<!-- Suggested source: Telemedicine proposal §3.1 / §3.2 (architecture tiers + SD-WAN architecture) — reuse only the generic topology/fabric shape; strip any "clinic", "Dubai", or site-name labels before use. -->
 <!-- Alternative: a path-diversity / quality-based steering decision diagram showing primary path, standby underlay, and steering logic (latency/jitter/loss thresholds). -->
 <!-- Generic-only rule: do not insert any image that names or depicts the customer's specific environment, architecture, site names, or branding. Replace customer-specific labels before use. -->
 <!-- To embed: place the approved image file at this location in the final docx (deferred — combine.py is text-only for now). -->
@@ -68,20 +70,17 @@ The following targets are representative reference values for prioritised real-t
 
 ---
 
-
-*Replace the `{{ola_*_target}}` values with the figures agreed for the current engagement, or remove the table where the customer has not specified quality targets.*
-
 ## Zero-Touch Provisioning (ZTP)
 
 DeviceX enables instant onboarding and rapid site bring-up for branches. Through the cloud orchestration plane and StackX, new configurations, updates, and policies can be pushed instantly to thousands of DeviceX units. The Branch-in-a-Box model allows for full remote management and updates, eliminating the need for on-site IT staff for provisioning.
 
 ## Link Aggregation Resilience
 
-DeviceX utilizes Link Aggregation, allowing the customer to combine fiber, 4G/5G, and even satellite links. If one connection fails, traffic fails over instantly without dropping a single packet of surveillance footage or transaction data.
+DeviceX utilizes Link Aggregation, allowing the customer to combine fiber, 4G/5G, and even satellite links. If one connection fails, traffic moves to the remaining links and active sessions continue, as described in the steering behaviour above.
 
 ## Traffic Prioritization
 
-DeviceX recognizes the importance of mission-critical applications. It ensures that critical traffic — such as vault sensors, ERP updates, or exam-platform traffic — is always prioritized over routine background data, even during peak congestion.
+DeviceX recognizes the importance of mission-critical applications. It ensures that critical traffic — such as business transactions, ERP updates or real-time voice and video — is always prioritized over routine background data, even during peak congestion.
 
 ## Deployment Architecture Options
 

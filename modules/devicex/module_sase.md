@@ -19,6 +19,7 @@ DeviceX SASE empowers total control over branch network access. Robust device vi
 - Assess Device Health
 - Authenticate users against common technologies
 - Protect Internal Assets
+
 ---
 
 ## Figure — SASE Architecture (Cloud + Edge Secure Access)
@@ -32,7 +33,6 @@ DeviceX SASE empowers total control over branch network access. Robust device vi
 *[Figure placeholder — insert approved generic SASE architecture diagram here. See image-placement guidance notes.]*
 
 ---
-
 
 ## How It Fits
 

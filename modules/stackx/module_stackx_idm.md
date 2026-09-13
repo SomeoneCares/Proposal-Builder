@@ -17,6 +17,14 @@ This module's content is to be authored from the source material for StackX Iden
 ## Typical scope areas (to be confirmed from source)
 
 Identity Management (IDM) capability areas typically include:
+
+- Identity and Access Management (IAM) policy design and enforcement
+- Multi-factor authentication (MFA) implementation
+- Role-based access control (RBAC)
+- Identity lifecycle management (provisioning / de-provisioning / review)
+- Integration with directory services (e.g., Active Directory, LDAP)
+- Secure authentication for users, devices, and services
+
 ---
 
 ## Figure — Identity & Access Management Architecture / SSO-MFA Flow
@@ -30,14 +38,6 @@ Identity Management (IDM) capability areas typically include:
 *[Figure placeholder — insert approved generic IDM architecture / SSO-MFA flow diagram here. See image-placement guidance notes.]*
 
 ---
-
-
-- Identity and Access Management (IAM) policy design and enforcement
-- Multi-factor authentication (MFA) implementation
-- Role-based access control (RBAC)
-- Identity lifecycle management (provisioning / de-provisioning / review)
-- Integration with directory services (e.g., Active Directory, LDAP)
-- Secure authentication for users, devices, and services
 
 ## Out-of-Scope (explicitly)
 

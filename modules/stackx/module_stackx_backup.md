@@ -17,6 +17,14 @@ This module's content is to be authored from the source material for StackX Back
 ## Typical scope areas (to be confirmed from source)
 
 Backup capability areas typically include:
+
+- Backup strategy design and implementation per system and business service
+- Data protection across on-premises and cloud workloads
+- Backup scheduling, retention, and recovery point objectives
+- Backup validation and restore testing
+- Integration with existing backup platforms where applicable
+- Backup security and ransomware resilience considerations
+
 ---
 
 ## Figure — Backup Architecture / Backup Policy Flow
@@ -30,14 +38,6 @@ Backup capability areas typically include:
 *[Figure placeholder — insert approved generic backup architecture / policy-flow diagram here. See image-placement guidance notes.]*
 
 ---
-
-
-- Backup strategy design and implementation per system and business service
-- Data protection across on-premises and cloud workloads
-- Backup scheduling, retention, and recovery point objectives
-- Backup validation and restore testing
-- Integration with existing backup platforms where applicable
-- Backup security and ransomware resilience considerations
 
 ## Out-of-Scope (explicitly)
 
