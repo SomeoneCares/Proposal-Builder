@@ -1,0 +1,8 @@
+{
+  "skill": "proposal-template",
+  "status": "draft",
+  "version": "0.1.0",
+  "last_modified": "2026-09-02",
+  "base_proposal_count": 5,
+  "note": "Initial modular proposal template — content derived from prior VertoWave DeviceX/SDX and StackX proposals. Validate each module against the current customer's RFP/ITB before issuing. Pricing excluded by design."
+}
