@@ -1,0 +1,24 @@
+# Runs the Proposal Builder from the packaged image.
+# Settings come from .env next to this file (copy .env.example; start.sh does it for you).
+services:
+  proposal-builder:
+    image: vertowave/proposal-builder:${PROPOSAL_BUILDER_TAG:-latest}
+    restart: unless-stopped
+    ports:
+      - "${PROPOSAL_BUILDER_BIND:-0.0.0.0}:${PROPOSAL_BUILDER_PORT:-8501}:8501"
+    environment:
+      PROPOSAL_EDITOR_PASSWORD: ${PROPOSAL_EDITOR_PASSWORD:-}
+      HERMES_API_URL: ${HERMES_API_URL:-}
+      HERMES_API_KEY: ${HERMES_API_KEY:-}
+    volumes:
+      - library:/data/library
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /home/builder
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+
+volumes:
+  # Module Library edits and uploaded figures; survives upgrades.
+  library:

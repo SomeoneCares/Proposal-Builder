@@ -8,6 +8,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "apps"))
@@ -84,6 +85,16 @@ class HermesReplyTests(unittest.TestCase):
     def test_non_json_reply_is_an_error(self):
         with self.assertRaises(hermes_research.ResearchError):
             hermes_research.parse_reply("I could not find anything.")
+
+    def test_api_key_from_environment_wins(self):
+        with mock.patch.dict(os.environ, {"HERMES_API_KEY": "key-from-env"}):
+            self.assertEqual(hermes_research.api_key(), "key-from-env")
+            self.assertTrue(hermes_research.is_configured())
+
+    def test_research_is_off_without_a_key(self):
+        with mock.patch.dict(os.environ, {"HERMES_API_KEY": ""}), \
+                mock.patch.object(hermes_research, "ENV_FILE", ROOT / "no-such-dir" / ".env"):
+            self.assertFalse(hermes_research.is_configured())
 
 
 if __name__ == "__main__":

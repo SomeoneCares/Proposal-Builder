@@ -3,8 +3,9 @@ Ask Hermes, through its OpenAI-compatible API server on the host, to draft
 customer context for the executive summary.
 
 Everything returned is a draft: the builder shows it for a person to edit and
-approve before any of it reaches the proposal. The API key is read at run time
-from Hermes's own env file and never stored by the builder.
+approve before any of it reaches the proposal. The API key comes from
+HERMES_API_KEY or, when the builder runs on the Hermes host itself, from Hermes's
+own env file; the builder never stores it.
 """
 
 from __future__ import annotations
@@ -47,12 +48,22 @@ class ResearchError(RuntimeError):
 
 
 def api_key() -> str:
+    key = os.environ.get("HERMES_API_KEY", "").strip()
+    if key:
+        return key
     if not ENV_FILE.is_file():
-        raise ResearchError(f"Hermes API key file not found ({ENV_FILE}).")
+        raise ResearchError("Customer research is not configured on this server: set HERMES_API_URL and HERMES_API_KEY.")
     for line in ENV_FILE.read_text(encoding="utf-8").splitlines():
         if line.strip().startswith("API_SERVER_KEY="):
             return line.split("=", 1)[1].strip().strip('"').strip("'")
     raise ResearchError("API_SERVER_KEY is not set in Hermes's env file.")
+
+
+def is_configured() -> bool:
+    try:
+        return bool(api_key())
+    except ResearchError:
+        return False
 
 
 def build_prompt(customer_name: str, customer_short: str, hint: str = "") -> str:

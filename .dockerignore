@@ -1,0 +1,14 @@
+.git
+.gitignore
+.gitattributes
+.claude
+**/__pycache__
+**/*.pyc
+.env
+*.env
+out/
+dist/
+hermes-profile/
+scripts/
+Dockerfile
+docker-compose.yml

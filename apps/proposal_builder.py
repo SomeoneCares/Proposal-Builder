@@ -323,7 +323,10 @@ with tabs[3]:
         hint = st.text_input("Anything Hermes should know (optional)", key="ai_hint",
                              placeholder="e.g. the customer's sector or country")
         name = str(st.session_state.get("customer_name", "")).strip()
-        if st.button("Research the customer with Hermes", disabled=not name):
+        research_ready = hermes_research.is_configured()
+        if not research_ready:
+            st.caption("Customer research is not configured on this server (HERMES_API_URL and HERMES_API_KEY).")
+        if st.button("Research the customer with Hermes", disabled=not name or not research_ready):
             with st.spinner("Hermes is researching — this can take a few minutes…"):
                 try:
                     draft = hermes_research.draft(name, str(st.session_state.get("customer_short", "")), hint)
