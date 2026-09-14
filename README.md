@@ -44,7 +44,7 @@ python combine.py --values my-values.json --offering licenses,services,managed_s
 
 - **Draft** (default): bid-team notes, figure placeholders and `(for the bid team)` sections stay in, highlighted.
 - **Issue copy** (`--issue`): all of that is removed, and the build is refused while any value used by the proposal is blank.
-- `--toc-levels 1|2|3` (default 2); table-of-contents page numbers are filled from a LibreOffice render where available (`--no-toc-pages` skips it).
+- `--toc-levels 1|2|3` (default 1, main sections only; the builder offers 1 or 2); table-of-contents page numbers are filled from a LibreOffice render where available (`--no-toc-pages` skips it).
 
 ## Checks on every build
 

@@ -229,11 +229,19 @@ class CompleteBuildTests(unittest.TestCase):
             self.assertIn(phrase.lower(), self.draft_text.lower())
             self.assertNotIn(phrase.lower(), self.issue_text.lower())
 
-    def test_executive_summary_starts_on_a_new_page(self):
-        paragraphs = self.issue.paragraphs
-        idx = next(i for i, p in enumerate(paragraphs) if p.text.endswith("Executive Summary")
-                   and p.style.name == "Heading 1")
-        self.assertIn('w:type="page"', paragraphs[idx - 1]._p.xml)
+    def test_sections_start_on_a_new_page_without_blank_pages(self):
+        heading = next(p for p in self.issue.paragraphs
+                       if p.text.endswith("Executive Summary") and p.style.name == "Heading 1")
+        self.assertTrue(heading.paragraph_format.page_break_before)
+        # No separate page-break paragraphs between modules (they can leave a blank page).
+        breaks = [p for p in self.issue.paragraphs if 'w:type="page"' in p._p.xml and not p.text.strip()]
+        self.assertEqual(breaks, [])
+
+    def test_one_level_toc_is_short(self):
+        doc, problems, _ = build(self.values, issue=True, toc_levels=1)
+        self.assertEqual(problems, [])
+        self.assertEqual({entry[0] for entry in doc._vw_toc["entries"]}, {1})
+        self.assertLess(len(doc._vw_toc["entries"]), 50)
 
 
 class OfferingTests(unittest.TestCase):

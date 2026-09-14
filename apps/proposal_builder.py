@@ -93,7 +93,7 @@ def init_state() -> None:
         st.session_state.setdefault(f"mod_{token}", bool(mod.get("required")))
     for flag in OFFERING_LABELS:
         st.session_state.setdefault(f"off_{flag}", flag in combine.DEFAULT_OFFERING)
-    st.session_state.setdefault("toc_levels", 2)
+    st.session_state.setdefault("toc_levels", 1)
     # The data editor edits compliance_base; its output is kept in compliance_rows. Feeding the output back
     # in as the editor's input would re-apply edits, so a new base gets a new editor key instead.
     st.session_state.setdefault("compliance_base", [])

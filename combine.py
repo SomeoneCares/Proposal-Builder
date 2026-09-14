@@ -597,6 +597,9 @@ class Renderer:
         self.root = root
         self.library = library
         self.number_headings = False
+        # Set before a module that must start on a new page; applied to the module's first paragraph as
+        # "page break before", which never leaves a blank page the way a separate break paragraph can.
+        self.break_before = False
         self.appendix_letter: str | None = None
         self.counters = [0, 0, 0]
         self.appendix_count = 0
@@ -629,16 +632,22 @@ class Renderer:
             self.counters[deeper] = 0
         return ".".join(str(c) for c in self.counters[:level])
 
+    def _mark(self, paragraph):
+        if self.break_before:
+            paragraph.paragraph_format.page_break_before = True
+            self.break_before = False
+        return paragraph
+
     def _paragraph(self, style: str | None = None):
         if style:
             try:
-                return self.doc.add_paragraph(style=style)
+                return self._mark(self.doc.add_paragraph(style=style))
             except KeyError:
                 pass
-        return self.doc.add_paragraph()
+        return self._mark(self.doc.add_paragraph())
 
     def note(self, text: str, bold: bool = False) -> None:
-        add_inline(self.doc.add_paragraph(), text, note=True, bold=bold)
+        add_inline(self._paragraph(), text, note=True, bold=bold)
 
     # -- blocks --------------------------------------------------------------
     def render(self, blocks: list[dict]) -> None:
@@ -663,7 +672,8 @@ class Renderer:
                     continue
                 number = self._number(level)
                 title = plain(block["text"])
-                self.doc.add_heading(f"{number}{HEADING_SEPARATOR}{title}" if number else title, level=level)
+                self._mark(self.doc.add_heading(f"{number}{HEADING_SEPARATOR}{title}" if number else title,
+                                                level=level))
                 continue
             if kind == "pagebreak":
                 # Page breaks survive even inside a removed bid-team section.
@@ -674,27 +684,27 @@ class Renderer:
             in_note = note_level is not None
 
             if kind == "title":
-                self.doc.add_heading(plain(block["text"]), level=0)
+                self._mark(self.doc.add_heading(plain(block["text"]), level=0))
             elif kind == "directive":
                 self._directive(block["name"], block["arg"], in_note)
             elif kind == "paragraph":
                 raw = block["text"]
                 if LOGO_MARKER in raw:
-                    p = self.doc.add_paragraph()
+                    p = self._paragraph()
                     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
                     add_inline(p, unwrap_note(raw), note=True)
                     continue
                 note = in_note or is_note(raw)
                 if note and not self.draft:
                     continue
-                add_inline(self.doc.add_paragraph(), unwrap_note(raw) if is_note(raw) else raw, note=note)
+                add_inline(self._paragraph(), unwrap_note(raw) if is_note(raw) else raw, note=note)
             elif kind == "bullets":
                 for level, text in block["items"]:
                     p = self._paragraph("List Bullet 2" if level else "List Bullet")
                     add_inline(p, text, note=in_note)
             elif kind == "numbered":
                 for text in block["items"]:
-                    p = self.doc.add_paragraph()
+                    p = self._paragraph()
                     p.paragraph_format.left_indent = Inches(0.25)
                     add_inline(p, text, note=in_note)
             elif kind == "table":
@@ -798,9 +808,10 @@ class Renderer:
 # Table of contents
 # ---------------------------------------------------------------------------
 
-def add_toc(doc, draft: bool):
+def add_toc(doc, draft: bool, page_break_before: bool = False):
     """Add the 'Table of Contents' title; return an anchor paragraph for write_toc_field()."""
     title = doc.add_paragraph()
+    title.paragraph_format.page_break_before = page_break_before
     run = title.add_run("Table of Contents")
     run.bold = True
     run.font.size = Pt(16)
@@ -1099,16 +1110,14 @@ def assemble_complete_document(
     front = [t for t in FRONT_MATTER if t in included]
     rest = [t for t in included if t not in front]
     for i, token in enumerate(front):
-        if i:
-            doc.add_page_break()
+        renderer.break_before = i > 0
         add_module(token)
-    if front:
-        doc.add_page_break()
-    toc_anchor = add_toc(doc, draft=not issue)
+    toc_anchor = add_toc(doc, draft=not issue, page_break_before=bool(front))
     renderer.number_headings = True
     for token in rest:
-        doc.add_page_break()
+        renderer.break_before = True
         add_module(token)
+    renderer.break_before = False
 
     renderer.fill_deferred(load_glossary(root))
     doc._vw_toc = write_toc_field(doc, toc_anchor, collect_headings(doc, toc_anchor, toc_levels), toc_levels)
@@ -1208,8 +1217,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     p.add_argument("--library", default=os.environ.get("PROPOSAL_LIBRARY_DIR"),
                    help="Module Library folder with portal overrides (default: $PROPOSAL_LIBRARY_DIR)")
     p.add_argument("--logo", default=None, help="Logo image (PNG/JPG) for the cover page")
-    p.add_argument("--toc-levels", type=int, choices=[1, 2, 3], default=2,
-                   help="Heading levels listed in the table of contents (default 2)")
+    p.add_argument("--toc-levels", type=int, choices=[1, 2, 3], default=1,
+                   help="Heading levels listed in the table of contents (default 1: main sections)")
     p.add_argument("--no-toc-pages", action="store_true",
                    help="Skip the LibreOffice render that fills in table-of-contents page numbers")
     return p.parse_args(argv)
