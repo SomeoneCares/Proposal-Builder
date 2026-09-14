@@ -8,44 +8,43 @@
 
 ## Overview
 
-*[Placeholder — module to be authored from source material describing StackX Identity Management (IDM).]*
+StackX Identity Management provides secure access control, authentication and authorization across {{customer_short}}'s systems from one governance platform. It manages who has access to what, why they have it, and whether they should keep it.
 
-## To be authored
+## Key Capabilities
 
-This module's content is to be authored from the source material for StackX Identity Management (IDM) before the module is included in a live proposal. Until then, include only with explicit subject-matter review.
+### Identity Lifecycle Management
 
-## Typical scope areas (to be confirmed from source)
+Identities are provisioned when people join, updated when they move and deprovisioned when they leave, automatically. Periodic access reviews and self-service requests keep access current without adding administrative load.
 
-Identity Management (IDM) capability areas typically include:
+### Role-Based Access Control
 
-- Identity and Access Management (IAM) policy design and enforcement
-- Multi-factor authentication (MFA) implementation
-- Role-based access control (RBAC)
-- Identity lifecycle management (provisioning / de-provisioning / review)
-- Integration with directory services (e.g., Active Directory, LDAP)
-- Secure authentication for users, devices, and services
+Access is granted through roles rather than individual assignments, with privileged access management, policy enforcement and dynamic access controls for sensitive systems.
+
+### Directory Services Integration
+
+StackX IDM integrates with enterprise directory services, LDAP directories and cloud identity providers, so identities stay consistent across on-premises and cloud systems.
+
+### Authentication
+
+- Multi-factor authentication for users and administrators
+- Single sign-on to connected applications
+- Secure authentication for users, devices and services
+
+<!-- Diagram guidance: identity sources and the IDM platform provisioning accounts to target systems, with access reviews and an SSO/MFA login flow. No identity provider or role names. -->
+[[figure: identity-lifecycle | Identity lifecycle and access governance]]
+
+## Value
+
+- One governance platform for identity and access
+- Stronger security through automated access controls and monitoring
+- Less administrative effort through automated provisioning and self-service
+- Easier compliance through access certification and audit trails
+
+## Integration
+
+- Provides role and identity data to StackX Operations Integrity for access to operations. <!-- if module_stackx_ops_integrity -->
+- Manages access to the StackX modules themselves through the same roles. <!-- if stackx -->
 
 ---
 
-## Figure — Identity & Access Management Architecture / SSO-MFA Flow
-
-<!-- IMAGE PLACEMENT GUIDANCE — insert approved generic image here -->
-<!-- Recommended image: a generic identity/access-management architecture diagram showing authentication, MFA, SSO, role-based access control, and identity lifecycle, plus an SSO/MFA login flow diagram. No customer-specific identity provider names, no customer-specific role names, no customer site names. -->
-<!-- Suggested source: generic IDM reference model — no customer-specific content from prior proposals is carried. -->
-<!-- Generic-only rule: do not insert any image that names or depicts the customer's specific environment, architecture, site names, or branding. Replace customer-specific labels before use. -->
-<!-- To embed: place the approved image file at this location in the final docx (deferred — combine.py is text-only for now). -->
-
-*[Figure placeholder — insert approved generic IDM architecture / SSO-MFA flow diagram here. See image-placement guidance notes.]*
-
----
-
-## Out-of-Scope (explicitly)
-
-- Any development and debugging activities not explicitly in scope.
-- Managing and supporting systems and devices not allowing ways of integration.
-- Operating 3rd party systems aside from the systems included in this scope.
-- Any implementation of identity systems not included in this proposal scope.
-
----
-
-*This module is a placeholder pending content authoring. Do not include in a live proposal without completing the module content and SME review.*
+*This module is a reusable building block. Confirm directories, target systems and the number of identities per bid.*

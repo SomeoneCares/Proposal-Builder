@@ -7,293 +7,420 @@
   },
   "output_format": {
     "source": "Markdown per module",
-    "assembly": "docx template with {{module_...}} and {{customer_...}} tokens",
-    "language": "English",
+    "assembly": "combine.py → .docx",
+    "language": "English (US)",
     "pricing": "excluded — technical proposal only"
   },
-  "include_service_model": false,
-  "include_training": true,
-  "include_customer_slots": true,
-  "include_document_control": true,
-  "base": "built from scratch — not copied from a prior proposal",
+  "document_order": [
+    "section_cover_execsummary",
+    "section_document_control",
+    "section_exec_summary",
+    "section_about_vertowave",
+    "section_understanding",
+    "section_solution_architecture",
+    "module_sdwan",
+    "module_firewall",
+    "module_sase",
+    "module_network_services",
+    "module_nvr",
+    "module_ipbx",
+    "module_virtualization",
+    "module_business_workloads",
+    "module_sdx_operations",
+    "section_hardware_sizing",
+    "module_stackx_trueview",
+    "module_stackx_observability_apm",
+    "module_stackx_ops_config_mgmt",
+    "module_stackx_network_ops",
+    "module_stackx_event_log_mgmt",
+    "module_stackx_itSM",
+    "module_stackx_automation_orchestration",
+    "module_stackx_endpoint_mgmt",
+    "module_stackx_idm",
+    "module_stackx_backup",
+    "module_stackx_security",
+    "module_stackx_compliance",
+    "module_stackx_ops_integrity",
+    "module_stackx_soc",
+    "module_stackx_devops",
+    "module_stackx_alm",
+    "module_stackx_call_center",
+    "section_professional_services",
+    "section_timeline",
+    "section_pm_methodology",
+    "section_roles",
+    "section_training",
+    "section_ola",
+    "section_support_warranty",
+    "section_assumptions",
+    "section_out_of_scope",
+    "section_change_mgmt",
+    "section_validity",
+    "section_compliance_matrix",
+    "section_glossary"
+  ],
   "modules": {
     "devicex_sdx": {
-      "group": "DeviceX/SDX — edge & branch layer",
-      "description": "Select one or more DeviceX/SDX capability modules. SD-WAN is the core; others are optional add-ons.",
+      "group": "DeviceX/SDX — Edge & Branch Layer",
+      "description": "Capability modules for the site edge. SD-WAN is the core; the others are optional add-ons.",
       "modules": [
         {
           "token": "module_sdwan",
           "file": "modules/devicex/module_sdwan.md",
           "name": "SD-WAN",
           "required": true,
-          "notes": "Core module — appears in every DeviceX proposal. Include unless the customer does not need SD-WAN."
+          "summary": "Resilient, quality-steered wide-area connectivity over any mix of access services.",
+          "notes": "Core module — include in every DeviceX proposal unless SD-WAN is not required."
         },
         {
           "token": "module_firewall",
           "file": "modules/devicex/module_firewall.md",
           "name": "Firewall",
           "required": false,
-          "notes": "Base stateful packet-inspection firewall, with an optional Enhanced NGFW variant (DPI application control, URL filtering, Suricata IDS/IPS, TLS inspection). Choose the variant per bid."
-        },
-        {
-          "token": "module_nvr",
-          "file": "modules/devicex/module_nvr.md",
-          "name": "NVR / Video Surveillance",
-          "required": false,
-          "notes": "Two variants: NVR without AI (recording, retention, remote access) or NVR with edge analytics (object detection, facial recognition, LPR, behavioural analytics, ONVIF). Choose the variant per bid."
-        },
-        {
-          "token": "module_ipbx",
-          "file": "modules/devicex/module_ipbx.md",
-          "name": "IP-PBX / Unified Communications",
-          "required": false,
-          "notes": "SIP/IAX2, IVR, voicemail-to-email, call recording, conferencing, mobile app, CRM integration and local survivability. Include when branch voice / unified communications is in scope."
+          "summary": "Stateful or next-generation firewall with in-site micro-segmentation.",
+          "notes": "Base stateful firewall or the enhanced next-generation variant — choose per bid."
         },
         {
           "token": "module_sase",
           "file": "modules/devicex/module_sase.md",
           "name": "SASE / Zero Trust Access",
           "required": false,
-          "notes": "Device profiling, Zero Trust, on-prem edge, LAN/WAN conditional secure access, device health assessment, user authentication, internal asset protection."
+          "summary": "Identity- and device-aware access control at the site edge."
         },
         {
           "token": "module_network_services",
           "file": "modules/devicex/module_network_services.md",
-          "name": "Network Services (DNS/DHCP/LDAP/RADIUS)",
+          "name": "Network Services (DNS, DHCP, LDAP, RADIUS)",
           "required": false,
-          "notes": "On-demand branch services catalogue."
+          "summary": "Core network services delivered on the appliance at each site."
+        },
+        {
+          "token": "module_nvr",
+          "file": "modules/devicex/module_nvr.md",
+          "name": "NVR / Video Surveillance",
+          "required": false,
+          "summary": "Local video recording with central monitoring and optional edge analytics.",
+          "notes": "Two variants: without analytics, or with edge analytics — choose per bid."
+        },
+        {
+          "token": "module_ipbx",
+          "file": "modules/devicex/module_ipbx.md",
+          "name": "IP-PBX / Unified Communications",
+          "required": false,
+          "summary": "Site telephony with call routing, IVR, recording and local survivability."
         },
         {
           "token": "module_virtualization",
           "file": "modules/devicex/module_virtualization.md",
           "name": "Virtualization / Container Platform",
           "required": false,
-          "notes": "KVM VM hosting, Docker container deployment, Kubernetes orchestration, multi-tenant workload isolation, resource allocation/scaling, app lifecycle mgmt, load balancing/service discovery, persistent storage, network policy enforcement, monitoring/logging integration."
+          "summary": "Virtual machines and containers hosted at the site edge."
         },
         {
           "token": "module_business_workloads",
           "file": "modules/devicex/module_business_workloads.md",
           "name": "Business Workloads Hosting Platform",
           "required": false,
-          "notes": "Secure, reliable, high-performance environment for mission-critical apps."
+          "summary": "Managed hosting for business-critical applications."
         },
         {
           "token": "module_sdx_operations",
           "file": "modules/devicex/module_sdx_operations.md",
-          "name": "DeviceX/SDX Operations (Centralized Edge Mgmt)",
+          "name": "DeviceX/SDX Centralized Operations",
           "required": false,
-          "notes": "Device provisioning/lifecycle, SD-WAN tunnel mgmt, firewall policy mgmt, monitoring (device health, agent status, tunnel status), centralized config push."
+          "summary": "Central provisioning, policy and monitoring of every appliance, with zero-touch provisioning and attestation."
         }
       ]
     },
     "stackx": {
-      "group": "StackX — control / orchestration / SOC / operations layer",
-      "description": "Select one or more StackX modules. Placeholder modules are marked and must not be used in a live bid until their content is authored and reviewed.",
+      "group": "StackX — Control / Orchestration / SOC / Operations Layer",
+      "description": "Capability modules for IT operations, service management and security.",
       "modules": [
         {
-          "token": "module_stackx_endpoint_mgmt",
-          "file": "modules/stackx/module_stackx_endpoint_mgmt.md",
-          "name": "StackX Endpoint Management & Analytics",
+          "token": "module_stackx_trueview",
+          "file": "modules/stackx/module_stackx_trueview.md",
+          "name": "StackX TrueView",
           "required": false,
-          "notes": "Hardware/software inventory, OS/version tracking, service/startup mgmt, remote control, software deploy/uninstall, registry mgmt, print mgmt, UBA, remote desktop. Includes StackX Print Management sub-module."
-        },
-        {
-          "token": "module_stackx_automation_orchestration",
-          "file": "modules/stackx/module_stackx_automation_orchestration.md",
-          "name": "StackX Automation & Orchestration",
-          "required": false,
-          "notes": "CLI/API/REST automation, no-code workflow builder, RBAC, multi-vendor orchestration, centralized console, action logging, custom actions UI builder, workflow templates across infra/apps/services."
+          "summary": "Business and technical service dashboards that correlate data across systems."
         },
         {
           "token": "module_stackx_observability_apm",
           "file": "modules/stackx/module_stackx_observability_apm.md",
           "name": "StackX Observability & APM",
           "required": false,
-          "notes": "Metrics/logs/traces, ML anomaly detection, distributed tracing, OpenTelemetry support, service dependency mapping, unified dashboards, proactive alerting, RBAC, encrypted comms, audit logging, horizontal scaling, hybrid on-prem/cloud."
+          "summary": "Metrics, logs and traces with anomaly detection and application performance monitoring."
         },
         {
-          "token": "module_stackx_trueview",
-          "file": "modules/stackx/module_stackx_trueview.md",
-          "name": "StackX TrueView",
+          "token": "module_stackx_ops_config_mgmt",
+          "file": "modules/stackx/module_stackx_ops_config_mgmt.md",
+          "name": "StackX Operations Monitoring & Configuration Management",
           "required": false,
-          "notes": "Placeholder — content still to be authored; SME review required before use in a live bid.",
-          "placeholder": true
+          "summary": "Automated discovery, CMDB and consolidated event management across the IT estate."
+        },
+        {
+          "token": "module_stackx_network_ops",
+          "file": "modules/stackx/module_stackx_network_ops.md",
+          "name": "StackX Network Operations",
+          "required": false,
+          "summary": "Network fault, availability and performance management with root-cause analysis."
+        },
+        {
+          "token": "module_stackx_event_log_mgmt",
+          "file": "modules/stackx/module_stackx_event_log_mgmt.md",
+          "name": "StackX Event & Log Management",
+          "required": false,
+          "summary": "Central collection, retention, search and analysis of logs and events."
+        },
+        {
+          "token": "module_stackx_itSM",
+          "file": "modules/stackx/module_stackx_itSM.md",
+          "name": "StackX ITSM",
+          "required": false,
+          "summary": "ITIL-aligned incident, problem, change and request management with a service portal."
+        },
+        {
+          "token": "module_stackx_automation_orchestration",
+          "file": "modules/stackx/module_stackx_automation_orchestration.md",
+          "name": "StackX Automation & Orchestration",
+          "required": false,
+          "summary": "No-code automation of multi-vendor devices and end-to-end workflows."
+        },
+        {
+          "token": "module_stackx_endpoint_mgmt",
+          "file": "modules/stackx/module_stackx_endpoint_mgmt.md",
+          "name": "StackX Endpoint Management & Analytics",
+          "required": false,
+          "summary": "Inventory, software distribution, remote management and user analytics for endpoints."
         },
         {
           "token": "module_stackx_idm",
           "file": "modules/stackx/module_stackx_idm.md",
           "name": "StackX Identity Management (IDM)",
           "required": false,
-          "notes": "Placeholder — content still to be authored; SME review required before use in a live bid. Covers IAM, MFA, RBAC, identity lifecycle.",
-          "placeholder": true
+          "summary": "Identity lifecycle, role-based access control and directory integration."
         },
         {
           "token": "module_stackx_backup",
           "file": "modules/stackx/module_stackx_backup.md",
           "name": "StackX Backup",
           "required": false,
-          "notes": "Placeholder — content still to be authored; SME review required before use in a live bid. Covers backup/recovery strategy, data protection, ransomware resilience.",
-          "placeholder": true
+          "summary": "Scheduled, incremental backup with fast recovery and immutable copies."
         },
         {
-          "token": "module_stackx_ops_config_mgmt",
-          "file": "modules/stackx/module_stackx_ops_config_mgmt.md",
-          "name": "StackX Operations Monitoring & Configuration Management Enterprise Management",
+          "token": "module_stackx_security",
+          "file": "modules/stackx/module_stackx_security.md",
+          "name": "StackX Security",
           "required": false,
-          "notes": "Placeholder — content still to be authored; SME review required before use in a live bid.",
-          "placeholder": true
-        },
-        {
-          "token": "module_stackx_network_ops",
-          "file": "modules/stackx/module_stackx_network_ops.md",
-          "name": "StackX Network Operations Enterprise Management",
-          "required": false,
-          "notes": "Placeholder — content still to be authored; SME review required before use in a live bid.",
-          "placeholder": true
-        },
-        {
-          "token": "module_stackx_itSM",
-          "file": "modules/stackx/module_stackx_itSM.md",
-          "name": "StackX ITSM Platform Enterprise Management",
-          "required": false,
-          "notes": "Incident/problem/change mgmt, ITSM workflows, CAB integration, service catalog, MTTR analytics. Integrated with StackX console."
-        },
-        {
-          "token": "module_stackx_alm",
-          "file": "modules/stackx/module_stackx_alm.md",
-          "name": "StackX Application Lifecycle Management (ALM) Enterprise Management",
-          "required": false,
-          "notes": "Placeholder — content still to be authored; SME review required before use in a live bid.",
-          "placeholder": true
+          "summary": "SIEM, SOAR, endpoint, network and threat intelligence capabilities for detection and response.",
+          "notes": "The security platform. Add StackX SOC Operations when Verto Wave also runs the security operations service."
         },
         {
           "token": "module_stackx_compliance",
           "file": "modules/stackx/module_stackx_compliance.md",
-          "name": "StackX Compliance Assurance System",
+          "name": "StackX Compliance Assurance",
           "required": false,
-          "notes": "Placeholder — content still to be authored; SME review required before use in a live bid. CIS, PCI-DSS compliance reporting, regulatory alignment.",
-          "placeholder": true
+          "summary": "Continuous configuration and vulnerability assessment with audit-ready compliance evidence."
         },
         {
           "token": "module_stackx_ops_integrity",
           "file": "modules/stackx/module_stackx_ops_integrity.md",
-          "name": "StackX Operations Integrity Platform",
+          "name": "StackX Operations Integrity",
           "required": false,
-          "notes": "Placeholder — content still to be authored; SME review required before use in a live bid. Systems Operations Integrity, DeviceX SASE & ZTNA Framework, Integrated Security Controls & Case Management.",
-          "placeholder": true
+          "summary": "Configuration baselines, drift detection and controlled, verified access to IT operations."
+        },
+        {
+          "token": "module_stackx_soc",
+          "file": "modules/stackx/module_stackx_soc.md",
+          "name": "StackX SOC Operations",
+          "required": false,
+          "summary": "Security monitoring and incident response operated by Verto Wave on the StackX platform.",
+          "notes": "A managed service: included only when managed services are part of the offering.",
+          "requires": "managed_services"
+        },
+        {
+          "token": "module_stackx_devops",
+          "file": "modules/stackx/module_stackx_devops.md",
+          "name": "StackX DevOps Framework",
+          "required": false,
+          "summary": "A governed release pipeline from development to production with digital change records."
+        },
+        {
+          "token": "module_stackx_alm",
+          "file": "modules/stackx/module_stackx_alm.md",
+          "name": "StackX Application Lifecycle Management (ALM)",
+          "required": false,
+          "summary": "Performance and functional test automation for applications before release."
         },
         {
           "token": "module_stackx_call_center",
           "file": "modules/stackx/module_stackx_call_center.md",
           "name": "StackX Call Center Management",
           "required": false,
-          "notes": "Placeholder — content still to be authored; SME review required before use in a live bid.",
-          "placeholder": true
+          "summary": "Omnichannel contact center with skills-based routing, IVR and quality management."
+        }
+      ]
+    },
+    "optional_sections": {
+      "group": "Optional Proposal Sections",
+      "description": "Additional sections an evaluation panel often expects. Select per bid.",
+      "modules": [
+        {
+          "token": "section_about_vertowave",
+          "file": "modules/optional/section_about_vertowave.md",
+          "name": "About Verto Wave",
+          "required": false,
+          "summary": "Company profile, sectors, certifications and references."
         },
         {
-          "token": "module_stackx_event_log_mgmt",
-          "file": "modules/stackx/module_stackx_event_log_mgmt.md",
-          "name": "StackX Event & Log Management (SIEM)",
+          "token": "section_understanding",
+          "file": "modules/optional/section_understanding.md",
+          "name": "Understanding of the Requirement",
           "required": false,
-          "notes": "Log ingestion/parsing/enrichment, MITRE ATT&CK mapping, data retention tiers (hot/warm/cold/frozen), distributed search, correlation rules, ML jobs."
+          "summary": "The requirement restated in the customer's terms."
         },
         {
-          "token": "module_stackx_soc",
-          "file": "modules/stackx/module_stackx_soc.md",
-          "name": "StackX SOC Operations (SIEM/SOAR/EDR/XDR/NDR/TIP/UEBA/VulnMgmt/CaseMgmt)",
-          "required": false,
-          "notes": "Composite SOC module. Includes automated response/SOAR playbooks, EDR/XDR endpoint telemetry, NDR/DPI/packet capture/TLS decryption, TIP/STIX-TAXII IoC lifecycle, UEBA behavioral baselining, vulnerability scanning/prioritization, incident triage & unified case mgmt."
+          "token": "section_solution_architecture",
+          "file": "modules/optional/section_solution_architecture.md",
+          "name": "Solution Architecture",
+          "required": true,
+          "summary": "How the selected DeviceX and StackX components fit together."
         },
         {
-          "token": "module_stackx_security",
-          "file": "modules/stackx/module_stackx_security.md",
-          "name": "StackX Security (SIEM / EDR / XDR / NDR / TIP / UEBA / VulnMgmt / CaseMgmt)",
+          "token": "section_hardware_sizing",
+          "file": "modules/optional/section_hardware_sizing.md",
+          "name": "DeviceX Hardware Specifications & Sizing",
           "required": false,
-          "notes": "Unified security monitoring and response: SIEM, EDR/XDR, NDR, TIP, UEBA, vulnerability and case management, with the Native/Integrated/Assured delivery modes and the extended security services catalogue. Use the StackX SOC Operations module instead of, or as well as, this one for a full SOC operations scope."
+          "summary": "Appliance specifications, site classes and central infrastructure sizing.",
+          "requires": "devicex"
         },
         {
-          "token": "module_stackx_devops",
-          "file": "modules/stackx/module_stackx_devops.md",
-          "name": "StackX DevOps Framework (CI/CD / IaC / DevSecOps)",
+          "token": "section_timeline",
+          "file": "modules/optional/section_timeline.md",
+          "name": "Implementation Timeline",
           "required": false,
-          "notes": "CI/CD pipelines, IaC (Terraform/Ansible), DevSecOps security integration, Dev→Staging→Prod pipeline with go/no-go gates, digital change/release record backbone, UAT governance, rollback planning."
+          "summary": "Indicative phase durations and milestones.",
+          "requires": "services"
+        },
+        {
+          "token": "section_support_warranty",
+          "file": "modules/optional/section_support_warranty.md",
+          "name": "Support & Warranty",
+          "required": false,
+          "summary": "Software support, hardware warranty and support coverage.",
+          "requires": "licenses"
+        },
+        {
+          "token": "section_compliance_matrix",
+          "file": "modules/optional/section_compliance_matrix.md",
+          "name": "Compliance Matrix",
+          "required": false,
+          "summary": "Point-by-point response to the RFP requirements.",
+          "appendix": true
+        },
+        {
+          "token": "section_glossary",
+          "file": "modules/optional/section_glossary.md",
+          "name": "Glossary",
+          "required": true,
+          "summary": "Terms and abbreviations used in the proposal.",
+          "appendix": true
         }
       ]
     },
     "cross_cutting": {
-      "group": "Cross-cutting / reusable sections",
-      "description": "Included in every proposal unless explicitly excluded.",
+      "group": "Cross-Cutting Sections",
+      "description": "Standard sections. Sections that do not apply to the selected offering are left out automatically.",
       "modules": [
         {
           "token": "section_cover_execsummary",
           "file": "modules/cross_cutting/section_cover_execsummary.md",
-          "name": "Cover Page & Executive Summary",
+          "name": "Cover Page",
           "required": true,
+          "summary": "Cover page.",
           "show_title": false
         },
         {
-          "token": "section_assumptions",
-          "file": "modules/cross_cutting/section_assumptions.md",
-          "name": "Assumptions, Dependencies & Risks",
-          "required": true
-        },
-        {
-          "token": "section_out_of_scope",
-          "file": "modules/cross_cutting/section_out_of_scope.md",
-          "name": "Out-of-Scope Activities",
-          "required": true
-        },
-        {
-          "token": "section_change_mgmt",
-          "file": "modules/cross_cutting/section_change_mgmt.md",
-          "name": "Change Management Procedure",
-          "required": true
-        },
-        {
-          "token": "section_pm_methodology",
-          "file": "modules/cross_cutting/section_pm_methodology.md",
-          "name": "Project Management Methodology",
-          "required": true
-        },
-        {
-          "token": "section_ola",
-          "file": "modules/cross_cutting/section_ola.md",
-          "name": "Operations Level Agreement (OLA) Template",
+          "token": "section_document_control",
+          "file": "modules/cross_cutting/section_document_control.md",
+          "name": "Document Control",
           "required": true,
-          "notes": "4-priority model, 8x5 Sun–Thu 9–5, RACI, escalation hierarchy, reporting cadence. Placeholder response times — confirm per bid."
+          "summary": "Document information and change history."
         },
         {
-          "token": "section_training",
-          "file": "modules/cross_cutting/section_training.md",
-          "name": "Training Services",
+          "token": "section_exec_summary",
+          "file": "modules/cross_cutting/section_exec_summary.md",
+          "name": "Executive Summary",
           "required": true,
-          "notes": "Standalone training and knowledge-transfer section with a course matrix to tailor per bid."
-        },
-        {
-          "token": "section_roles",
-          "file": "modules/cross_cutting/section_roles.md",
-          "name": "Roles & Responsibilities (VertoWave + Customer)",
-          "required": true
+          "summary": "Customer context, objectives and the proposed scope."
         },
         {
           "token": "section_professional_services",
           "file": "modules/cross_cutting/section_professional_services.md",
           "name": "Professional Services — Architecture, Design, Implementation & Roll-out",
           "required": true,
-          "notes": "Standalone services engagement module. 18 mandatory scope-number slots (branches, network devices, apps monitored, workflows, endpoints, NVR cameras, IoT devices, tunnels, firewall policies, PBX extensions, virtualisation workloads, integrations, roles, training attendees, training sessions, acceptance-test sites, arch workshops, arch diagrams). In-scope and out-of-scope written to complete each other per phase. Separate from platform capability modules."
+          "summary": "Quantified architecture, design, implementation and roll-out services.",
+          "requires": "services"
+        },
+        {
+          "token": "section_pm_methodology",
+          "file": "modules/cross_cutting/section_pm_methodology.md",
+          "name": "Project Management Methodology",
+          "required": true,
+          "summary": "PMI-mapped stages, delivery phasing and deliverables.",
+          "requires": "services"
+        },
+        {
+          "token": "section_roles",
+          "file": "modules/cross_cutting/section_roles.md",
+          "name": "Roles & Responsibilities",
+          "required": true,
+          "summary": "Engagement organization and responsibilities of both parties.",
+          "requires": "services or managed_services"
+        },
+        {
+          "token": "section_training",
+          "file": "modules/cross_cutting/section_training.md",
+          "name": "Training & Knowledge Transfer",
+          "required": true,
+          "summary": "Courses, audience and content for the selected modules."
+        },
+        {
+          "token": "section_ola",
+          "file": "modules/cross_cutting/section_ola.md",
+          "name": "Operations Level Agreement (OLA)",
+          "required": true,
+          "summary": "Service levels for the managed operations service.",
+          "notes": "Included only when managed services are part of the offering.",
+          "requires": "managed_services"
+        },
+        {
+          "token": "section_assumptions",
+          "file": "modules/cross_cutting/section_assumptions.md",
+          "name": "Assumptions, Dependencies & Risks",
+          "required": true,
+          "summary": "Engagement assumptions, acceptance terms, dependencies and risks."
+        },
+        {
+          "token": "section_out_of_scope",
+          "file": "modules/cross_cutting/section_out_of_scope.md",
+          "name": "Out-of-Scope Activities",
+          "required": true,
+          "summary": "The single list of exclusions for the proposal."
+        },
+        {
+          "token": "section_change_mgmt",
+          "file": "modules/cross_cutting/section_change_mgmt.md",
+          "name": "Change Management Procedure",
+          "required": true,
+          "summary": "How scope changes are requested, assessed and agreed.",
+          "requires": "services or managed_services"
         },
         {
           "token": "section_validity",
           "file": "modules/cross_cutting/section_validity.md",
-          "name": "Proposal Validity / Expiry Clause",
+          "name": "Proposal Validity",
           "required": true,
-          "notes": "12-month default expiry from Effective Date; extension by mutual agreement 3+ months before expiry. Confirm legal review per bid."
-        },
-        {
-          "token": "section_document_control",
-          "file": "modules/cross_cutting/section_document_control.md",
-          "name": "Document Control (metadata, classification, change history)",
-          "required": true
+          "summary": "Validity period and effective date."
         }
       ]
     }
@@ -303,10 +430,10 @@
     "customer_short": "Short name for headers/footers (e.g. EGYCash)",
     "rfp_reference": "RFP/ITB/quotation reference number if any",
     "proposal_date": "Date the proposal is issued (DD Month YYYY)",
-    "prepared_by": "VertoWave entity preparing the proposal",
+    "prepared_by": "Verto Wave entity preparing the proposal",
     "customer_primary_contact": "Customer primary contact name/role/email",
     "engagement_name": "Customer-facing engagement/project name (e.g. DeviceX Branch-in-a-Box)",
-    "site_count": "Number of sites/branches/locations — used to flag hardware sizing as a separate exercise",
+    "site_count": "Number of sites in scope (e.g. '28 branches across Egypt')",
     "compliance_frameworks": "Customer-specific regulatory/compliance frameworks to call out (e.g. CBE, FRA, education-sector)",
     "validity_period_months": "Proposal validity in months (default 12)",
     "effective_date": "Effective date of the proposal/agreement",
@@ -352,7 +479,19 @@
     "services_training_sessions": "Professional Services: training sessions",
     "services_acceptance_sites": "Professional Services: acceptance-test sites",
     "services_arch_workshops": "Professional Services: architecture / design workshops",
-    "services_arch_diagrams": "Professional Services: architecture diagrams to be produced"
+    "services_arch_diagrams": "Professional Services: architecture diagrams to be produced",
+    "customer_profile": "Short profile of the customer for the executive summary — can be drafted by Hermes and must be approved by a person",
+    "requirement_summary": "Two or three sentences restating what the customer has asked for (Understanding of the Requirement)",
+    "key_requirements": "The RFP's main requirements, one per line starting with '- ' (Understanding of the Requirement)",
+    "timeline_design_weeks": "Implementation timeline: envisioning and design, in weeks",
+    "timeline_core_weeks": "Implementation timeline: core build, in weeks",
+    "timeline_pilot_weeks": "Implementation timeline: pilot site, in weeks",
+    "timeline_rollout_weeks": "Implementation timeline: site roll-out, in weeks",
+    "timeline_stackx_weeks": "Implementation timeline: StackX implementation, in weeks",
+    "timeline_training_weeks": "Implementation timeline: training and handover, in weeks",
+    "support_term_months": "Software support and maintenance term, in months from license delivery (e.g. '12')",
+    "hardware_warranty_months": "DeviceX hardware warranty against manufacturing defects, in months (e.g. '12')",
+    "support_coverage": "Support coverage hours (e.g. '8x5, Sunday to Thursday, 9 AM to 5 PM local time')"
   },
   "banned_terms": [
     "EGYCash",
@@ -374,5 +513,74 @@
     "Educational City",
     "Roxy",
     "RDH"
+  ],
+  "third_party_terms": [
+    "Elasticsearch",
+    "Elastic Stack",
+    "Elastic Common Schema",
+    "Logstash",
+    "Kibana",
+    "StackXsearch",
+    "OpenShift",
+    "Kubernetes",
+    "Docker",
+    "KVM",
+    "Suricata",
+    "Terraform",
+    "Ansible",
+    "Microsoft",
+    "Windows",
+    "MS Office",
+    "Active Directory",
+    "VMware",
+    "vCenter",
+    "vCloud",
+    "AWS",
+    "Amazon Web Services",
+    "Azure",
+    "Google Cloud",
+    "Cisco",
+    "CiscoWorks",
+    "Oracle",
+    "SAP",
+    "Salesforce",
+    "Siebel",
+    "WebSphere",
+    "WebLogic",
+    "Glassfish",
+    "LoadRunner",
+    "UFT",
+    "SMAX",
+    "OpenText",
+    "Micro Focus",
+    "Hewlett Packard",
+    "HPE",
+    "IDOL",
+    "Dynatrace",
+    "New Relic",
+    "AppDynamics",
+    "BMC",
+    "Troux",
+    "Emerson",
+    "Helion",
+    "OpenStack",
+    "CloudWatch",
+    "ServiceNow",
+    "Jira",
+    "Splunk",
+    "Zabbix",
+    "Grafana",
+    "Prometheus",
+    "Fortinet",
+    "FortiGate",
+    "Palo Alto",
+    "Check Point",
+    "Sophos",
+    "Veeam",
+    "Commvault",
+    "Intel",
+    "Xeon",
+    "Ubuntu",
+    "Asterisk"
   ]
 }

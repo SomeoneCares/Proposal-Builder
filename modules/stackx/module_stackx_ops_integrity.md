@@ -1,4 +1,4 @@
-# StackX Operations Integrity Platform
+# StackX Operations Integrity
 
 **Token:** `{{module_stackx_ops_integrity}}`  
 **Group:** StackX — Control / Orchestration / SOC / Operations Layer  
@@ -8,66 +8,49 @@
 
 ## Overview
 
-*[Placeholder — module to be authored from source material describing the StackX Operations Integrity Platform.]*
+StackX Operations Integrity assures that {{customer_short}}'s systems are operated as intended: that configurations match their approved baselines, that only authorized people perform operations, and that every operational action can be proven afterwards.
 
-## To be authored
+## Key Capabilities
 
-This module's content is to be authored from the source material for the StackX Operations Integrity Platform before the module is included in a live proposal. Until then, include only with explicit subject-matter review.
+### Baselines and Drift Detection
 
-## Sub-components (to be confirmed from source)
+- Approved configuration baselines for in-scope systems
+- Continuous comparison of running configurations against their baselines
+- Immediate alerts on unapproved drift, with the difference and the affected system identified
 
-### Systems Operations Integrity
+### Controlled Access to Operations
 
-Operational integrity capabilities typically include:
+Access to operational interfaces is brokered through an identity-aware access layer rather than trusted network locations:
 
-- Systems operations integrity monitoring and enforcement
-- Configuration and change integrity baselines
-- Operational control validation for in-scope systems
-- Integrity reporting for governance and audit
+- Access is granted per request after continuous evaluation of the user's identity, multi-factor authentication state and device health.
+- Internal management interfaces are hidden from unauthorized users entirely.
+- Access can be revoked immediately when a risk signal changes, for example when a device's security posture degrades.
 
-### DeviceX SASE & ZTNA Framework
+### Verified Operations
 
-Zero Trust Network Access (ZTNA) and SASE framework capabilities typically include:
+- Every administrative session and action recorded against a named identity
+- Operational changes matched to approved change records
+- Unapproved or out-of-window actions flagged for investigation
 
-- Device visibility and profiling for policy-driven access
-- Zero Trust enforcement for access to internal assets
-- On-prem edge ZTNA technology
-- LAN/WAN conditional secure access controls
-- Device health assessment for access decisions
-- User authentication integration against common identity technologies
-- Protection of internal assets through ZTNA policy
+### Integrity Case Handling
 
----
+Integrity events — drift, unapproved changes, unusual administrative behavior — are raised as cases with their evidence attached, assigned to an owner and tracked to closure, with role-based access for handlers.
 
-## Figure — Operations Integrity / Integrity-Check Flow
+<!-- Diagram guidance: approved baseline vs running configuration with drift alerts; administrators reaching systems only through the identity-aware access layer; every action linked to a change record. -->
+[[figure: operations-integrity | Baselines, controlled access and verified operations]]
 
-<!-- IMAGE PLACEMENT GUIDANCE — insert approved generic image here -->
-<!-- Recommended image: a generic operations-integrity diagram showing integrity monitoring, baseline comparison, anomaly detection, and integrity-check/remediation flow. No customer-specific integrity-check targets, no customer-specific system names, no customer site names. -->
-<!-- Suggested source: generic operations-integrity reference model — no customer-specific content from prior proposals is carried. -->
-<!-- Generic-only rule: do not insert any image that names or depicts the customer's specific environment, architecture, site names, or branding. Replace customer-specific labels before use. -->
-<!-- To embed: place the approved image file at this location in the final docx (deferred — combine.py is text-only for now). -->
+## Value
 
-*[Figure placeholder — insert approved generic operations-integrity / integrity-check-flow diagram here. See image-placement guidance notes.]*
+- Configuration errors and unauthorized changes found in minutes, not at the next outage
+- Excessive standing access to production systems removed
+- Evidence for auditors and regulators that operations follow approved processes
 
----
+## Integration
 
-### Integrated Security Controls & Case Management
-
-Integrated security control and case management capabilities typically include:
-
-- Integrated security control enforcement across in-scope systems
-- Centralized case management for security and operational incidents
-- Workflow and collaboration for incident handlers
-- Role-based access control for case management and incident handling
-- Integration with SIEM, ITSM, and observability for unified incident context
-
-## Out-of-Scope (explicitly)
-
-- Any security penetration testing, vulnerability assessment, code review, and forensics activities unless explicitly in scope.
-- Any ZTNA/SASE implementation for components that don't support standard protocols used by DeviceX.
-- Operating 3rd party systems aside from the systems included in this scope.
-- Any development and debugging activities not explicitly in scope.
+- Uses identities and roles from StackX Identity Management. <!-- if module_stackx_idm -->
+- Checks operational changes against approved change records in StackX ITSM. <!-- if module_stackx_itSM -->
+- Shares integrity events with StackX Security for correlation with other threats. <!-- if module_stackx_security -->
 
 ---
 
-*This module is a placeholder pending content authoring. Do not include in a live proposal without completing the module content and SME review.*
+*This module is a reusable building block. Confirm the systems under baseline and the operational interfaces to be brokered per bid.*

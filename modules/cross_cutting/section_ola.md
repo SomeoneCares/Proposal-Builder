@@ -1,142 +1,78 @@
-# Operations Level Agreement (OLA) Template
+# Operations Level Agreement (OLA)
 
 **Token:** `{{section_ola}}`  
 **Group:** Cross-Cutting  
-**Required:** Yes
+**Required:** No
 
 ---
 
 ## Introduction
 
-This OLA outlines the level of service, priority definitions, response times, escalation times, authority matrix, and RACI model provided by Verto Wave for the IT managed services to the customer. The aim is to ensure timely and effective handling of incidents and requests to maintain optimal performance and availability of IT services.
+This Operations Level Agreement defines the service levels, priority definitions, response and escalation times, authority matrix and RACI model for the managed services Verto Wave provides to {{customer_short}}. Its aim is timely and effective handling of incidents and requests, to keep the in-scope services performing and available.
 
-*[Note: The OLA below is a reusable template. Response times, escalation times, operations team availability, and the RACI model must be confirmed per bid. Do not issue with placeholder values without validation against the current customer's SLA/OLA requirements.]*
+*[Response times, escalation times, coverage hours and the RACI model must be confirmed per bid against {{customer_short}}'s service-level requirements.]*
 
 ## Priority Definitions
 
-Incidents and requests are categorized based on their priority and impact on business operations. The following priority levels are defined:
+| Priority | Definition |
+| :--- | :--- |
+| Priority 1 (Critical) | The entire system or a critical business function is down, with severe impact on operations and no workaround. |
+| Priority 2 (High) | A major component or business function is severely impacted; a workaround may exist but is not sustainable. |
+| Priority 3 (Medium) | A non-critical component is impacted, causing moderate disruption; a workaround exists. |
+| Priority 4 (Low) | A minor issue or request with little or no impact on business operations. |
 
-### Priority 1 (Critical)
+### Examples
 
-**Definition:** The entire system or a critical business function is down, causing a severe impact on operations with no workaround.
+- **Priority 1:** central platform unavailable; loss of overlay connectivity for a location; no service possible at multiple sites. <!-- if devicex -->
+- **Priority 1:** central platform unavailable; loss of monitoring or security visibility across the estate. <!-- if stackx and not devicex -->
+- **Priority 2:** single site offline; service quality persistently below target at a site. <!-- if devicex -->
+- **Priority 2:** NVR not recording at a site. <!-- if module_nvr -->
+- **Priority 2:** call queue misrouting. <!-- if module_ipbx or module_stackx_call_center -->
+- **Priority 3:** single extension fault. <!-- if module_ipbx -->
+- **Priority 3:** monitoring dashboard error; intermittent minor degradation on a secondary path.
+- **Priority 4:** general inquiries, routine service requests, report additions and cosmetic issues.
 
-**Examples:** Loss of overlay connectivity for a location; central platform unavailable; hub down; no session possible at multiple sites.
+## Response and Escalation Times
 
-### Priority 2 (High)
-
-**Definition:** A major component of the system or a major business function is severely impacted, causing significant disruption. A workaround may exist but is not sustainable for long-term use.
-
-**Examples:** Single site offline; session quality persistently below target at a site; NVR not recording; queue misrouting.
-
-### Priority 3 (Medium)
-
-**Definition:** A non-critical component is impacted, causing moderate disruption. A workaround exists and operations can continue.
-
-**Examples:** Single extension fault; monitoring dashboard error; intermittent minor quality degradation on a secondary path.
-
-### Priority 4 (Low)
-
-**Definition:** A minor issue or request that has little to no impact on business operations.
-
-**Examples:** General enquiries, routine service requests, report additions, cosmetic issues.
-
-## Operations Levels and Response Times
-
-Response times are defined based on the priority of the incident or request and the level required.
-
-*[The response-time table below reflects a common VertoWave baseline from prior proposals. Confirm and adjust per bid.]*
-
-| Priority | Response Time | Escalation to L2 | Escalation to L3 |
+| Priority | Response | Escalation to L2 | Escalation to L3 |
 | :--- | :--- | :--- | :--- |
-| Priority 1 | 30 Business Minutes | 1 Business Hour | 2 Business Hours |
-| Priority 2 | 1 Business Hour | 2 Business Hours | 4 Business Hours |
-| Priority 3 | 2 Business Hours | 4 Business Hours | 1 Business Day |
-| Priority 4 | 4 Business Hours | 1 Business Day | 2 Business Days |
+| Priority 1 | 30 business minutes | 1 business hour | 2 business hours |
+| Priority 2 | 1 business hour | 2 business hours | 4 business hours |
+| Priority 3 | 2 business hours | 4 business hours | 1 business day |
+| Priority 4 | 4 business hours | 1 business day | 2 business days |
 
 ## Operations Team Availability
 
-Verto Wave commits to providing operations services 8x5 (Sunday to Thursday, 9am–5pm), ensuring continuous availability and quick response to all incidents and requests.
+Verto Wave provides operations services 8x5, Sunday to Thursday, 9 AM to 5 PM local time.
 
-*[If 24x7 or extended coverage is required, this must be explicitly agreed and documented per bid. 24x7 coverage is aligned to service hours across all locations and the central site, and applies where the customer selects the extended operations option.]*
+*[If 24x7 or extended coverage is required, it must be explicitly agreed and documented per bid.]*
 
 ## Authority Matrix
 
-The following authority matrix outlines the roles and responsibilities for incident management and escalation:
-
-### L1 Operations Engineer
-
-The first point of contact for all IT-related requests/issues.
-
-- Receiving calls and incidents from help desk.
-- Logging tickets.
-- Verifying the issue and performing basic troubleshooting.
-- Executing approved standard actions.
-- Escalating cases beyond their skills to Level 2 specialists.
-
-### L2 Operations Engineer
-
-Handles more complex technical requests and issues escalated by L1.
-
-- Work on escalated cases regarding provided solutions.
-- Implement approved changes and configurations.
-- Update, close, and approve closure of tickets.
-- Escalate cases beyond their skills to Level 3 specialists.
-
-### L3 Operations Engineer
-
-Subject matter expert responsible for resolving the most advanced IT requests and issues.
-
-- Work on escalated cases from Level 2.
-- Implement approved advanced changes and configurations.
-- Opening support tickets and managing communication with the vendor.
-
-### Operations Team Lead
-
-Oversees the L1 and L2 Operations teams, ensuring efficient and effective incident management and service delivery.
-
-### Operations Manager
-
-Leads the L3 Operations team, focusing on strategic IT initiatives, complex problem resolution, and continuous improvement of IT services.
-
-### Technical Account Manager
-
-Customer-facing role focusing on managing and supporting the technical aspects and relationship with its clients.
-
----
-
-## Figure — <Insert approved generic diagram / screenshot here>
-
-<!-- IMAGE PLACEMENT GUIDANCE — insert approved generic image here -->
-<!-- Recommended image: a generic diagram or screenshot relevant to this section's content (architecture, flow, dashboard, or topology as appropriate). No customer-specific names, environment, architecture, site names, or branding. -->
-<!-- Generic-only rule: do not insert any image that names or depicts the customer's specific environment, architecture, site names, or branding. Replace customer-specific labels before use. -->
-<!-- To embed: place the approved image file at this location in the final docx (deferred — combine.py is text-only for now). -->
-
-*[Figure placeholder — insert approved generic image here. See image-placement guidance notes.]*
-
----
+- **L1 operations engineer** — first point of contact: receives incidents from the help desk, logs tickets, verifies the issue, performs basic troubleshooting and approved standard actions, and escalates to L2.
+- **L2 operations engineer** — works escalated cases, implements approved changes and configurations, updates and closes tickets, and escalates to L3.
+- **L3 operations engineer** — subject-matter expert for the most advanced cases; implements approved advanced changes and manages communication with vendors.
+- **Operations team lead** — oversees the L1 and L2 teams to ensure effective incident management and service delivery.
+- **Operations manager** — leads the L3 team, complex problem resolution and continuous improvement.
+- **Technical account manager** — {{customer_short}}-facing role managing the technical relationship.
 
 ## RACI Model
 
-The RACI model outlines who is Responsible, Accountable, Consulted, and Informed for various tasks and activities.
+*[Attach or insert the RACI matrix per bid. In some engagements the operations team lead covers both the L1 and L2 lead functions.]*
 
-*[Attach or insert the RACI matrix per bid. Note: in some cases the Operations Team Lead can assume both functions of L1 and L2 Operations Manager.]*
+## Escalation
 
-## Escalation Process
-
-If an incident is not resolved within the specified resolution time, it will be escalated according to the following hierarchy:
-
-- **First Escalation:** Operations Team Lead
-- **Second Escalation:** Operations Manager
+If an incident is not resolved within the specified time, it is escalated first to the operations team lead and then to the operations manager.
 
 ## Reporting and Review
 
-Regular reports on OLA performance will be provided to the customer on a monthly basis. OLA performance reviews will be conducted quarterly to ensure service quality and identify areas for improvement. Reporting includes per-location availability, service quality trend and incident summary.
+OLA performance is reported to {{customer_short}} monthly and reviewed quarterly to confirm service quality and identify improvements. Reports include availability, service-quality trends and an incident summary.
 
 ## OLA Conditions
 
-- The OLA clock will be paused if the case falls outside Verto Wave coverage or is dispatched to the customer team.
-- Customer-reported critical and major requests must be raised by phone or email to be eligible for the KPIs.
+- The OLA clock is paused while a case is outside Verto Wave's coverage or dispatched to {{customer_short}}'s team.
+- Critical and major requests must be raised by phone or email to be eligible for the KPIs.
 
 ---
 
-*This section is a reusable building block. The OLA template above reflects the standard 4-priority, 8x5 model used across prior VertoWave proposals. Per-bid: confirm priority definitions, response/escalation times, coverage hours, RACI assignments, and KPI eligibility rules with the customer and with VertoWave Operations before issuance.*
+*This section applies only when managed services are part of the offering. Confirm priority definitions, times, coverage and KPI rules with Verto Wave Operations before issue.*

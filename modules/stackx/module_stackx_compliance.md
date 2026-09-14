@@ -1,4 +1,4 @@
-# StackX Compliance Assurance System
+# StackX Compliance Assurance
 
 **Token:** `{{module_stackx_compliance}}`  
 **Group:** StackX — Control / Orchestration / SOC / Operations Layer  
@@ -8,44 +8,48 @@
 
 ## Overview
 
-*[Placeholder — module to be authored from source material describing StackX Compliance Assurance System.]*
+StackX Compliance Assurance continuously measures {{customer_short}}'s estate against the standards and regulations that apply to it, and keeps the evidence needed to prove it. It turns compliance from a periodic audit exercise into a continuously maintained position.
 
-## To be authored
+## Key Capabilities
 
-This module's content is to be authored from the source material for StackX Compliance Assurance System before the module is included in a live proposal. Until then, include only with explicit subject-matter review.
+### Continuous Assessment
 
-## Typical scope areas (to be confirmed from source)
+- Active and passive scanning of the internal network and external attack surface to find missing patches, insecure configurations and default passwords
+- Authenticated and unauthenticated scanning, with automated asset discovery
+- Configuration assessment against security benchmarks such as the CIS benchmarks
 
-Compliance Assurance capability areas typically include:
+### Standards and Regulatory Mapping
 
-- Compliance dashboard usage for regulatory and standards alignment (e.g., CIS, PCI-DSS, and other relevant frameworks)
-- Monitoring where data resides and ensuring encryption-at-rest compliance
-- Automated compliance reporting for standards and regulatory requirements
-- Compliance evidence collection and reporting for audits
-- Contextual compliance views for the customer's applicable regulations where relevant
-- Integration with configuration management and security controls for compliance posture
+- Compliance dashboards for standards such as CIS and PCI-DSS, and for {{customer_short}}'s applicable regulations: {{compliance_frameworks}}
+- Monitoring of where data resides and whether encryption at rest is in place
+
+### Evidence and Audit Readiness
+
+- Automated compliance reports for standards and regulatory requirements
+- Collection and retention of compliance evidence for audits
+- A complete trail of findings, remediation actions and exceptions
+
+### Remediation Tracking
+
+- Findings assigned to owners with target dates
+- Progress and aging of open findings visible to management
+- Accepted exceptions recorded with their justification and review date
+
+<!-- Diagram guidance: assessment sources (scans, configuration checks) → findings mapped to controls → remediation tracking → audit evidence and reports. -->
+[[figure: compliance-assurance | Continuous compliance assessment and evidence]]
+
+## Value
+
+- A smaller attack surface and actionable metrics for patching teams
+- Continuous regulatory compliance instead of point-in-time audits
+- Audit preparation in days rather than weeks, with evidence already collected
+
+## Integration
+
+- Uses retained logs from StackX Event & Log Management as audit evidence. <!-- if module_stackx_event_log_mgmt -->
+- Feeds vulnerability findings to StackX Security for exploitation-based prioritization. <!-- if module_stackx_security -->
+- Tracks remediation tasks as tickets in StackX ITSM. <!-- if module_stackx_itSM -->
 
 ---
 
-## Figure — Compliance Framework / Audit-Trail Diagram
-
-<!-- IMAGE PLACEMENT GUIDANCE — insert approved generic image here -->
-<!-- Recommended image: a generic compliance-framework diagram showing compliance domains, controls, evidence, and audit trail — aligned to the customer's compliance framework confirmed per bid. No customer-specific control names that reveal the customer's regulatory regime beyond what is agreed, no customer site names. -->
-<!-- Suggested source: generic compliance reference model — no customer-specific content from prior proposals is carried. -->
-<!-- Generic-only rule: do not insert any image that names or depicts the customer's specific environment, architecture, site names, or branding. Replace customer-specific labels before use. -->
-<!-- To embed: place the approved image file at this location in the final docx (deferred — combine.py is text-only for now). -->
-
-*[Figure placeholder — insert approved generic compliance-framework / audit-trail diagram here. See image-placement guidance notes.]*
-
----
-
-## Out-of-Scope (explicitly)
-
-- Any security penetration testing, vulnerability assessment, code review, and forensics activities not explicitly in scope.
-- Any compliance certification or attestation not explicitly in scope.
-- Operating 3rd party systems aside from the systems included in this scope.
-- Any development and debugging activities not explicitly in scope.
-
----
-
-*This module is a placeholder pending content authoring. Do not include in a live proposal without completing the module content and SME review.*
+*This module is a reusable building block. Confirm the standards, regulations and scanning scope per bid. Do not claim certification or attestation on {{customer_short}}'s behalf.*

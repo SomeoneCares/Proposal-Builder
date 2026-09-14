@@ -8,110 +8,72 @@
 
 ## Overview
 
-Verto Wave Project Management Methodology consists of five stages. The methodology is mapped to the PMI standard Project Management Process Groups, and RAID (Risks, Assumptions, Issues, Dependencies) logging is used throughout the project lifecycle.
-
-## Project Management Stages
-
-The overall project lifecycle and their interrelations are depicted in the project management stages diagram.
-
-- **Envisioning**
-- **Designing & Planning**
-- **Building (Deployment, Stabilization and Testing)**
-- **Monitoring & Controlling**
-- **Closure**
-
-## PMI Process Group Mapping
+The Verto Wave project management methodology has five stages, mapped to the PMI project management process groups. A RAID log (risks, actions, issues and decisions) is maintained throughout the project.
 
 | PMI Process Group | Verto Wave Project Stage |
 | :--- | :--- |
-| Initiating Process Group | Envisioning |
-| Planning Process Group | Designing & Planning |
-| Executing Process Group | Building |
-| Monitoring & Controlling Process Group | Monitoring & Controlling |
-| Closing Process Group | Closure |
+| Initiating | Envisioning |
+| Planning | Designing and Planning |
+| Executing | Building (deployment, stabilization and testing) |
+| Monitoring and Controlling | Monitoring and Controlling |
+| Closing | Closure |
 
-## Stage 1 — Envisioning
+<!-- Diagram guidance: the five stages as a left-to-right flow, with Monitoring and Controlling spanning underneath. -->
+[[figure: pm-stages | Verto Wave project management stages]]
 
-Envisioning stage is generally when a project is formally approved and assigned to a Project Manager and Tech Lead. Two main activities should be completed during this project stage: developing the project charter and identifying key project stakeholders.
+## Project Stages
 
-The main objective of this stage is launching the project, getting the required data regarding the customer's environment, and aligning the currently identified stakeholders with the project's objectives, constraints, and timeline.
+### Envisioning
 
-During this stage, a consecutive series of technical workshops should be held so the project management team deeply goes inside what is already on the ground at the customer side. This can serve as an early form of planning; it sets the stage for the more formal planning process that will take place during the project's Designing & Planning stage.
+The project is formally approved and assigned to a project manager and technical lead. The project charter is developed and the key stakeholders are identified. A series of technical workshops establishes what is already in place at {{customer_short}} and aligns stakeholders with the project's objectives, constraints and timeline.
 
-## Stage 2 — Designing & Planning
+### Designing and Planning
 
-In this stage, the project management team will start the planning process to build a solid ground for the project. The planning stage is where they evaluate and manage the timeframe, and the possible risks of the project.
+The project plan is developed and the timeframe and risks are evaluated. The plan is used to monitor project performance throughout the lifecycle. The key outcomes are a confirmed scope document with the detailed scope of work, and confirmed project management deliverables.
 
-The most important task here is to develop the project plan which will be used for Project Performance Monitoring throughout the project life cycle in the Monitoring and Controlling stage.
+### Building
 
-The most important outcomes of this stage are:
+The work defined in the approved project plan is carried out, coordinating all resources so the project keeps delivering its objectives. Deliverables are built, tested and stabilized in line with the plan. Only changes approved by the steering committee or change control board are implemented.
 
-- A confirmed Scope document, which includes the project detailed scope of work
-- Confirmed project management deliverables
+### Monitoring and Controlling
 
-## Stage 3 — Building (Deployment, Stabilization and Testing)
+Project work is tracked and reviewed throughout all stages to regulate progress and performance, identify where the plan must change, and initiate those changes. The RAID log records:
 
-This stage is focused on completing the work defined in the Project Plan, which is completed and approved by the stakeholders at the end of the project planning stage. It involves coordinating all the resources to get the work done efficiently and effectively so that the project keeps delivering the promised objective.
+- **Risks** — potential challenges, their causes and effects, and the mitigation strategy
+- **Actions** — planned tasks, their owners and timelines
+- **Issues** — problems encountered, how they arose and how they were resolved
+- **Decisions** — choices made, by whom and when
 
-This stage is where most of the work is carried out, and where products and deliverables are built, assembled, constructed, and created.
+### Closure
 
-The most important output here is the Deliverable, which is produced in line with the defined Project Plan.
+The project is completed and authorized by {{customer_short}}'s designated authority. The handover and acceptance activities defined in the scope documentation are carried out, and the solution is handed over to {{customer_short}}.
 
-During this stage, Changes will also be implemented but only those which are Approved by the management or change control board or by the steering committee.
+## Delivery Phasing
 
----
+The stages above describe how the project is managed; the phasing below describes how delivery is sequenced. The central platform is proven before site roll-out begins, and the first site validates the model end to end before the remaining sites are delivered in parallel. <!-- if devicex -->
 
-## Figure — Delivery Phasing / Project Stages Diagram
-
-<!-- IMAGE PLACEMENT GUIDANCE — insert approved generic image here -->
-<!-- Recommended image: a generic delivery-phasing / project-stages diagram showing the phases (from the delivery phasing subsection: Phase 1 … through optional Phase 6 managed ops) and the 5-stage PMI-mapped PM methodology + RAID log. No customer-specific milestone names, no customer-specific dates, no customer site names. -->
-<!-- Generic-only rule: do not insert any image that names or depicts the customer's specific environment, architecture, site names, or branding. Replace customer-specific labels before use. -->
-<!-- To embed: place the approved image file at this location in the final docx (deferred — combine.py is text-only for now). -->
-
-*[Figure placeholder — insert approved generic delivery-phasing / project-stages diagram here. See image-placement guidance notes.]*
-
----
-
-## Stage 4 — Monitoring & Controlling
-
-Project monitoring activities are performed throughout all project stages. In this stage, project work is required to be tracked, reviewed, in order to regulate the progress and performance of the project; identify any areas in which changes to the plan are required; and initiate the corresponding changes.
-
-RAID technique is used to evaluate the effectiveness of a work assignment. RAID log is created and updated throughout project lifecycle.
-
-The term RAID is an acronym that represents the following terms that apply to project management:
-
-- **Risks:** Risks represent potential challenges that can interfere with the success of the assignment. The RAID log explains the risks and their causes; discusses the effects they can have on the project's goals and develops strategies for avoiding and overcoming them.
-- **Actions:** Actions are the tasks team members plan to work on to deliver a quality final product. In this section, project managers identify the employees responsible for the tasks and the timeline for finishing them.
-- **Issues:** Issues are hardships project management teams have encountered along the project. The log explains how the issue transpired, who contributed to its occurrence and what team members did to resolve it.
-- **Decisions:** Decisions are choices the group made throughout the course of the project, which allow employees to track changes to their objectives. In the log, project managers may write what they decided on, who made the decision and when they agreed on the choice.
-
-## Stage 5 — Closure
-
-Project closure is the final stage of project management methodology. It is when the project has been completed and finished successfully and authorized by the designated customer authority.
-
-At this stage, the handover and acceptance activities outlined in the scope documentation will be implemented. The key focus of the project closeout is the handover of the product, good, or service to the customer, whether physical or virtual.
-
-## Change Procedures
-
-Change management is handled per the Change Management Procedure section of this proposal.
-
-## Delivery Phasing (separate from the PM methodology above)
-
-The PM stages above describe how we manage the project. The phasing below describes how we sequence the delivery. They are complementary, not the same thing.
-
-Delivery is phased so that the central/core is proven before location rollout begins, and so the first location validates the model end to end before the remaining locations are executed in parallel.
-
-The pilot-then-parallel sequence is deliberate. The first location is where unknowns surface — carrier behaviour, customs, power, user workflow. Absorbing them once, into a template, is what allows the remaining locations to be delivered at pace rather than repeating the same discovery multiple times.
-
-| Phase | Focus | Key Outcomes |
+| Phase | Focus | Key outcomes |
 | :--- | :--- | :--- |
-| Phase 1 — Envisioning & Design | Requirements gathered, site profiles completed, classes assigned, traffic and security models agreed, call flows designed, design document signed off, hardware forecast issued. | Requirements gathered; site profiles completed; traffic and security models agreed; design document signed off; hardware forecast issued. |
-| Phase 2 — Core Build | Backend, hub, certificate authority, monitoring and log management, central platform and remote-room edge in service and validated. | Core platform components in service and validated. |
-| Phase 3 — Pilot Rollout | First location's sites provisioned via zero-touch, end-to-end session validated against the service quality targets, template hardened from real-world findings. | First location validated end to end; template hardened. |
-| Phase 4 — Parallel Rollout | Remaining locations deployed against the hardened template, each site closed out with the standard acceptance test. | Remaining locations delivered at pace against a proven template. |
-| Phase 5 — Training & Handover | Administration training delivered, documentation issued, operational handover completed. This is the final phase of the base scope. | Training delivered; documentation issued; handover completed. |
-| Phase 6 (Optional) — Managed Operations | Only if the managed service option is selected. Remote managed service commences under the OLA. Where the customer self-operates, the engagement concludes at Phase 5. | Managed operations commenced under the OLA, or self-operation concluded at handover. |
+| Envisioning and design | Requirements gathered, site profiles and classes assigned, traffic and security models agreed, design signed off | Signed-off design document and hardware forecast |
+| Core build | Central platform components built, integrated and validated | Central platform in service and validated |
+| Pilot | First site provisioned through zero-touch provisioning and validated against the service-quality targets | Site template hardened from real-world findings <!-- if devicex --> |
+| Parallel roll-out | Remaining sites deployed from the hardened template, each closed with the standard acceptance test | All sites accepted <!-- if devicex --> |
+| StackX implementation | StackX modules configured, integrated with {{customer_short}}'s systems and tested | StackX modules accepted <!-- if stackx --> |
+| Training and handover | Administration training, documentation and operational handover | Training delivered and handover pack issued <!-- if section_training --> |
+| Managed operations | Managed operations start under the Operations Level Agreement | Operations running under the OLA <!-- if managed_services --> |
+
+## Deliverables by Phase
+
+| Phase | Deliverables |
+| :--- | :--- |
+| Envisioning and design | Design document for each solution; security baseline; configuration and policy design |
+| Envisioning and design | Site profile and class assignment per site; traffic classification, QoS and segmentation model; access service validation record per site <!-- if devicex --> |
+| Envisioning and design | Numbering plan and call-flow design <!-- if module_ipbx or module_stackx_call_center --> |
+| Build | Implemented and validated solution; as-built documentation |
+| Build | Per-site acceptance test record <!-- if devicex --> |
+| Training and handover | Training delivered; training documentation and recorded session; operational handover pack <!-- if section_training --> |
+| Managed operations | Operations reports and enhancement recommendations <!-- if managed_services --> |
 
 ---
 
-*This section is a reusable building block. The methodology above is near-verbatim across prior VertoWave proposals. Confirm per bid whether any stage gating, milestone definitions, or RAID review cadence require tailoring for the current engagement. The delivery phasing is platform-agnostic; tailor the phase count, pilot location and parallel-location count to the current engagement.*
+*This section is a reusable building block. Confirm stage gating, milestone definitions and the RAID review cadence per bid.*

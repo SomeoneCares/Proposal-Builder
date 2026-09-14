@@ -8,14 +8,13 @@
 
 ## Solution Overview
 
-The DeviceX Virtualization/Container Platform provides a secure, reliable, and high-performance environment for running containerized and virtualized workloads at the branch edge. With enterprise-grade infrastructure, advanced monitoring, and seamless scalability, this platform ensures workload isolation, availability, and performance — enabling distributed enterprises to consolidate multiple environments onto a single branch appliance without the overhead of separate compute hardware.
+The DeviceX virtualization and container platform runs virtual machines and containers at the site edge, so {{customer_short}} can consolidate site workloads onto the appliance instead of separate compute hardware.
 
 ## Platform Capabilities
 
-- Run any business workload on virtual environments
-- KVM-based virtual machine hosting
-- Docker container deployment and management
-- Kubernetes orchestration platform
+- Hypervisor-based virtual machine hosting
+- Container deployment and management
+- Container orchestration
 - Multi-tenant workload isolation
 - Resource allocation and scaling
 - Application lifecycle management
@@ -24,38 +23,17 @@ The DeviceX Virtualization/Container Platform provides a secure, reliable, and h
 - Network policy enforcement
 - Monitoring and logging integration
 
----
-
-## Figure — Virtualization Architecture / Workload Placement
-
-<!-- IMAGE PLACEMENT GUIDANCE — insert approved generic image here -->
-<!-- Recommended image: a generic virtualization architecture diagram showing the hypervisor stack, virtual machines / containers, and per-site workload placement, with a continuity-by-design note (local survivability, workload counts per site as a variable). No customer-specific VM names, no customer-specific application names, no customer site names. -->
-<!-- Alternative: a workload-capacity / per-site workload-count diagram (generic — show N workloads per site as a variable). -->
-<!-- Generic-only rule: do not insert any image that names or depicts the customer's specific environment, architecture, site names, or branding. Replace customer-specific labels before use. -->
-<!-- To embed: place the approved image file at this location in the final docx (deferred — combine.py is text-only for now). -->
-
-*[Figure placeholder — insert approved generic virtualization / workload-placement diagram here. See image-placement guidance notes.]*
-
----
-
 ## Continuity by Design
 
-The virtualization platform can host cached copies of key workloads — application front-ends, imaging or documentation viewers, directory services, and similar — so that a site remains functional through a wide-area outage. Local workload hosting is therefore part of the continuity story, not just a consolidation benefit. The number of workloads hosted per site is a per-engagement design input; a small site is not charged for capacity it does not use, and capability can be added later without redesign.
+The platform can host local copies of key workloads — application front ends, document viewers, directory services and similar — so a site remains functional through a wide-area outage. The number of workloads per site is a design input: a small site does not carry capacity it does not use, and capacity can be added later without redesign.
 
-## Value to Branch Locations
+<!-- Diagram guidance: the appliance's hypervisor with VMs and containers alongside the network functions; workload count per site shown as N. -->
+[[figure: virtualization-stack | Workloads hosted on the DeviceX appliance]]
 
-The low-power, compact design of DeviceX/SDX means it can be easily installed with minimal space and cooling requirements, making it the ideal solution for space-constrained environments. With its modular architecture, only the required functionalities are deployed — optimizing IT investments while enabling local workload hosting at the branch.
+## Value to Sites
 
-## Out-of-Scope (explicitly)
-
-- Deploying any software on the created Virtual Machines (unless explicitly in scope)
-- Any configuration/troubleshooting in the Business Virtual Machines hosted on DeviceX
-- Any deployment or configuration or integration or troubleshooting of any 3rd party systems or applications or any new service or products not mentioned in the in-Scope section
-- Any migration activities
-- Operating system or database version upgrades
-- Application compatibility checks or troubleshooting with operating systems
-- Supplying and mounting hardware, network equipment, and storage devices, along with the necessary cabling other than DeviceX
+The compact, low-power appliance needs minimal space and cooling, and only the required functions are enabled, which suits space-constrained sites.
 
 ---
 
-*This module is a reusable building block. Include when local virtualization / container hosting at the branch is in scope for the current engagement. Define the workload set, capacity and local-continuity scope against the current RFP/ITB.*
+*This module is a reusable building block. Define the workload set, capacity and continuity scope against the current RFP/ITB.*

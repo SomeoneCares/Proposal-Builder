@@ -28,7 +28,13 @@ git ls-files -z --cached --others --exclude-standard \
 
 echo "== checking the builder's Python environment (~/$VENV)"
 ssh "$HOST" "set -e; test -x ~/$PY || python3 -m venv ~/$VENV
-  ~/$PY -m pip install -q -r ~/$STAGE/requirements.txt"
+  ~/$PY -m pip install -q -r ~/$STAGE/requirements.txt
+  mkdir -p ~/proposal-builder/library
+  if [ ! -f ~/.config/proposal-builder.env ]; then
+    mkdir -p ~/.config && umask 077
+    printf 'PROPOSAL_EDITOR_PASSWORD=%s\n' \"\$(python3 -c 'import secrets; print(secrets.token_urlsafe(12))')\" > ~/.config/proposal-builder.env
+    echo 'created the Module Library editor password in ~/.config/proposal-builder.env'
+  fi"
 
 echo "== running tests on the host"
 ssh "$HOST" "cd ~/$STAGE && ~/$PY -B -m unittest discover -s tests"
@@ -57,5 +63,11 @@ echo "== restarting proposal-builder"
 ssh "$HOST" "systemctl --user daemon-reload && systemctl --user restart proposal-builder && sleep 4 \
   && systemctl --user is-active proposal-builder \
   && curl -fsS -o /dev/null -w 'builder HTTP %{http_code}\n' http://127.0.0.1:8501/_stcore/health"
+
+overrides=$(ssh "$HOST" 'ls ~/proposal-builder/library/modules/*/current.md 2>/dev/null | sed "s|.*/modules/||; s|/current.md||"' || true)
+if [[ -n "$overrides" ]]; then
+  echo "== note: these modules have portal edits that override the repo copy (scripts/pull-library.sh brings them into git):"
+  echo "$overrides" | sed 's/^/   /'
+fi
 
 echo "== deployed $(git rev-parse --short HEAD)$(git diff --quiet && echo '' || echo ' + uncommitted changes')"

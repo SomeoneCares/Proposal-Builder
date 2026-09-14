@@ -144,7 +144,7 @@ def set_core_properties(doc, title: str, author: str, subject: str, category: st
 
 def new_document(
     title: str = "DeviceX/SDX & StackX — Technical Proposal",
-    footer_label: str = "VertoWave — Technical Proposal",
+    footer_label: str = "Verto Wave —Technical Proposal",
     author: str = "VertoWave",
     subject: str = "DeviceX/SDX & StackX technical proposal",
     keywords: str = "DeviceX, SDX, StackX, VertoWave, technical proposal",
@@ -170,7 +170,7 @@ def main(argv: list[str] | None = None) -> int:
     out.parent.mkdir(parents=True, exist_ok=True)
     doc = new_document(
         title="DeviceX/SDX & StackX — Technical Proposal Template",
-        footer_label="VertoWave — DeviceX/SDX & StackX Proposal Template",
+        footer_label="Verto Wave —DeviceX/SDX & StackX Proposal Template",
     )
     doc.add_paragraph("")
     doc.save(out)

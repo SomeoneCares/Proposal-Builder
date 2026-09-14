@@ -1,4 +1,4 @@
-# StackX Security (SIEM / EDR / XDR / NDR / TIP / UEBA / VulnMgmt / CaseMgmt)
+# StackX Security
 
 **Token:** `{{module_stackx_security}}`  
 **Group:** StackX — Control / Orchestration / SOC / Operations Layer  
@@ -8,97 +8,74 @@
 
 ## Overview
 
-StackX Security provides a unified security monitoring and response capability that combines SIEM log ingestion and correlation, endpoint and extended detection and response (EDR/XDR), network traffic analysis (NDR), threat intelligence (TIP), user and entity behavioural analytics (UEBA), vulnerability management, and unified case management. It leverages advanced analytics, machine learning and automation to transition from a reactive security posture to a proactive and predictive one.
-
-*[Note: This is a composite security module. Include it when a security monitoring and response scope is required. Confirm per bid the depth of each sub-capability and whether any sub-capabilities are out of scope. Where a fuller SOC operations scope is required, use the `{{module_stackx_soc}}` composite SOC module instead or in addition.]*
+StackX Security is the platform for detecting, investigating and responding to threats across {{customer_short}}'s estate. It brings security telemetry into a shared, searchable data store and applies correlation, behavioral analytics, threat intelligence and automated response to it — moving security from a reactive posture to a proactive one.
 
 ## How Each Security Capability Is Delivered
 
-Every security capability in this section is delivered in one of three ways. The distinction is stated plainly because it determines both cost and accountability, and because a security function assessing this proposal is entitled to know which controls the vendor operates and which it verifies.
+Each capability is delivered in one of three ways. The distinction determines both cost and accountability.
 
-| Delivery Mode | What It Means |
+| Delivery mode | What it means |
 | :--- | :--- |
-| **Native** | Delivered by the DeviceX and StackX platform itself. Already included in the platform build, with no additional licence or operating cost. |
-| **Integrated** | A specialist product selected, deployed, integrated and operated by Verto Wave within the agreed design. Operational accountability sits with Verto Wave; the product carries its own licence and operating cost. |
-| **Assured** | The control is executed by the application supplier or by the customer's own team. Verto Wave tests it independently, evidences the result and supervises remediation to closure. Ownership of the control remains with the party that executes it. |
+| Native | Delivered by the DeviceX and StackX platform itself, already included in the platform build. |
+| Integrated | A specialist solution selected, deployed, integrated and operated by Verto Wave within the agreed design; it carries its own license and operating cost. |
+| Assured | The control is executed by the application supplier or by {{customer_short}}'s own team; Verto Wave tests it independently, evidences the result and supervises remediation to closure. |
 
-## SIEM — Log Ingestion, Correlation and Analytics
+## Platform Capabilities
 
-- Operate the StackX SIEM as the primary ingestion hub to parse, enrich and store telemetry from network assets, cloud environments and applications.
-- Execute real-time log correlation and automatically map detected threats to the out-of-the-box MITRE ATT&CK framework.
-- Manage dynamic data retention tiers (hot, warm, cold and frozen) to optimise storage costs while ensuring data remains available for compliance and security auditing.
-- Run complex correlation rules and machine learning jobs across large volumes of historical data using the platform's distributed search and analytics engine.
+### Security Information and Event Management (SIEM)
 
-## EDR / XDR — Endpoint and Extended Detection & Response
+The central ingestion hub parses, enriches and stores telemetry from network assets, cloud environments and applications, collected through lightweight shippers or API integrations. Real-time correlation maps detections to the MITRE ATT&CK framework, and customizable alerting dashboards give analysts one view.
 
-- Deploy and monitor unified, tamper-proof agents to track kernel-level processes, memory access and registry modifications across all endpoints.
-- Stitch endpoint telemetry together with network and identity data for comprehensive cross-domain correlation using XDR capabilities.
-- Enforce behavioural ransomware prevention, memory threat protection and remote-shell capabilities for live forensics.
-- Isolate compromised hosts immediately to stop zero-day exploits and fileless malware that bypass traditional signature-based antivirus solutions.
+### Security Orchestration, Automation and Response (SOAR)
 
-## NDR — Network Traffic Analysis and Threat Intelligence
+A playbook engine executes predefined, API-driven sequences of actions across the security stack. Visual playbook design, threat-intelligence enrichment, one-click containment and bidirectional integration with service management reduce alert fatigue and shorten response time.
 
-- Analyse East-West and North-South network traffic flows using Deep Packet Inspection (DPI) and protocol parsing via StackX NDR.
-- Maintain full packet capture (PCAP) storage and conduct TLS/SSL decryption analysis to detect lateral movement, beaconing or data exfiltration attempts.
-- Aggregate structured threat data (STIX/TAXII) from open-source, commercial and industry feeds through the StackX Threat Intelligence Platform (TIP).
-- Automate Indicator of Compromise (IoC) lifecycle management, profile threat actors and distribute blocklists to firewalls and endpoints.
+### Endpoint and Extended Detection and Response (EDR/XDR)
 
-## UEBA and Vulnerability Management
+A unified endpoint agent monitors process activity, memory access and registry changes. XDR correlates endpoint telemetry with network and identity data across domains. Behavioral ransomware prevention, memory threat protection, process-tree reconstruction, host isolation and remote shell for live forensics address threats that bypass signature-based antivirus.
 
-- Leverage StackX UEBA unsupervised machine-learning algorithms to build mathematical baselines of normal activity for every user, device and service account over a 30-to-60-day period.
-- Perform continuous peer-group analysis, track anomalous logins, monitor excessive privilege usage and assign automated risk scores to uncover malicious insiders or compromised credentials.
-- Conduct active and passive scanning to identify missing patches, default passwords and insecure configurations across the internal network and external attack surface.
-- Prioritise vulnerabilities based on active exploitation trends and generate automated compliance reporting for standards such as CIS and PCI-DSS.
+### Network Detection and Response (NDR)
 
----
+Network traffic is captured from span ports or taps and analyzed with deep packet inspection and protocol parsing, East-West and North-South. Full packet capture, automated traffic baselining and encrypted-traffic analysis detect lateral movement, beaconing and data exfiltration, and provide forensic evidence.
 
-## Figure — Security Architecture / Defence-in-Depth
+### Threat Intelligence Platform (TIP)
 
-<!-- IMAGE PLACEMENT GUIDANCE — insert approved generic image here -->
-<!-- Recommended image: a generic defence-in-depth / layered security architecture diagram showing the security capability layers (external boundary, internal visibility & control, identity shield, data & system integrity, continuity & recovery, assurance & oversight) and the delivery-mode framing (Native / Integrated / Assured). No customer-specific control names that reveal the customer's regulatory regime beyond what is agreed, no customer site names. -->
-<!-- Generic-only rule: do not insert any image that names or depicts the customer's specific environment, architecture, site names, or branding. Replace customer-specific labels before use. -->
-<!-- To embed: place the approved image file at this location in the final docx (deferred — combine.py is text-only for now). -->
+Structured threat data (STIX/TAXII) from open-source, commercial and industry feeds is aggregated and matched against ingested telemetry. Indicator-of-compromise lifecycle management, threat actor profiling and false-positive filtering feed block lists to firewalls and endpoints.
 
-*[Figure placeholder — insert approved generic security / defence-in-depth architecture diagram here. See image-placement guidance notes.]*
+### User and Entity Behavior Analytics (UEBA)
 
----
+Unsupervised machine learning builds baselines of normal activity for every user, device and service account. Peer-group analysis, anomalous login detection, excessive privilege tracking and per-entity risk scoring uncover insider threats and compromised credentials without relying on known signatures.
 
-## Incident Triage and Unified Case Management
+### Vulnerability Prioritization
 
-- Manage security incidents through a centralised ticketing and workflow engine integrated directly into the StackX console.
-- Automate digital evidence gathering by immediately attaching PCAPs, endpoint logs and threat intelligence to security tickets.
-- Enforce role-based access control and integrated collaboration for incident handlers.
-- Track comprehensive SLAs and provide management with clear dashboards detailing SOC efficiency and analyst performance.
+Vulnerability findings are correlated with active exploitation trends and asset exposure, so remediation effort goes first to the weaknesses attackers are actually using.
 
-## Extended Security Services (optional — selected and quoted per service area)
+### Unified Case Management
 
-Everything described so far is delivered by the platform itself, and secures the network, the edge and the communications path. Where the customer prefers one accountable party across a wider picture rather than a platform supplier alone, Verto Wave can deliver the following services around the platform. These are scoped per service area; nothing in this list forms part of the platform build unless it is explicitly selected and separately quoted.
+A ticketing and workflow engine inside the StackX console links alerts to human resolution: evidence is attached automatically (packet captures, endpoint logs, threat intelligence), access is role-based, handlers collaborate in the case, and SLA dashboards show response performance.
 
-- **Identity and access** — single sign-on and multi-factor authentication for users, including phishing-resistant factors, contextual authorisation policy and blocking of known-compromised credentials. Complements the machine identity model, which secures the nodes rather than the people using them.
-- **Privileged access** — credential vaulting, brokered administrative sessions and session recording for privileged users, alongside the credential-free administration model already native to the platform.
-- **Application edge protection** — web application firewall, API gateway protection and distributed denial-of-service mitigation in front of the published service, complementing the firewall and intrusion prevention enforced at every site.
-- **Key and secret management** — centralised key and secret custody: rotation, separation of key operator from key user, expiry alerting and prevention of secrets held in code or configuration. Extends the hardware-sealed secret handling beyond the appliance itself.
-- **Data protection** — classification and tagging of sensitive data, masking of data used in non-production environments and data-loss prevention on the endpoints that handle sensitive records.
-- **Endpoint detection and response** — a detection engine licensed and operated alongside the platform-managed endpoint agent and telemetry pipeline, so detection and response share one console with the rest of the estate.
-- **Backup and continuity** — backup design and operation, a documented disaster recovery plan and recovery point and recovery time targets agreed with the customer and exercised on an agreed cycle.
-- **Security assurance and testing** — independent penetration testing coordinated by Verto Wave, application and interface security testing and cloud configuration assessment, with findings tracked to closure in StackX ITSM.
+<!-- Diagram guidance: layered defense — external boundary, internal visibility and control, identity, data and system integrity, recovery, and assurance — annotated with the Native / Integrated / Assured delivery modes. -->
+[[figure: security-architecture | Security capability layers and delivery modes]]
 
-## Delivery Mode Boundaries (generic)
+## Extended Security Services (Optional)
 
-- Products are not named at proposal stage. Selection is made during design against the customer's existing security standards, held licences and the regulatory position in each operating location.
-- The application / application layer remains its supplier's product. Verto Wave does not write, modify or assume ownership of the application's code. Where a control lives inside that application, Verto Wave's role is independent testing, evidencing and supervision.
-- Recovery targets are agreed, not assumed. Recovery point and recovery time objectives are set during design against the customer's priorities. No figure is committed ahead of that exercise.
-- Customer-owned infrastructure stays customer-owned. Where a control depends on equipment or tenancy the customer supplies (access-layer switching, cloud accounts, directory services), Verto Wave's commitment is to design, verify and evidence it, not to operate what it does not supply.
-- The connectivity boundary is unchanged. Wide-area access services remain a customer procurement. Selecting any security service does not alter that boundary.
-- Where the customer has issued a formal cybersecurity requirements document, Verto Wave provides a separate point-by-point compliance response mapping each stated requirement to one of the three delivery modes above. That response, not this section, is the correct artefact for a requirement-by-requirement assessment.
+Where {{customer_short}} prefers one accountable party across a wider picture, Verto Wave can deliver the services below around the platform. Each is scoped per service area and forms part of the platform build only if explicitly selected and quoted.
 
-## Out-of-Scope (explicitly)
+- **Identity and access** — single sign-on and multi-factor authentication for users, including phishing-resistant factors, contextual authorization and blocking of known-compromised credentials.
+- **Privileged access** — credential vaulting, brokered administrative sessions and session recording.
+- **Application edge protection** — web application firewall, API protection and distributed denial-of-service mitigation in front of published services.
+- **Key and secret management** — central custody, rotation and expiry alerting for keys and secrets, and prevention of secrets held in code or configuration.
+- **Data protection** — classification and tagging of sensitive data, masking in non-production environments and data-loss prevention on endpoints.
+- **Backup and continuity** — backup design and operation, a documented disaster recovery plan, and recovery targets agreed and exercised on an agreed cycle.
+- **Security assurance and testing** — independent penetration testing coordinated by Verto Wave, application and interface security testing and cloud configuration assessment, with findings tracked to closure.
 
-- Security penetration testing, vulnerability assessment, code review and forensics activities, unless explicitly stated as in scope (note: many prior proposals explicitly exclude penetration testing, vulnerability assessment, code review and forensics — confirm per bid whether any of these are requested).
-- Any development and debugging activities not explicitly in scope.
-- Operating third-party security systems aside from the systems included in this scope.
-- Managing and supporting systems and devices not allowing ways of integration.
+## Delivery Boundaries
+
+- Specific products for integrated services are selected during design against {{customer_short}}'s security standards, existing licenses and regulatory position.
+- Recovery targets are agreed, not assumed; recovery point and time objectives are set during design.
+- Where {{customer_short}} has issued a formal cybersecurity requirements document, Verto Wave provides a point-by-point compliance response mapping each requirement to a delivery mode. <!-- if not section_compliance_matrix -->
+- Each security requirement is mapped to a delivery mode in the compliance matrix appendix. <!-- if section_compliance_matrix -->
 
 ---
 
-*This module is a reusable building block. The security scope is the most sensitive area in the template — confirm with Security/Compliance SME per bid: which sub-capabilities are in scope, whether penetration testing/vulnerability assessment/code review/forensics are requested or explicitly excluded, whether certified SOC staff resourcing is in place, and which extended security services (if any) are selected. The Native/Integrated/Assured delivery-modes framing and the extended-security-services list are platform-agnostic — tailor the service list and naming policy to the current engagement. For a fuller SOC operations scope, use the `{{module_stackx_soc}}` composite SOC module.*
+*This module describes the security platform. The security operations service that runs it is described in StackX SOC Operations. Confirm the capabilities and any extended services in scope with the Security SME per bid.*

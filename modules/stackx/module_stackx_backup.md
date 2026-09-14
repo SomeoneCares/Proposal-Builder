@@ -8,44 +8,30 @@
 
 ## Overview
 
-*[Placeholder — module to be authored from source material describing StackX Backup.]*
+StackX Backup protects {{customer_short}}'s critical data and supports business continuity through a unified backup and recovery platform for physical and virtual environments. It protects data against hardware failure, accidental deletion and cyber threats.
 
-## To be authored
+## Key Capabilities
 
-This module's content is to be authored from the source material for StackX Backup before the module is included in a live proposal. Until then, include only with explicit subject-matter review.
+- **Automated scheduled backups** — hourly, daily or weekly schedules run without manual intervention.
+- **Incremental capture** — only changes since the last backup are captured, saving storage and bandwidth.
+- **Recovery point discovery** — browse historical versions and restore specific files or data points in a few steps.
+- **Immutable copies** — isolated, immutable backup copies allow a return to a clean state even if primary systems are compromised.
+- **Organized, searchable archives** — support for retention and privacy requirements.
 
-## Typical scope areas (to be confirmed from source)
+<!-- Diagram guidance: protected sources → backup policies (full, incremental) → immutable repository → recovery path. Retention and recovery targets shown as agreed values, not fixed figures. -->
+[[figure: backup-architecture | Backup and recovery architecture]]
 
-Backup capability areas typically include:
+## Value
 
-- Backup strategy design and implementation per system and business service
-- Data protection across on-premises and cloud workloads
-- Backup scheduling, retention, and recovery point objectives
-- Backup validation and restore testing
-- Integration with existing backup platforms where applicable
-- Backup security and ransomware resilience considerations
+- **Minimized downtime** — fast restoration so operations resume in minutes rather than days.
+- **Ransomware resilience** — immutable copies provide a clean recovery point.
+- **Storage efficiency** — incremental capture and scalable storage grow only as data grows.
+- **Regulatory compliance** — organized archives support data retention and privacy obligations.
 
----
+## Recovery Targets
 
-## Figure — Backup Architecture / Backup Policy Flow
-
-<!-- IMAGE PLACEMENT GUIDANCE — insert approved generic image here -->
-<!-- Recommended image: a generic backup architecture diagram showing backup sources, backup repository/target, backup policies (full/incremental/differential), retention, and recovery path — with recovery targets agreed per bid (not assumed). No customer-specific data-source names, no customer-specific retention figures, no customer site names. -->
-<!-- Suggested source: generic backup reference model — no customer-specific content from prior proposals is carried. -->
-<!-- Generic-only rule: do not insert any image that names or depicts the customer's specific environment, architecture, site names, or branding. Replace customer-specific labels before use. -->
-<!-- To embed: place the approved image file at this location in the final docx (deferred — combine.py is text-only for now). -->
-
-*[Figure placeholder — insert approved generic backup architecture / policy-flow diagram here. See image-placement guidance notes.]*
+Recovery point and recovery time objectives are agreed with {{customer_short}} during the design stage for each protected system; no figure is assumed in advance.
 
 ---
 
-## Out-of-Scope (explicitly)
-
-- Any backup, network, and security activities not explicitly in scope.
-- Any backup solution procurement or licensing unless explicitly in scope.
-- Operating 3rd party systems aside from the systems included in this scope.
-- Disaster recovery (DR) activities unless explicitly in scope.
-
----
-
-*This module is a placeholder pending content authoring. Do not include in a live proposal without completing the module content and SME review.*
+*This module is a reusable building block. Confirm the protected systems, schedules, retention and recovery targets per bid.*

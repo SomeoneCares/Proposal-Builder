@@ -8,87 +8,63 @@
 
 ## Solution Overview
 
-Providing robust surveillance capabilities over IP networks. The value lies in offering remote access, scalability, and advanced analytics, which enhance security and operational efficiency for organizations.
+The DeviceX NVR module records and manages IP video surveillance at each site, with remote access, central visibility and, where selected, analytics at the edge.
 
-## Two NVR Sub-Options
+## Variants
 
-This module has two variants. Select the variant that matches the current customer's requirements. Do not assume one or the other without validating against the RFP/ITB.
+*[Choose the variant that matches the current requirement; do not assume one without validating it against the RFP/ITB.]*
 
-### Variant A — NVR Without AI
+### NVR Without Analytics
 
-- Configure and deploy the NVR system without AI capabilities as per the design
-- Set up video recording parameters including resolution, frame rate, and bitrate as per the design
+- Recording configured to the resolution, frame rate and bitrate agreed in the design
 - Camera-based retention policies
-- Centralized archiving with WAN optimization
+- Central archiving with WAN optimization
 - Remote access and management
 
-### Variant B — NVR with Edge Analytics
+### NVR With Edge Analytics
 
-- AI-powered surveillance with edge analytics
 - ONVIF-compliant camera integration
-- AI-powered object detection and recognition
+- Object detection and recognition
 - Motion detection and behavioral analytics
 - Facial recognition and people counting
-- License plate recognition (LPR)
+- License plate recognition
 - Real-time alerts and notifications
-- Video recording and playback
-- Remote access and mobile viewing
+- Recording, playback, remote and mobile viewing
 - Integration with access control systems
 - Forensic search and investigation tools
 
 ## Operating Pattern
 
-### Local recording and retention (default)
+### Local Recording and Retention
 
-Surveillance is recorded locally at the edge, with retention policy and alert forwarding configured to the central platform. Recording locally means surveillance does not compete with priority wide-area traffic for the link — a key property for deployments where the wide-area link also carries sensitive real-time traffic.
+Video is recorded locally on the appliance, with the retention policy and alert forwarding configured to the central platform. Recording locally means surveillance never competes with priority wide-area traffic.
 
----
+### Central Monitoring (Optional)
 
-## Figure — NVR Recording & Monitoring Architecture
+Where {{customer_short}} requires central monitoring, the platform can present multiple display outputs, each with a camera grid and a focus window. Sizing — displays, camera count and monitoring-site bandwidth — is confirmed in the design against the camera count, resolution and number of sites.
 
-<!-- IMAGE PLACEMENT GUIDANCE — insert approved generic image here -->
-<!-- Recommended image: a generic NVR architecture diagram showing camera streams recorded locally on the appliance, with only alerts/metadata/thumbnails/operator-requested playback traversing the wide-area link to a central monitoring array. No customer-specific camera names, no site names, no customer-specific retention figures. -->
-<!-- Alternative: a camera layout / per-site camera-count diagram (generic — show N cameras per site as a variable, not a fixed customer number). -->
-<!-- Generic-only rule: do not insert any image that names or depicts the customer's specific environment, architecture, site names, or branding. Replace customer-specific labels before use. -->
-<!-- To embed: place the approved image file at this location in the final docx (deferred — combine.py is text-only for now). -->
+### Bandwidth Planning
 
-*[Figure placeholder — insert approved generic NVR architecture / camera-layout diagram here. See image-placement guidance notes.]*
+- Local recording is not a continuous consumer of the wide-area link.
+- Where central archive synchronization is required, it is scheduled outside critical hours and rate-limited so it never contends with live priority traffic.
+- Monitoring-site bandwidth is sized against the agreed camera count, resolution and display configuration.
 
----
-
-### Centralised monitoring array (optional, where required)
-
-Where the customer requires a centralised monitoring array, the platform can be configured with a high-capacity monitoring arrangement — for example, multiple display outputs, each featuring a camera grid plus a dedicated active-focus window. The configuration is optimised for a reference resolution and requires a recommended minimum backbone bandwidth at the monitoring location to maintain high-quality real-time streaming. Sizing is confirmed at design stage against the camera count, resolution and site count; it is presented here as a design-time planning input, not as a fixed product specification.
-
-### NVR bandwidth consideration (planning input)
-
-- Surveillance recorded locally is not a continuous consumer of the wide-area link.
-- Where central archive synchronisation is required, it is scheduled outside critical hours and rate-limited so it can never contend with live priority traffic.
-- The monitoring-location backbone bandwidth is sized against the agreed camera count, resolution and display configuration, and confirmed during design.
+<!-- Diagram guidance: cameras recording locally on the appliance; only alerts, metadata and requested playback crossing the WAN to a central monitoring view. Show camera count as N. -->
+[[figure: nvr-architecture | Local recording with central monitoring]]
 
 ## Camera Support
 
 - IP cameras are supported by default.
-- Analogue camera support, if required, is a per-engagement decision and is confirmed against the customer's existing camera estate during design. (Do not assume analogue support without validating.)
+- Analog camera support is decided per engagement against {{customer_short}}'s existing camera estate during design.
 
-## Reference Parameters (optional — confirm per bid)
+## Parameters Confirmed in Design
 
-The following parameters are provided as generic reference values only. Do **not** carry them into a new proposal without validating against the current design and customer requirements:
-
-- Video retention period — confirm per design
-- Camera recording resolution — confirm per design
-- Video frame rate — confirm per design
-- Average video bitrate per stream — confirm per design
-- Central monitoring array sizing (display outputs, camera grid, backbone bandwidth) — confirm per design
-- Archive synchronisation schedule and rate limiting — confirm per design
-
-## Out-of-Scope (explicitly)
-
-- Any video recordings or screenshots
-- Adding any NVR or DVR to the platform-NVR
-- Adding any analogue cameras to the platform-NVR, unless confirmed per design
-- On-site or field operations
+- Video retention period
+- Camera recording resolution and frame rate
+- Average bitrate per stream
+- Central monitoring sizing (displays, camera grid, bandwidth)
+- Archive synchronization schedule and rate limits
 
 ---
 
-*This module is a reusable building block. Validate scope, camera support, retention and monitoring-array sizing against the current customer's RFP/ITB before issuing.*
+*This module is a reusable building block. Validate camera support, retention and monitoring sizing against the current RFP/ITB before issue.*

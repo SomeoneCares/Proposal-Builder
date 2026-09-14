@@ -1,4 +1,4 @@
-# VertoWave Proposal Builder
+# Verto Wave Proposal Builder
 
 Builds DeviceX/SDX & StackX technical proposals (.docx) from reusable Markdown
 modules. Pricing is excluded by design and attached separately.
@@ -10,51 +10,65 @@ maintained in this repo since 2026-09-14 and deployed to the Hermes lab host.
 
 | Path | What it is |
 | --- | --- |
-| `modules/devicex/`, `modules/stackx/`, `modules/cross_cutting/` | One Markdown file per module (9 + 17 + 11) |
-| `module_index.json` | Registry: module tokens, files, names, required/placeholder flags, notes; value slots (`customer_slots`); `banned_terms` |
-| `values-example.json` | Sample values, one key per slot; blank keys render as `[TO CONFIRM: key]` |
+| `modules/devicex/`, `modules/stackx/`, `modules/optional/`, `modules/cross_cutting/` | One Markdown file per module (9 + 17 + 8 + 12) |
+| `module_index.json` | Registry: tokens, files, names, summaries, `requires` rules, document order, value slots, `banned_terms`, `third_party_terms` |
+| `glossary.json` | Glossary definitions; only terms used in a proposal are printed |
+| `values-example.json` | Sample values, one key per slot |
 | `combine.py` | Assembler (CLI) |
-| `build_base_template.py` | Styled base document every build starts from |
-| `apps/proposal_builder.py` | Streamlit web UI (port 8501 on the host) |
+| `library.py` | Versioned module and figure overrides edited in the portal |
+| `build_base_template.py` | Styled A4 base document every build starts from |
+| `apps/proposal_builder.py` | Streamlit builder (port 8501 on the host) |
+| `apps/pages/1_Module_Library.py` | Password-protected module editor |
+| `apps/hermes_research.py` | Customer research through the Hermes API (drafts need human approval) |
 | `write_module.py` | Scaffold and register a new module |
 | `references/` | Module authoring contract and notes |
 | `hermes-profile/` | `SKILL.md` + references that Hermes (bid-orchestrator profile) loads |
 | `tests/` | unittest suite |
-| `scripts/deploy.sh` | Stage, test and deploy to the host |
+| `scripts/deploy.sh`, `scripts/pull-library.sh`, `scripts/proposal-builder.service` | Deploy, pull portal edits, service unit |
 
-## Building
+## How a proposal is assembled
+
+1. **Offering** — any of `licenses`, `services`, `managed_services`, `premier_support`.
+2. **Modules** — the capability modules and sections ticked in the builder.
+3. Modules whose `requires` rule is false are left out (for example the OLA without
+   managed services), and every conditional line inside the remaining modules is kept
+   or dropped by the same rules (`references/module_authoring.md`).
+4. Order: cover and document control, table of contents, then numbered sections in
+   `document_order`; the compliance matrix and glossary are appendices.
+5. Values fill `{{slots}}`; blank ones become `[TO CONFIRM: key]`.
 
 ```bash
-python combine.py --values values-example.json --logo assets/vertowave_logo.png --out out/draft.docx
-python combine.py --values my-values.json --modules module_sdwan,section_ola --issue --out out/issue.docx
-python combine.py --values values-example.json --mode template --out out/template.docx
+python combine.py --values values-example.json --offering licenses,services --logo assets/vertowave_logo.png --out out/draft.docx
+python combine.py --values my-values.json --offering licenses,services,managed_services --modules module_sdwan,section_ola --issue --out out/issue.docx
 ```
 
-- **Draft** (default): bid-team notes, figure placeholders and `(for the bid team)` sections stay in, highlighted yellow; blank values show as `[TO CONFIRM: key]`.
-- **Issue copy** (`--issue`): all of that is removed, and the build is refused while any value used by the selected modules is blank.
-
-Order in the document: cover and executive summary, document control, table of contents, then DeviceX/SDX, StackX and the remaining cross-cutting sections, each starting on a new page. Pages are A4 with 25 mm margins.
-
-The table of contents is written with every Heading 1–3. Where LibreOffice and `pdftotext` are installed (the lab host), each build renders a temporary PDF to read the page numbers and fills them in; the .docx itself is not converted. Word still refreshes the table on open. Skip the render with `--no-toc-pages`.
+- **Draft** (default): bid-team notes, figure placeholders and `(for the bid team)` sections stay in, highlighted.
+- **Issue copy** (`--issue`): all of that is removed, and the build is refused while any value used by the proposal is blank.
+- `--toc-levels 1|2|3` (default 2); table-of-contents page numbers are filled from a LibreOffice render where available (`--no-toc-pages` skips it).
 
 ## Checks on every build
 
-Before saving, `combine.py` scans the finished document (body, tables, headers, footers, properties). It refuses to write the file (exit code 3) if it finds:
+Before saving, `combine.py` scans the finished document and refuses to write it
+(exit code 3) if it finds `{{...}}` text, HTML comment text, a `banned_terms` entry
+(prior customers; allowed when it is the current customer) or a `third_party_terms`
+product name.
 
-- any `{{...}}` text (complete mode)
-- any HTML comment text
-- any term in `module_index.json` → `banned_terms` (prior customers and their sectors), unless the term appears in the current values — for a returning customer
+## Module Library (portal)
 
-## Writing modules
-
-See `references/module_authoring.md`. In short: metadata header closed by `---`, body in plain Markdown, bid-team guidance as whole-paragraph `*[...]*` notes, `(for the bid team)` in a heading for internal sections, `<!-- -->` comments for image guidance (never rendered).
+The builder's Module Library page lets authorized users read, edit, upload and restore
+versions of every module, and upload figure images. Versions are validated with the same
+rules as the tests, stored in `~/proposal-builder/library` on the host, and override the
+deployed modules until reverted. Run `scripts/pull-library.sh` to copy them into this repo
+for review and commit. The editor password is in `~/.config/proposal-builder.env` on the
+host (created by the first deploy; never in git).
 
 ## Runtime on the lab host
 
-- Python: its own venv at `~/proposal-builder/venv` (system `python3`, packages pinned in `requirements.txt`). It does not use Hermes's venv, so `hermes update` cannot break the builder.
-- Service: systemd user unit `proposal-builder` (`scripts/proposal-builder.service`), port 8501, independent of the Hermes gateway.
-- Code: deployed to `~/.hermes/skills/proposal-template` so Hermes (bid-orchestrator) can still find the skill; the builder does not call Hermes.
-- Review tools (apt): LibreOffice Writer, pandoc, poppler-utils, Carlito font — used for table-of-contents page numbers and page renders.
+- Python: its own venv at `~/proposal-builder/venv` (system `python3`, `requirements.txt`); `hermes update` cannot break it.
+- Service: systemd user unit `proposal-builder`, port 8501, independent of the Hermes gateway.
+- Code: deployed to `~/.hermes/skills/proposal-template` so Hermes (bid-orchestrator) can find the skill.
+- Customer research: the builder calls the Hermes API server on `127.0.0.1:8642` with the key from `~/.hermes/.env`.
+- Review tools (apt): LibreOffice Writer, pandoc, poppler-utils, Carlito font.
 
 ## Tests and deploy
 
@@ -63,4 +77,6 @@ scripts/deploy.sh --test-only   # copy the working tree to the host staging fold
 scripts/deploy.sh               # tests, then swap into ~/.hermes/skills/proposal-template and restart the builder
 ```
 
-The host keeps the previous deployment in `~/proposal-template-previous`. To roll back, move it back over `~/.hermes/skills/proposal-template` and restart with `systemctl --user restart proposal-builder`.
+The host keeps the previous deployment in `~/proposal-template-previous`. To roll back,
+move it back over `~/.hermes/skills/proposal-template` and restart with
+`systemctl --user restart proposal-builder`.

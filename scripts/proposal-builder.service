@@ -1,7 +1,8 @@
 # systemd user unit for the builder; scripts/deploy.sh installs it to
 # ~/.config/systemd/user/proposal-builder.service on the lab host.
+# ~/.config/proposal-builder.env holds PROPOSAL_EDITOR_PASSWORD (created by deploy.sh, never in git).
 [Unit]
-Description=VertoWave Proposal Builder (Streamlit, port 8501)
+Description=Verto Wave Proposal Builder (Streamlit, port 8501)
 After=network-online.target
 Wants=network-online.target
 
@@ -9,6 +10,8 @@ Wants=network-online.target
 Type=simple
 WorkingDirectory=/home/hermes/.hermes/skills/proposal-template
 Environment=PATH=/home/hermes/proposal-builder/venv/bin:/usr/local/bin:/usr/bin:/bin
+Environment=PROPOSAL_LIBRARY_DIR=/home/hermes/proposal-builder/library
+EnvironmentFile=-/home/hermes/.config/proposal-builder.env
 ExecStart=/home/hermes/proposal-builder/venv/bin/streamlit run apps/proposal_builder.py --server.address 0.0.0.0 --server.port 8501 --server.headless true --browser.gatherUsageStats false --server.enableXsrfProtection true
 Restart=on-failure
 RestartSec=5

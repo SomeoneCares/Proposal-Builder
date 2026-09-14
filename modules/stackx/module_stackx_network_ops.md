@@ -1,4 +1,4 @@
-# StackX Network Operations Enterprise Management
+# StackX Network Operations
 
 **Token:** `{{module_stackx_network_ops}}`  
 **Group:** StackX — Control / Orchestration / SOC / Operations Layer  
@@ -8,45 +8,44 @@
 
 ## Overview
 
-*[Placeholder — module to be authored from source material describing StackX Network Operations Enterprise Management.]*
+StackX Network Operations brings network fault, availability, performance and service monitoring into a single operations console. Continuous discovery, a single polling engine and common causal analysis keep administrative overhead low, while workflow-based navigation helps the network team move quickly from an alert to its cause.
 
-## To be authored
+It manages physical, virtual, hybrid and cloud network environments, and extends to a wide range of devices, services and protocols.
 
-This module's content is to be authored from the source material for StackX Network Operations Enterprise Management before the module is included in a live proposal. Until then, include only with explicit subject-matter review.
+## Key Capabilities
 
-## Typical scope areas (to be confirmed from source)
+- **Continuous discovery and monitoring** — the network topology is discovered and kept current automatically.
+- **Unified polling** — one correlated, optimized polling engine and a single configuration point.
+- **Root-cause analysis** — service-impacting incidents are identified in the context of the network topology, rather than as isolated alarms.
+- **Workflow-based navigation** — a network-wide status view with drill-down to device, component and incident detail.
+- **Path health** — traffic trends and congestion analysis, bottleneck isolation and synthetic path tests.
+- **Performance monitoring** — interface and component health, flow records and service-level quality, with incidents raised from static or adaptive thresholds and dynamically calculated baselines.
+- **Configuration and compliance** — configuration changes are correlated with performance, so a degradation caused by a new configuration is visible immediately.
+- **Multi-tenancy** — node, user and security groups partition the network logically.
+- **Regional scale** — global and regional managers consolidate information across locations.
 
-Network Operations Enterprise Management capability areas typically include:
+<!-- Diagram guidance: live network topology with health status, traffic heatmap and a drill-down from an incident to the affected interface. No device names or addressing. -->
+[[figure: network-operations | Network operations console and topology]]
 
-- Enterprise network monitoring and performance management
-- Network health and availability monitoring
-- Topology discovery and dependency mapping for network devices
-- Bandwidth utilization, latency, and traffic analysis
-- Network device configuration and change tracking
-- Alerting, trending, and capacity reporting for network infrastructure
-- Integration with network device vendor telemetry (switch, router, firewall, load balancer, wireless controller)
+## Reporting and Dashboards
+
+- Performance reports scheduled and shared with stakeholders
+- Traffic reporting by interface, with drill-down to top applications and conversations
+- Time filters that let teams correlate events across panels
+- Usage trend and forecast reports for capacity planning
+
+## Value
+
+- Lower mean time to resolution through topology-aware root-cause analysis
+- Fewer outages caused by configuration errors, because changes are correlated with their impact
+- One tool for fault, performance and configuration, instead of separate consoles
+
+## Integration
+
+- Monitors the DeviceX appliances and overlay alongside the rest of the network. <!-- if devicex -->
+- Raises incidents automatically in StackX ITSM. <!-- if module_stackx_itSM -->
+- Shares network topology with the CMDB. <!-- if module_stackx_ops_config_mgmt -->
 
 ---
 
-## Figure — Network Operations Dashboard / Topology Map
-
-<!-- IMAGE PLACEMENT GUIDANCE — insert approved generic image here -->
-<!-- Recommended image: a generic network-operations dashboard / interactive topology-map diagram showing live network topology, port utilisation heatmaps, bandwidth traffic graphs, and link-flap alerts — aligned to the "how many network devices to be monitored" scope-number slot ({{services_network_devices}}) in the Professional Services module. No customer-specific device names, no customer-specific interface descriptions that reveal the customer's business, no customer site names. -->
-<!-- Generic-only rule: do not insert any image that names or depicts the customer's specific environment, architecture, site names, or branding. Replace customer-specific labels before use. -->
-<!-- To embed: place the approved image file at this location in the final docx (deferred — combine.py is text-only for now). -->
-
-*[Figure placeholder — insert approved generic network-operations dashboard / topology-map diagram here. See image-placement guidance notes.]*
-
----
-
-## Out-of-Scope (explicitly)
-
-- Any design changes to the existing network environment unless explicitly in scope.
-- Managing and supporting network devices not allowing ways of integration with StackX.
-- Operating 3rd party network systems aside from the systems included in this scope.
-- Any development and debugging activities not explicitly in scope.
-- Any civil, electrical, or power/UPS work related to network infrastructure.
-
----
-
-*This module is a placeholder pending content authoring. Do not include in a live proposal without completing the module content and SME review.*
+*This module is a reusable building block. Confirm the number and types of devices to be monitored per bid.*

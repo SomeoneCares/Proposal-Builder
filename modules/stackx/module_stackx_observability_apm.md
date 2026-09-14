@@ -1,4 +1,4 @@
-# StackX Observability & Application Performance Monitoring (APM)
+# StackX Observability & APM
 
 **Token:** `{{module_stackx_observability_apm}}`  
 **Group:** StackX — Control / Orchestration / SOC / Operations Layer  
@@ -8,63 +8,48 @@
 
 ## Overview
 
-In today's complex and dynamic IT landscapes, effective server monitoring and management are critical to ensuring operational stability, performance, and security. The StackX Observability solution provides a unified, scalable, and intelligent approach to managing server infrastructure. It consolidates all key metrics and performance data into a single, comprehensive view, enabling teams to move from reactive troubleshooting to proactive and predictive insights.
+StackX Observability gives {{customer_short}} a unified, scalable view of its server and application estate. It consolidates metrics, logs and traces into a single view, moving teams from reactive troubleshooting to proactive and predictive operations.
 
-A comprehensive observability solution provides real-time visibility into server health by continuously tracking key metrics such as CPU/memory utilization, disk I/O, network throughput, and process activity. By aggregating and analyzing system logs, administrators gain actionable insights into potential bottlenecks, hardware failures, or misconfigurations before they escalate into outages. Automated alerting mechanisms notify teams of anomalies — such as unexpected resource spikes or failed services — enabling rapid incident response. Historical trend analysis further aids capacity planning, ensuring infrastructure scales efficiently with organizational demands. Security is enhanced through log correlation, detecting suspicious login attempts, unauthorized configuration changes, or malware activity. When integrated with IT service management (ITSM) workflows, server telemetry enables data-driven decision-making, reduces mean time to resolution (MTTR), and enforces compliance with operational policies. Ultimately, a robust monitoring framework transforms raw server data into operational intelligence — optimizing uptime, streamlining troubleshooting, and safeguarding business continuity in dynamic IT environments.
+The platform continuously tracks CPU and memory utilization, disk I/O, network throughput and process activity. Automated alerting flags anomalies such as unexpected resource spikes or failed services, historical trends support capacity planning, and log correlation helps expose suspicious logins or unauthorized configuration changes.
 
-The StackX observability platform — combining StackXsearch, Logstash, Kibana, the StackX Agent and Fleet — delivers a powerful observability platform capable of providing real-time insights into both traditional systems and dynamic containerized platforms such as Kubernetes and OpenShift.
+## Platform Components
 
-This solution continuously monitors core system health indicators including CPU and memory utilization, disk I/O, network activity, and running processes. It aggregates logs and system metrics from physical servers, virtual machines, and container nodes within OpenShift clusters — offering unified visibility across hybrid environments.
+- **Collection agents** — a single lightweight agent per server or node collects metrics, logs and traces, managed centrally.
+- **Ingestion pipeline** — parses, enriches and normalizes incoming data into a common schema.
+- **Search and analytics engine** — a distributed engine that indexes the data for fast querying and analysis.
+- **Visualization layer** — dashboards, interactive charts and reports that give one view of the infrastructure.
 
-## Key Features and Capabilities
+The platform covers physical servers, virtual machines and container platforms, on premises and in the cloud.
 
-- **Unified Infrastructure Monitoring:** Eliminate data silos by bringing together metrics from every layer of your server infrastructure. This unified approach allows for rapid root-cause analysis by correlating events across your entire technology stack.
-- **Proactive Alerting and Anomaly Detection:** Configure intelligent, customizable alerts based on performance thresholds or leverage built-in machine learning capabilities to automatically detect unusual patterns and anomalies in real time. This allows your teams to identify and address potential issues before they impact end-users.
-- **Comprehensive Visibility:** From individual CPU utilization and disk I/O to a complete view of hardware health and network traffic, the solution provides granular insights into every server. Detailed views track resource usage, giving a full picture of system health.
-- **Robust Security:** Enterprise-grade security features include role-based access control (RBAC), field-level security, and encrypted communications, ensuring sensitive data remains protected. Audit logging provides a complete trail of all user actions.
-- **Scalability and Flexibility:** Designed for the modern enterprise, the platform scales horizontally to accommodate massive data volumes and dynamic environments. With flexible deployment options on-premises or across all major cloud providers, it adapts to your architectural needs.
+## Key Capabilities
 
-## Solution Components
+- **Unified infrastructure monitoring** — metrics from every layer brought together for rapid root-cause analysis.
+- **Proactive alerting and anomaly detection** — threshold-based alerts plus machine-learning detection of unusual patterns.
+- **Comprehensive visibility** — from CPU and disk I/O to hardware health and network traffic.
+- **Security of the platform** — role-based access control, field-level security, encrypted communication and audit logging.
+- **Scalability** — horizontal scaling for large data volumes, deployable on premises or in the cloud.
 
-- **Centralized Data Aggregation:** A lightweight, single-agent solution for collecting and shipping data from all your servers and network devices.
-- **Real-time Analytics Engine:** A distributed and highly resilient search and analytics engine that indexes your data for lightning-fast querying and analysis.
-- **Intuitive Visualization:** A flexible and extensible user interface for creating dynamic dashboards, interactive charts, and custom reports that provide a clear "single pane of glass" view of your entire infrastructure.
+<!-- Diagram guidance: sources → agents → ingestion → analytics engine → dashboards and alerts, with traces and service maps for APM. No application or metric names that reveal a customer's business. -->
+[[figure: observability-flow | Observability data flow]]
 
----
+## Application Performance Monitoring
 
-## Figure — Observability / APM Dashboards & Traces
+APM gives deep visibility into distributed applications, from services to serverless functions. It maps service dependencies automatically, detects anomalies and simplifies investigation of outliers, with support for popular programming languages, OpenTelemetry and distributed tracing.
 
-<!-- IMAGE PLACEMENT GUIDANCE — insert approved generic image here -->
-<!-- Recommended image: a generic observability/APM dashboard image showing metrics, logs, traces, alerting, and dashboard-oriented visibility — aligned to the "how many apps monitored" scope-number slot ({{services_apps_monitored}}) in the Professional Services module. No customer-specific application names, no customer-specific metric labels that reveal the customer's business, no customer site names. -->
-<!-- Generic-only rule: do not insert any image that names or depicts the customer's specific environment, architecture, site names, or branding. Replace customer-specific labels before use. -->
-<!-- To embed: place the approved image file at this location in the final docx (deferred — combine.py is text-only for now). -->
+Service level objectives (SLOs) are defined and tracked through service level indicators (SLIs) such as latency, error rate and availability, so service health can be measured against agreed thresholds.
 
-*[Figure placeholder — insert approved generic observability/APM dashboard diagram here. See image-placement guidance notes.]*
+## Value
 
----
+- **Lower mean time to resolution** — one view and correlated data cut troubleshooting time.
+- **Operational efficiency** — automated collection and alerting reduce manual effort.
+- **Performance and stability** — bottlenecks are found before they degrade service.
 
-## APM Capabilities
+## Integration
 
-Get deep visibility into cloud-native and distributed applications — from microservices to serverless architectures — and quickly identify and resolve root causes of issues. Seamlessly adopt APM to automatically identify anomalies, map service dependencies, and simplify investigations into outliers and abnormal behaviour. Optimize your application code with extensive support for popular languages, OpenTelemetry, and distributed tracing.
-
-## Value Proposition
-
-- **Reduced Mean Time to Resolution (MTTR):** By providing a unified view and intelligent correlation of server metrics, the solution drastically reduces the time and effort required for troubleshooting, allowing teams to resolve issues faster and minimize downtime.
-- **Enhanced Operational Efficiency:** Automated data collection, intelligent alerting, and a centralized management console reduce manual effort, freeing up teams to focus on strategic initiatives rather than reactive fire-fighting.
-- **Improved Performance and Stability:** With real-time visibility into performance bottlenecks and proactive anomaly detection, you can optimize resource allocation, prevent performance degradation, and maintain high levels of service availability.
-- **Future-Proof Platform:** The solution's open and flexible architecture ensures it can evolve with your needs, supporting new technologies, services, and data sources as your business grows.
-
-## Enterprise Management Context
-
-StackX Observability and APM is part of the broader StackX platform and integrates with ITSM for incident generation and closure, with Automation & Orchestration for event-driven remediation, with Endpoint Management for cross-domain correlation, and with Security modules (SIEM/EDR/XDR) for security telemetry enrichment.
-
-## Out-of-Scope (explicitly)
-
-- Any application development or debugging activities not explicitly in scope.
-- Any development and debugging activities.
-- Managing and supporting systems and devices not allowing ways of integration.
-- Operating 3rd party systems aside from the systems included in this scope.
+- Raises and closes incidents automatically in StackX ITSM. <!-- if module_stackx_itSM -->
+- Triggers remediation workflows in StackX Automation & Orchestration. <!-- if module_stackx_automation_orchestration -->
+- Shares telemetry with the StackX security modules for enrichment. <!-- if module_stackx_security or module_stackx_soc -->
 
 ---
 
-*This module is a reusable building block, derived from source material describing StackX Observability and APM. Confirm per bid which environments (on-prem physical/virtual, OpenShift/Kubernetes, AWS/Azure) and which telemetry sources are in scope.*
+*This module is a reusable building block. Confirm the environments (physical, virtual, container, cloud) and telemetry sources in scope per bid.*

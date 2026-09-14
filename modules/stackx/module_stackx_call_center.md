@@ -8,45 +8,32 @@
 
 ## Overview
 
-*[Placeholder — module to be authored from source material describing StackX Call Center Management.]*
+StackX Call Center Management is an integrated contact center suite that helps {{customer_short}} handle high volumes of customer interactions while keeping each one personal, so every query is resolved efficiently.
 
-## To be authored
+## Key Capabilities
 
-This module's content is to be authored from the source material for StackX Call Center Management before the module is included in a live proposal. Until then, include only with explicit subject-matter review.
+- **Omnichannel integration** — voice calls, emails, live chat and social media messages handled from one agent dashboard.
+- **Skills-based routing** — callers are directed automatically to the best-qualified agent by need, language or account history.
+- **Interactive voice response (IVR)** — a configurable self-service menu resolves simple queries or reaches the right department without an agent.
+- **Real-time analytics and reporting** — live KPIs such as average handle time (AHT) and first-call resolution (FCR), with heat maps and automated daily reports.
+- **Quality management** — call recording and whisper mode let supervisors monitor calls and coach agents in real time.
 
-## Typical scope areas (to be confirmed from source)
+<!-- Diagram guidance: channels (voice, email, chat, social) → routing and IVR → agent groups → supervisor dashboards and quality management. No queue or agent names. -->
+[[figure: contact-center | Omnichannel contact center flow]]
 
-Call Center Management capability areas typically include:
+## Value
 
-- Call routing, queuing and distribution across available agents
-- Interactive Voice Response (IVR) design and administration
-- Agent and supervisor dashboards and real-time monitoring
-- Call recording, retention and playback
-- Workforce management and scheduling support
-- Integration with platform telephony and ITSM for service-driven call handling
+- **Better customer experience** — faster responses and accurate routing raise satisfaction.
+- **Agent productivity** — one workspace and automated routine tasks let agents focus on complex issues.
+- **Data-driven staffing** — insight into peak times and performance improves scheduling.
+- **Scalability** — users and features are added as the operation grows, for central-office or remote teams.
 
----
+## How It Fits
 
-## Figure — Call-Center Architecture / Call Flow
+The contact center runs on the DeviceX IP-PBX for voice, adding the agent, routing and quality layer on top of site telephony. <!-- if module_ipbx -->
 
-<!-- IMAGE PLACEMENT GUIDANCE — insert approved generic image here -->
-<!-- Recommended image: a generic call-center architecture diagram showing inbound/outbound routing, queues, agents, and reporting — plus a call-flow diagram. No customer-specific queue names, no customer-specific agent roles, no customer site names. -->
-<!-- Suggested source: generic call-center reference model — no customer-specific content from prior proposals is carried. -->
-<!-- Generic-only rule: do not insert any image that names or depicts the customer's specific environment, architecture, site names, or branding. Replace customer-specific labels before use. -->
-<!-- To embed: place the approved image file at this location in the final docx (deferred — combine.py is text-only for now). -->
-
-*[Figure placeholder — insert approved generic call-center architecture / call-flow diagram here. See image-placement guidance notes.]*
+Customer requests that need back-office work are raised as tickets in StackX ITSM. <!-- if module_stackx_itSM -->
 
 ---
 
-## Out-of-Scope (explicitly)
-
-- Any communication with telco operators.
-- Any telephony numbering, VoIP or data-service licensing and regulatory permits.
-- Any configuration of the underlying telephony platform not included in this proposal scope.
-- Operating 3rd party call centre systems aside from the systems included in this scope.
-- Any development and debugging activities not explicitly in scope.
-
----
-
-*This module is a placeholder pending content authoring. Do not include in a live proposal without completing the module content and SME review.*
+*This module is a reusable building block. Confirm the channels, agent numbers and reporting requirements per bid.*

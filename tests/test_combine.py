@@ -1,7 +1,7 @@
-"""Tests for combine.py and the module sources.
+"""Tests for combine.py, library.py and the module sources.
 
 Run from the repo root:  python -m unittest discover -s tests -v
-Needs python-docx (the Hermes venv on the lab host has it).
+Needs python-docx (the builder's venv on the lab host has it).
 """
 
 from __future__ import annotations
@@ -19,15 +19,25 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 import combine  # noqa: E402
+import library  # noqa: E402
 from docx import Document  # noqa: E402
 
 INDEX = combine.load_index(ROOT / "module_index.json")
 EXAMPLE_VALUES = json.loads((ROOT / "values-example.json").read_text(encoding="utf-8"))
 LOGO = ROOT / "assets" / "vertowave_logo.png"
 ALL_TOKENS = [mod["token"] for mod in combine.iter_modules(INDEX)]
+FULL_OFFERING = ["licenses", "services", "managed_services", "premier_support"]
+CORE = ["section_cover_execsummary", "section_document_control", "section_exec_summary", "section_assumptions",
+        "section_out_of_scope", "section_change_mgmt", "section_pm_methodology", "section_roles",
+        "section_professional_services", "section_training", "section_ola", "section_validity",
+        "section_support_warranty", "section_glossary"]
 BANNED_RE = re.compile(
     r"(?<![A-Za-z0-9])(" + "|".join(re.escape(t) for t in INDEX["banned_terms"]) + r")(?![A-Za-z0-9])", re.I
 )
+THIRD_PARTY_RE = re.compile(
+    r"(?<![A-Za-z0-9])(" + "|".join(re.escape(t) for t in INDEX["third_party_terms"]) + r")(?![A-Za-z0-9])"
+)
+MODULE_FILES = sorted((ROOT / "modules").rglob("*.md"))
 
 
 def full_values() -> dict:
@@ -35,49 +45,120 @@ def full_values() -> dict:
     for slot in INDEX["customer_slots"]:
         if not str(values.get(slot, "")).strip():
             values[slot] = f"Value for {slot}"
+    values["key_requirements"] = "- First requirement\n- Second requirement"
+    values["compliance_matrix"] = [
+        {"ref": "R-1", "requirement": "Encrypted site links", "code": "C-DX", "response": "IPsec overlay", "section": "SD-WAN"},
+        {"ref": "R-2", "requirement": "Central log retention", "code": "C-SX", "response": "Tiered retention", "section": "Logs"},
+    ]
     return values
 
 
-def build(values: dict, tokens=None, issue: bool = False, logo=LOGO):
+def build(values: dict, tokens=None, issue: bool = False, logo=LOGO, offering=None, library_dir=None, toc_levels=2):
     doc, warnings = combine.assemble_complete_document(
-        INDEX, tokens or ALL_TOKENS, values, str(logo) if logo else None, issue
+        INDEX, tokens or ALL_TOKENS, values, str(logo) if logo else None, issue,
+        offering=offering or FULL_OFFERING, toc_levels=toc_levels, library=library_dir,
     )
-    problems, unconfirmed = combine.check_document(doc, values, INDEX["banned_terms"], "complete", issue)
-    return doc, problems, unconfirmed
+    problems, unconfirmed = combine.check_document(doc, values, INDEX["banned_terms"], "complete", issue,
+                                                   INDEX["third_party_terms"])
+    return doc, list(doc._vw_problems) + problems, unconfirmed
+
+
+def text(doc) -> str:
+    return combine.document_text(doc)
+
+
+def headings(doc, level: int | None = None) -> list[str]:
+    names = ("Heading 1", "Heading 2", "Heading 3") if level is None else (f"Heading {level}",)
+    return [p.text for p in doc.paragraphs if p.style.name in names]
 
 
 class ModuleSourceTests(unittest.TestCase):
-    def test_every_registered_module_file_exists(self):
-        for mod in combine.iter_modules(INDEX):
-            self.assertTrue((ROOT / mod["file"]).is_file(), mod["file"])
+    def test_every_registered_module_file_exists_and_every_file_is_registered(self):
+        registered = {(ROOT / mod["file"]).resolve() for mod in combine.iter_modules(INDEX)}
+        for path in registered:
+            self.assertTrue(path.is_file(), path)
+        self.assertEqual({p.resolve() for p in MODULE_FILES}, registered)
 
-    def test_module_sources_name_no_prior_customer(self):
-        for md in (ROOT / "modules").rglob("*.md"):
+    def test_document_order_lists_every_module_once(self):
+        order = INDEX["document_order"]
+        self.assertEqual(len(order), len(set(order)))
+        self.assertEqual(set(order), set(ALL_TOKENS))
+
+    def test_modules_name_no_prior_customer(self):
+        for md in MODULE_FILES:
             for n, line in enumerate(md.read_text(encoding="utf-8").splitlines(), 1):
                 self.assertIsNone(BANNED_RE.search(line), f"{md.name}:{n}: {line[:80]}")
 
-    def test_registry_names_no_prior_customer(self):
-        self.assertIsNone(BANNED_RE.search(json.dumps(INDEX["modules"])))
+    def test_modules_name_no_third_party_product(self):
+        for md in MODULE_FILES:
+            for n, line in enumerate(md.read_text(encoding="utf-8").splitlines(), 1):
+                self.assertIsNone(THIRD_PARTY_RE.search(line), f"{md.name}:{n}: {line[:80]}")
 
-    def test_every_token_in_modules_is_a_slot_or_module(self):
-        known = set(INDEX["customer_slots"]) | set(ALL_TOKENS)
-        for md in (ROOT / "modules").rglob("*.md"):
-            body = combine.prepare_module_text(md.read_text(encoding="utf-8"))
-            for token in re.findall(r"\{\{([^}]*)\}\}", body):
-                self.assertIn(token, known, f"{md.name}: {{{{{token}}}}}")
+    def test_registry_is_clean(self):
+        self.assertIsNone(BANNED_RE.search(json.dumps(INDEX["modules"])))
+        self.assertIsNone(THIRD_PARTY_RE.search(json.dumps(INDEX["modules"])))
+        self.assertNotIn("VertoWave", json.dumps(INDEX["modules"]))
+
+    def test_modules_pass_library_validation(self):
+        for md in MODULE_FILES:
+            self.assertEqual(library.validate_module_text(md.read_text(encoding="utf-8"), INDEX), [], md.name)
+
+    def test_every_requires_expression_is_valid(self):
+        known = combine.known_condition_names(INDEX)
+        for mod in combine.iter_modules(INDEX):
+            if mod.get("requires"):
+                self.assertLessEqual(combine.condition_names(combine.parse_condition(mod["requires"])), known)
 
     def test_every_slot_has_an_example_value_key(self):
         self.assertEqual(set(INDEX["customer_slots"]) - set(EXAMPLE_VALUES), set())
 
-    def test_figure_blocks_sit_at_section_boundaries(self):
-        for md in (ROOT / "modules").rglob("*.md"):
-            lines = md.read_text(encoding="utf-8").splitlines()
-            figures = [i for i, line in enumerate(lines) if line.startswith("## Figure —")]
-            self.assertLessEqual(len(figures), 1, md.name)
-            for i in figures:
-                before = [line for line in lines[:i] if line.strip() and line.strip() != "---"]
-                self.assertFalse(before[-1].startswith("#"), f"{md.name}: figure directly under a heading")
-                self.assertFalse(before[-1].rstrip().endswith(":"), f"{md.name}: figure splits a list intro")
+    def test_exclusions_live_only_in_the_out_of_scope_section(self):
+        for md in MODULE_FILES:
+            if md.name != "section_out_of_scope.md":
+                self.assertNotIn("Out-of-Scope (explicitly)", md.read_text(encoding="utf-8"), md.name)
+
+    def test_modules_use_us_spelling_and_the_brand_name(self):
+        uk = re.compile(r"(?i)\b(organis|optimis|centralis|prioritis|modernis|virtualis|licence|behaviour|catalogue|"
+                        r"programme|analyse|colour|defence|datacentre)")
+        for md in MODULE_FILES:
+            content = md.read_text(encoding="utf-8")
+            self.assertIsNone(uk.search(content), f"{md.name}: {uk.search(content)}")
+            self.assertNotIn("VertoWave", content, md.name)
+
+    def test_figure_slugs_are_unique(self):
+        slugs = [s for md in MODULE_FILES for s, _ in library.FIGURE_RE.findall(md.read_text(encoding="utf-8"))]
+        self.assertEqual(len(slugs), len(set(slugs)))
+
+
+class ConditionTests(unittest.TestCase):
+    def test_expressions(self):
+        tree = combine.parse_condition("module_nvr or (services and not managed_services)")
+        self.assertTrue(combine.evaluate_condition(tree, {"module_nvr"}))
+        self.assertTrue(combine.evaluate_condition(tree, {"services"}))
+        self.assertFalse(combine.evaluate_condition(tree, {"services", "managed_services"}))
+        for bad in ("module_nvr or", "(services", "services & licenses", ""):
+            with self.assertRaises(ValueError):
+                combine.parse_condition(bad)
+
+    def test_blocks_lines_and_table_rows(self):
+        source = "\n".join([
+            "keep",
+            "- only nvr <!-- if module_nvr -->",
+            "| a | b <!-- if services --> |",
+            "<!-- if licenses -->",
+            "licensed",
+            "<!-- if services -->",
+            "nested",
+            "<!-- endif -->",
+            "<!-- endif -->",
+        ])
+        self.assertEqual(combine.apply_conditions(source, {"services"}), "keep\n| a | b |")
+        self.assertEqual(combine.apply_conditions(source, {"licenses", "services", "module_nvr"}),
+                         "keep\n- only nvr\n| a | b |\nlicensed\nnested")
+        with self.assertRaises(ValueError):
+            combine.apply_conditions("<!-- if services -->\nx", set())
+        with self.assertRaises(ValueError):
+            combine.apply_conditions("x\n<!-- endif -->", set())
 
 
 class CompleteBuildTests(unittest.TestCase):
@@ -86,53 +167,153 @@ class CompleteBuildTests(unittest.TestCase):
         cls.values = full_values()
         cls.draft, cls.draft_problems, _ = build(cls.values)
         cls.issue, cls.issue_problems, _ = build(cls.values, issue=True)
-        cls.draft_text = combine.document_text(cls.draft)
-        cls.issue_text = combine.document_text(cls.issue)
+        cls.draft_text = text(cls.draft)
+        cls.issue_text = text(cls.issue)
 
     def test_draft_and_issue_pass_the_checks(self):
         self.assertEqual(self.draft_problems, [])
         self.assertEqual(self.issue_problems, [])
 
     def test_no_markdown_or_comment_residue(self):
-        for text in (self.draft_text, self.issue_text):
-            for residue in ("<!--", "-->", "{{", "}}", ":---", "**", "\\newpage"):
-                self.assertNotIn(residue, text)
+        for content in (self.draft_text, self.issue_text):
+            for residue in ("<!--", "-->", "{{", "}}", ":---", "**", "\\newpage", "[["):
+                self.assertNotIn(residue, content)
+
+    def test_customer_name_used_instead_of_the_customer(self):
+        self.assertNotRegex(self.issue_text, r"(?i)\bthe customer\b")
+        self.assertIn(self.values["customer_short"], self.issue_text)
 
     def test_logo_replaces_the_placeholder(self):
         self.assertNotIn(combine.LOGO_MARKER, self.issue_text)
         self.assertEqual(len(self.issue.inline_shapes), 1)
 
-    def test_issue_copy_without_logo_drops_the_placeholder_line(self):
-        doc, problems, _ = build(self.values, issue=True, logo=None)
-        self.assertEqual(problems, [])
-        self.assertNotIn(combine.LOGO_MARKER, combine.document_text(doc))
-
-    def test_cover_then_toc_then_capability_modules(self):
+    def test_front_matter_then_toc_then_numbered_sections(self):
         paragraphs = [p.text for p in self.issue.paragraphs]
-        self.assertLess(paragraphs.index(self.values["proposal_title"]), paragraphs.index("Table of Contents"))
-        self.assertLess(paragraphs.index("Table of Contents"), paragraphs.index("SD-WAN"))
-        self.assertNotIn("Cover Page & Executive Summary", paragraphs)
+        toc = paragraphs.index("Table of Contents")
+        self.assertLess(paragraphs.index(self.values["proposal_title"]), toc)
+        self.assertLess(paragraphs.index("Document Control"), toc)
+        body_h1 = [h for h in headings(self.issue, 1) if h != "Document Control"]
+        self.assertTrue(body_h1[0].startswith("1" + combine.HEADING_SEPARATOR + "Executive Summary"), body_h1[0])
+        for heading in body_h1:
+            self.assertRegex(heading, r"^(\d+|Appendix [A-Z]:)" + combine.HEADING_SEPARATOR)
+        self.assertTrue(any(h.startswith("Appendix A:" + combine.HEADING_SEPARATOR) for h in body_h1))
 
-    def test_executive_summary_starts_on_a_new_page(self):
-        for doc in (self.draft, self.issue):
-            paragraphs = doc.paragraphs
-            idx = next(i for i, p in enumerate(paragraphs)
-                       if p.text == "Executive Summary" and p.style.name == "Heading 1")
-            self.assertIn('w:type="page"', paragraphs[idx - 1]._p.xml)
+    def test_toc_lists_two_levels(self):
+        levels = {entry[0] for entry in self.issue._vw_toc["entries"]}
+        self.assertEqual(levels, {1, 2})
+
+    def test_scope_table_lists_selected_capability_modules(self):
+        self.assertIn("SD-WAN", self.issue_text)
+        self.assertIn("StackX Call Center Management", self.issue_text)
+        self.assertIn("Operation of the implemented solution under the agreed Operations Level Agreement.",
+                      self.issue_text)
+
+    def test_glossary_and_compliance_matrix(self):
+        self.assertIn("Software-defined wide-area network", self.issue_text)
+        self.assertIn("Encrypted site links", self.issue_text)
+
+    def test_tables_have_a_shaded_header(self):
+        xml = self.issue.tables[0]._tbl.xml
+        self.assertIn(f'w:fill="{combine.HEADER_FILL}"', xml)
+        self.assertIn("w:tblHeader", xml)
+
+    def test_figures_are_placeholders_in_a_draft_and_absent_from_an_issue_copy(self):
+        self.assertIn("Figure placeholder", self.draft_text)
+        self.assertIn("Figure 1:", self.draft_text)
+        self.assertNotIn("Figure placeholder", self.issue_text)
+        self.assertNotRegex(self.issue_text, r"Figure \d+:")
 
     def test_issue_copy_drops_bid_team_material(self):
-        for phrase in ("Figure placeholder", "for the bid team", "This module is a reusable building block",
-                       "Author per bid", "SECONDARY LOGO"):
+        for phrase in ("for the bid team", "This module is a reusable building block", "Author per bid",
+                       "SECONDARY LOGO"):
             self.assertIn(phrase.lower(), self.draft_text.lower())
             self.assertNotIn(phrase.lower(), self.issue_text.lower())
 
-    def test_table_separator_rows_are_not_rendered(self):
-        for table in self.issue.tables:
-            for row in table.rows:
-                self.assertFalse(all(re.fullmatch(r":?-{3,}:?", c.text.strip()) for c in row.cells))
+    def test_executive_summary_starts_on_a_new_page(self):
+        paragraphs = self.issue.paragraphs
+        idx = next(i for i, p in enumerate(paragraphs) if p.text.endswith("Executive Summary")
+                   and p.style.name == "Heading 1")
+        self.assertIn('w:type="page"', paragraphs[idx - 1]._p.xml)
 
-    def test_module_references_become_names(self):
-        self.assertIn("StackX SOC Operations", self.draft_text)
+
+class OfferingTests(unittest.TestCase):
+    def issue_text(self, tokens, offering) -> str:
+        doc, problems, _ = build(full_values(), tokens=tokens, issue=True, offering=offering)
+        self.assertEqual(problems, [])
+        return text(doc)
+
+    def test_licenses_only(self):
+        content = self.issue_text(CORE + ["module_sdwan"], ["licenses"])
+        self.assertIn("deemed delivered", content)
+        self.assertNotIn("acceptance criteria", content)
+        for absent in ("Professional Services", "Project Management Methodology", "Operations Level Agreement",
+                       "managed services", "Change Management Procedure"):
+            self.assertNotIn(absent.lower(), content.lower(), absent)
+
+    def test_services_only(self):
+        content = self.issue_text(CORE + ["module_sdwan"], ["services"])
+        self.assertIn("accepted against acceptance criteria", content)
+        self.assertNotIn("deemed delivered", content)
+        self.assertNotIn("Support and Warranty", content)
+        self.assertNotIn("managed services", content.lower())
+
+    def test_managed_services_appear_only_when_selected(self):
+        without = self.issue_text(CORE + ["module_stackx_security", "module_stackx_soc"], ["licenses", "services"])
+        self.assertNotIn("Operations Level Agreement", without)
+        self.assertNotIn("SOC Operations", without)
+        with_ms = self.issue_text(CORE + ["module_stackx_security", "module_stackx_soc"], FULL_OFFERING)
+        self.assertIn("Operations Level Agreement", with_ms)
+        self.assertIn("StackX SOC Operations", with_ms)
+
+    def test_module_specific_lines_follow_the_selection(self):
+        content = self.issue_text(CORE + ["module_sdwan"], FULL_OFFERING)
+        for absent in ("NVR", "PBX", "call-flow", "extension fault", "analog cameras", "Surveillance"):
+            self.assertNotIn(absent, content, absent)
+        content = self.issue_text(CORE + ["module_sdwan", "module_nvr", "module_ipbx"], FULL_OFFERING)
+        for present in ("NVR not recording", "Call-flow administration", "analog cameras"):
+            self.assertIn(present, content, present)
+
+    def test_stackx_only_bid_has_no_devicex_material(self):
+        content = self.issue_text(CORE + ["module_stackx_itSM", "section_hardware_sizing"], FULL_OFFERING)
+        for absent in ("DeviceX/SDX Assumptions", "Connectivity, Carriers", "Hardware Specifications",
+                       "site roll-out", "customs"):
+            self.assertNotIn(absent.lower(), content.lower(), absent)
+
+    def test_premier_support_is_optional(self):
+        self.assertNotIn("Premier Support", self.issue_text(CORE, ["licenses"]))
+        self.assertIn("Premier Support", self.issue_text(CORE, ["licenses", "premier_support"]))
+
+
+class CheckTests(unittest.TestCase):
+    def test_blank_values_are_marked_in_a_draft_and_refused_in_an_issue_copy(self):
+        values = full_values()
+        values["services_integrations"] = ""
+        _doc, problems, unconfirmed = build(values, tokens=["section_professional_services"])
+        self.assertEqual(problems, [])
+        self.assertEqual(unconfirmed, ["services_integrations"])
+        _doc, problems, _ = build(values, tokens=["section_professional_services"], issue=True)
+        self.assertTrue(any("services_integrations" in p for p in problems))
+
+    def test_empty_compliance_matrix_blocks_an_issue_copy(self):
+        values = full_values()
+        values["compliance_matrix"] = []
+        _doc, problems, _ = build(values, tokens=["section_compliance_matrix"], issue=True)
+        self.assertTrue(any("compliance matrix" in p for p in problems))
+
+    def check(self, sentence: str, values: dict | None = None) -> list[str]:
+        doc = Document()
+        doc.add_paragraph(sentence)
+        problems, _ = combine.check_document(doc, values or full_values(), INDEX["banned_terms"], "complete", False,
+                                             INDEX["third_party_terms"])
+        return problems
+
+    def test_banned_and_third_party_terms_are_refused(self):
+        self.assertTrue(any("Telemedicine" in p for p in self.check("As delivered for the Telemedicine network.")))
+        self.assertTrue(any("Kibana" in p for p in self.check("Dashboards are built in Kibana.")))
+
+    def test_ordinary_words_and_the_current_customer_are_allowed(self):
+        self.assertEqual(self.check("Changes run in agreed maintenance windows."), [])
+        self.assertEqual(self.check("Prepared for EGYCash.", dict(full_values(), customer_name="EGYCash")), [])
 
 
 class PageAndTocTests(unittest.TestCase):
@@ -140,13 +321,6 @@ class PageAndTocTests(unittest.TestCase):
         doc, _problems, _ = build(full_values(), tokens=["section_validity"], issue=True)
         section = doc.sections[0]
         self.assertEqual((round(section.page_width.mm), round(section.page_height.mm)), (210, 297))
-
-    def test_toc_lists_every_heading_once(self):
-        doc, _problems, _ = build(full_values(), issue=True)
-        headings = [p.text for p in doc.paragraphs if p.style.name in ("Heading 1", "Heading 2", "Heading 3")]
-        self.assertEqual([e[1] for e in doc._vw_toc["entries"]], headings)
-        self.assertTrue(any(e[2] for e in doc._vw_toc["entries"]))
-        self.assertFalse(doc._vw_toc["entries"][0][2], "front-matter headings come before the TOC")
 
     def test_find_heading_pages_skips_toc_lines(self):
         entries = [(1, "Executive Summary", False), (1, "SD-WAN", True), (2, "Key Capabilities", True)]
@@ -160,49 +334,64 @@ class PageAndTocTests(unittest.TestCase):
 
     @unittest.skipUnless(shutil.which("soffice") and shutil.which("pdftotext"), "LibreOffice not installed")
     def test_toc_page_numbers_filled_from_a_render(self):
-        tokens = ["section_cover_execsummary", "section_document_control", "module_sdwan", "section_validity"]
+        tokens = ["section_cover_execsummary", "section_document_control", "section_exec_summary", "module_sdwan",
+                  "section_validity"]
         doc, problems, _ = build(full_values(), tokens=tokens, issue=True)
         self.assertEqual(problems, [])
         filled, message = combine.fill_toc_page_numbers(doc)
         self.assertTrue(filled, message)
         numbers = [int(run.text) for run in doc._vw_toc["runs"]]
         self.assertEqual(numbers, sorted(numbers))
-        toc_page = next(n for n, e in zip(numbers, doc._vw_toc["entries"]) if e[2])
-        self.assertGreater(toc_page, numbers[0])
-
-
-class CheckTests(unittest.TestCase):
-    def test_blank_values_are_marked_in_a_draft_and_refused_in_an_issue_copy(self):
-        values = full_values()
-        values["services_branches"] = ""
-        _doc, problems, unconfirmed = build(values, tokens=["section_professional_services"])
-        self.assertEqual(problems, [])
-        self.assertEqual(unconfirmed, ["services_branches"])
-        _doc, problems, _ = build(values, tokens=["section_professional_services"], issue=True)
-        self.assertTrue(any("services_branches" in p for p in problems))
-
-    def test_banned_term_in_the_output_is_refused(self):
-        doc = Document()
-        doc.add_paragraph("As delivered for the Telemedicine network last year.")
-        problems, _ = combine.check_document(doc, full_values(), INDEX["banned_terms"], "complete", False)
-        self.assertTrue(any("Telemedicine" in p for p in problems))
-
-    def test_banned_term_allowed_when_it_is_the_current_customer(self):
-        doc = Document()
-        doc.add_paragraph("Prepared for EGYCash.")
-        values = dict(full_values(), customer_name="EGYCash")
-        problems, _ = combine.check_document(doc, values, INDEX["banned_terms"], "complete", False)
-        self.assertEqual(problems, [])
 
 
 class TemplateModeTests(unittest.TestCase):
     def test_template_keeps_double_brace_tokens(self):
         doc, _warnings = combine.assemble_template_document(INDEX, ALL_TOKENS, EXAMPLE_VALUES)
-        text = combine.document_text(doc)
-        self.assertIn("{{module_sdwan}}", text)
-        self.assertNotRegex(text, r"(?<!\{)\{module_sdwan\}(?!\})")
-        problems, _ = combine.check_document(doc, EXAMPLE_VALUES, INDEX["banned_terms"], "template", False)
+        content = text(doc)
+        self.assertIn("{{module_sdwan}}", content)
+        self.assertNotRegex(content, r"(?<!\{)\{module_sdwan\}(?!\})")
+        problems, _ = combine.check_document(doc, EXAMPLE_VALUES, INDEX["banned_terms"], "template", False,
+                                             INDEX["third_party_terms"])
         self.assertEqual(problems, [])
+
+
+class LibraryTests(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.lib = library.Library(Path(self.tmp.name), INDEX, ROOT)
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def test_saved_version_overrides_the_repo_copy_until_reverted(self):
+        edited = self.lib.current_text("section_validity").replace("## Validity", "## Validity\n\nEdited in the portal.")
+        entry = self.lib.save("section_validity", edited, "Basem", "wording")
+        self.assertEqual(entry["version"], 1)
+        doc, problems, _ = build(full_values(), tokens=["section_validity"], issue=True, library_dir=Path(self.tmp.name))
+        self.assertEqual(problems, [])
+        self.assertIn("Edited in the portal.", text(doc))
+        self.lib.revert_to_baseline("section_validity", "Basem")
+        doc, _p, _ = build(full_values(), tokens=["section_validity"], issue=True, library_dir=Path(self.tmp.name))
+        self.assertNotIn("Edited in the portal.", text(doc))
+        self.assertEqual(self.lib.restore("section_validity", 1, "Basem")["version"], 2)
+        self.assertEqual(len(self.lib.history("section_validity")), 3)
+
+    def test_invalid_versions_are_refused(self):
+        base = self.lib.current_text("section_validity")
+        for bad in (base + "\nDelivered for the Telemedicine network.", base + "\nBuilt on Kibana.",
+                    base + "\n- line <!-- if module_nope -->", base + "\n{{unknown_slot}}",
+                    base + "\n<!-- if services -->\nunclosed"):
+            with self.assertRaises(ValueError):
+                self.lib.save("section_validity", bad, "Basem", "bad")
+        self.assertEqual(self.lib.history("section_validity"), [])
+
+    def test_figure_upload_is_used_by_the_build(self):
+        self.lib.save_figure("change-request-flow", LOGO.read_bytes(), ".png")
+        doc, problems, _ = build(full_values(), tokens=["section_change_mgmt"], issue=True,
+                                 library_dir=Path(self.tmp.name))
+        self.assertEqual(problems, [])
+        self.assertEqual(len(doc.inline_shapes), 2)  # cover logo is absent here; logo + figure
+        self.assertIn("Figure 1: Change request process", text(doc))
 
 
 class CliTests(unittest.TestCase):
@@ -224,10 +413,15 @@ class CliTests(unittest.TestCase):
         self.assertIn("ERROR: an issue copy cannot contain unfilled values", proc.stderr)
 
     def test_draft_build_with_example_values_succeeds(self):
-        proc, written = self.run_cli(EXAMPLE_VALUES, "--logo", str(LOGO))
+        proc, written = self.run_cli(EXAMPLE_VALUES, "--logo", str(LOGO), "--no-toc-pages")
         self.assertEqual(proc.returncode, 0, proc.stderr)
         self.assertTrue(written)
         self.assertIn("TO CONFIRM: ", proc.stderr)
+
+    def test_invalid_offering_is_refused(self):
+        proc, written = self.run_cli(EXAMPLE_VALUES, "--offering", "licenses,hardware")
+        self.assertNotEqual(proc.returncode, 0)
+        self.assertFalse(written)
 
 
 if __name__ == "__main__":

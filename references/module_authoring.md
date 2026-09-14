@@ -1,7 +1,8 @@
 # Module Authoring Contract
 
 How to write a module `.md` under `modules/<group>/` so `combine.py` renders it
-correctly. `write_module.py` creates a file in this shape and registers it.
+correctly. `write_module.py` creates a file in this shape and registers it; the
+portal's Module Library refuses to save a version that breaks these rules.
 
 ## File structure
 
@@ -11,81 +12,92 @@ correctly. `write_module.py` creates a file in this shape and registers it.
 **Token:** `{{module_<token>}}`
 **Group:** <group label>
 **Required:** Yes | No (<when to include it>)
-<optional: **Note:** / **Present in:** / **To be authored:** ...>
 
 ---
 
 <body>
 ```
 
-- The title line and the metadata block are required. The block ends at the first
-  `---` line; everything in it is dropped from the proposal.
-- The `# Title` becomes the module's Heading 1 (the cover module hides it via
+- The title and metadata block are required. The block ends at the first `---`
+  line; everything in it is dropped from the proposal.
+- The `# Title` becomes the module's numbered Heading 1 (the cover hides it via
   `"show_title": false` in `module_index.json`).
-- Other `---` lines are horizontal rules in the source only; they are not rendered.
+- Other `---` lines are source-only rules and are not rendered.
 
 ## What the converter renders
 
 | Markdown | In the .docx |
 | --- | --- |
-| `#`, `##`, `###` | Heading 1–3 (these build the table of contents) |
+| `#`, `##`, `###` | Numbered Heading 1–3 (1, 1.1, 1.1.1; appendices A, A.1) |
 | `#! text` | Title style — cover page only |
 | `\newpage` alone on a line | Page break |
 | `- item` / indented `- item` | Bullets, two levels |
 | `1. item` | Indented numbered line (the number is kept as written) |
-| `| a | b |` tables | Word table; a `| --- |` separator row marks the first row as a bold header |
+| `| a | b |` tables | Styled table; a `| --- |` separator row marks a navy header row |
 | `**bold**`, `*italic*`, `` `code` `` | Bold, italic, plain text |
-| `> text` | Plain paragraph |
-| `<!-- ... -->` | Never rendered (use for image guidance and author comments) |
+| `<!-- ... -->` | Never rendered — use for diagram guidance |
 
-Links, images, nested tables and deeper list levels are not supported.
+## Conditional content — every point appears only when it applies
+
+```
+<!-- if module_nvr -->
+... a block shown only when the NVR module is selected ...
+<!-- endif -->
+
+- a single bullet <!-- if module_ipbx or module_stackx_call_center -->
+| a table row | ... <!-- if devicex --> |
+## A heading <!-- if managed_services -->
+```
+
+Names usable in conditions:
+
+- any module or section token (`module_sdwan`, `section_training`, ...)
+- `devicex` / `stackx` — any module of that family is selected
+- the offering: `licenses`, `services`, `managed_services`, `premier_support`
+- combine with `and`, `or`, `not` and parentheses
+
+A whole module can be tied to the offering with `"requires"` in
+`module_index.json` (for example `"requires": "managed_services"` on the OLA).
+
+## Directives
+
+| Line | Result |
+| --- | --- |
+| `[[figure: slug \| Caption]]` | The image uploaded as `slug` in the Module Library (or `assets/figures/slug.png`), numbered "Figure N: Caption". Without an image: a placeholder box in a draft, nothing in an issue copy. |
+| `[[scope_table]]` | Table of the selected modules and their `summary` from the registry |
+| `[[compliance_matrix]]` | The RFP requirement rows entered in the builder |
+| `[[glossary]]` | `glossary.json` terms that appear in the built proposal |
 
 ## Bid-team material
 
-Content meant for the bid team, not the customer, must be marked so that an issue copy
-removes it (a draft keeps it, highlighted yellow):
+Content for the bid team, not the customer, is removed from an issue copy and
+highlighted in a draft:
 
-- **Notes:** a whole paragraph in italics — `*[Note: confirm the response times per bid.]*`
-  or a closing `*This module is a reusable building block ...*` line. A whole
-  paragraph in `**[...]**` also counts.
-- **Sections:** a heading containing `(for the bid team)`, e.g.
-  `## Logo Placement Notes (for the bid team)`; everything under it up to the next
-  heading of the same or higher level is bid-team material.
-- **Figure placeholders:** a `## Figure — <name>` heading followed by `<!-- -->`
-  guidance and a `*[Figure placeholder — ...]*` note. Place it at a section boundary,
-  never between a heading or a "the following ...:" sentence and its content.
+- a whole paragraph in italics — `*[Note: confirm the response times per bid.]*`
+- a heading containing `(for the bid team)` and everything under it
 
-Never write customer-facing text in italics as a whole paragraph — it would be removed
-from the issue copy.
+Never write customer-facing text as a whole italic paragraph.
 
-## Values and cross-references
+## Wording rules
 
-- `{{slot}}` is filled from the proposal values. Every slot used in a module must exist
-  in `module_index.json` → `customer_slots` and in `values-example.json` (the tests
-  enforce this). Blank values render as `[TO CONFIRM: slot]` in a draft and block an
-  issue copy.
-- `{{module_...}}` / `{{section_...}}` in body text renders as that module's name.
-  Prefer writing the name in plain words.
-- Only letters, digits and underscores inside `{{ }}`; `{{training_*}}`-style
-  wildcards are not tokens and will block the build.
-
-## Keeping modules generic
-
-- No prior-customer names, sites, sectors or dates anywhere in the file — comments
-  included. `banned_terms` in `module_index.json` lists the known ones; the tests scan
-  every module line and every build scans the finished document.
-- Final italic notes say when to include the module, not where the text came from.
-- Do not duplicate another module's capability list; write from this module's layer.
-- End each module with an `## Out-of-Scope (explicitly)` list that mirrors
-  `modules/cross_cutting/section_out_of_scope.md`.
+- US spelling; the brand is **Verto Wave**.
+- Use `{{customer_short}}` instead of "the customer".
+- No prior-customer names, sites or sectors (`banned_terms`) and no third-party
+  product names (`third_party_terms`) — describe the function instead.
+- Exclusions belong only in `section_out_of_scope.md`, tagged with conditions;
+  modules do not carry their own out-of-scope lists.
+- Each module describes its own layer; do not repeat another module's
+  capability list.
+- `{{slot}}` values must exist in `module_index.json` → `customer_slots` and in
+  `values-example.json`.
 
 ## Placeholder modules
 
-A module whose content is not authored yet carries `"placeholder": true` in
-`module_index.json`. The builder labels it and warns when it is selected. Remove the flag
-only after the content is written and SME-reviewed.
+A module whose content is not written yet carries `"placeholder": true`; the
+builder labels it and warns when it is selected.
 
 ## After editing
 
-Run `scripts/deploy.sh --test-only` (tests on the host) and build a draft of the modules
-you touched to read the result.
+Portal edits: save a new version in the Module Library (it validates the text).
+Repo edits: `scripts/deploy.sh --test-only`, then build a draft of the modules
+you touched.

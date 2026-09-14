@@ -26,12 +26,14 @@ INDEX = SCRIPT_DIR / "module_index.json"
 GROUP_LABELS = {
     "devicex_sdx": "DeviceX/SDX — Edge & Branch Layer",
     "stackx": "StackX — Control / Orchestration / SOC / Operations Layer",
+    "optional_sections": "Optional Proposal Sections",
     "cross_cutting": "Cross-Cutting",
 }
 
 GROUP_DIR = {
     "devicex_sdx": "modules/devicex",
     "stackx": "modules/stackx",
+    "optional_sections": "modules/optional",
     "cross_cutting": "modules/cross_cutting",
 }
 

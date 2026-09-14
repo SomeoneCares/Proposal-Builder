@@ -1,4 +1,4 @@
-# Assumptions, Dependencies & Risks
+# Assumptions, Dependencies and Risks
 
 **Token:** `{{section_assumptions}}`  
 **Group:** Cross-Cutting  
@@ -8,90 +8,91 @@
 
 ## General Assumptions
 
-- VertoWave operates on a standard forty (40) hour work week, with resources adhering to an eight (8) hour schedule from Sunday to Thursday, or other mutually agreed local working days. Working hours are from 9 AM to 5 PM local time, excluding official local holidays. Any other standard local business hours can be mutually agreed upon, referred to as "working days".
-- The entire project will be delivered remotely, and remote access is mandatory throughout its lifecycle.
-- Build/implementation activities are only concerned with implementing and configuring the systems as per the agreed-upon design, and apply only to systems and configurations that meet all the requirements mentioned in the designing and planning stage.
-- Implementation activities will be performed remotely. Where the optional managed operations service is selected, operations activities and the operations team will follow the allocation provided in the OLA and will be delivered from the central site.
-- Integration with third-party applications will be provided if applicable — meaning that the system is healthy, supported by the involved system vendors, and provides supported integration methodology and compatibility scenarios per the involved systems vendors' guidelines and supportability matrix.
-- The customer will ensure the dedication of stakeholders to participate effectively in requirement gathering and system design.
-- Delays in responses or feedback from the customer's resources will lead to corresponding delays in the project schedule.
-- Hardware, operating system and database specifications will be recommended by Verto Wave during the design workshop.
-- Any modification or additional requirements beyond the stated scope will be handled through a change request.
-- Scope is limited to the solutions mentioned in this document and not any other solution, even those in the same portfolio.
-- The customer will provide reliable, stable connectivity, including Internet connectivity, at every site and in the central data center for all systems contributing to this project.
-- There is no security policy or firewall blocking required communication or replication between servers.
-- Services identified in this proposal which include configured, installed, upgraded or implemented software are not subject to customer acceptance.
+- Verto Wave operates on a standard forty (40) hour work week, with resources working an eight (8) hour schedule from Sunday to Thursday, or other mutually agreed local working days. Working hours are 9 AM to 5 PM local time, excluding official local holidays ("working days").
+- Any modification or additional requirement beyond the stated scope is handled through a change request. <!-- if services or managed_services -->
+- Scope is limited to the solutions described in this document and does not include any other solution, even those in the same portfolio.
+- {{customer_short}} provides reliable, stable connectivity, including Internet connectivity, at every site and at the central site for all systems contributing to this project.
+- No security policy or firewall blocks the communication or replication required between the solution's components.
 
-## Customer Responsibilities
+## Licenses and Acceptance
 
-- The customer will provide Verto Wave with the required credentials and access, including any required remote access, in all locations.
-- All requirements and recommendations identified during the envisioning stage and outlined in the design document must be addressed by the customer before the kick-off of build activities.
-- All required network communication ports requested during the building/implementation stage should be opened in the firewall within one business day of the request.
-- The customer should maintain a complete backup (full, incremental, differential, etc.) of the implemented solutions under this scope from the date of installation.
-- The customer's technical team should provide all required information about the environment to ensure Verto Wave resources can work effectively both onsite or offsite.
-- All administrative accounts for the services specified within the scope of this engagement must be prepared and handed over to the Verto Wave team prior to the commencement of deployment.
-- The customer should provide full administrative access to the existing servers and services, where applicable.
-- The solution servers must meet all prerequisites outlined in the design documents before deployment.
-- During the designing and planning stage, the customer and Verto Wave must finalize the detailed design prior to starting the building stage.
-- Any required certificates for securing the solution will be provided by the customer.
-- The customer will purchase any required operating system, database, or application subscription licenses, where applicable.
-- The naming convention will be established and agreed upon during the designing and planning stage.
-- Designate stakeholders to participate in meetings.
-- Facilitate the information-gathering sessions.
+- Software licenses are deemed delivered when the license keys or entitlements are delivered to {{customer_short}}, and are not subject to acceptance. <!-- if licenses -->
+- The license term, quantities and editions are those stated in the commercial proposal. <!-- if licenses -->
+- Professional services are accepted against acceptance criteria agreed during the designing and planning stage; each phase or site is accepted on successful completion of its acceptance test. <!-- if services -->
+- Managed services are not subject to acceptance; service performance is measured and reported against the Operations Level Agreement. <!-- if managed_services -->
 
----
+<!-- if services -->
+## Delivery Assumptions
 
-## Figure — <Insert approved generic diagram / screenshot here>
+- The project is delivered remotely, and remote access is required throughout its lifecycle.
+- Build and implementation activities cover implementing and configuring the systems according to the agreed design, and apply only to systems and configurations that meet all requirements identified in the designing and planning stage.
+- Integration with third-party applications is provided where the system is healthy, supported by its vendor, and offers a supported integration method according to the vendor's guidelines and supportability matrix.
+- Hardware, operating system and database specifications are recommended by Verto Wave during the design workshop.
+- {{customer_short}} dedicates stakeholders to participate effectively in requirement gathering and system design.
+- Delays in responses or feedback from {{customer_short}}'s resources lead to corresponding delays in the project schedule.
+<!-- endif -->
 
-<!-- IMAGE PLACEMENT GUIDANCE — insert approved generic image here -->
-<!-- Recommended image: a generic diagram or screenshot relevant to this section's content (architecture, flow, dashboard, or topology as appropriate). No customer-specific names, environment, architecture, site names, or branding. -->
-<!-- Generic-only rule: do not insert any image that names or depicts the customer's specific environment, architecture, site names, or branding. Replace customer-specific labels before use. -->
-<!-- To embed: place the approved image file at this location in the final docx (combine.py embeds the cover logo only). -->
+- Managed operations activities follow the allocation defined in the Operations Level Agreement and are delivered from Verto Wave's central operations site. <!-- if managed_services -->
 
-*[Figure placeholder — insert approved generic image here. See image-placement guidance notes.]*
+<!-- if services -->
+## {{customer_short}} Responsibilities
 
----
+- Provide Verto Wave with the required credentials and access, including remote access, at all locations.
+- Address all requirements and recommendations identified during envisioning and recorded in the design document before build activities begin.
+- Open the network ports requested during implementation within one business day of the request.
+- Maintain a complete backup (full, incremental, differential) of the implemented solutions from the date of installation.
+- Provide all required information about the environment so that Verto Wave resources can work effectively on site or remotely.
+- Prepare and hand over the administrative accounts for the services in scope before deployment begins.
+- Provide full administrative access to the existing servers and services, where applicable.
+- Ensure the solution servers meet all prerequisites in the design documents before deployment.
+- Finalize the detailed design with Verto Wave during the designing and planning stage, before the building stage starts.
+- Provide any certificates required to secure the solution.
+- Purchase any required operating system, database or application subscription licenses for the supporting infrastructure.
+- Agree the naming convention during the designing and planning stage.
+- Designate stakeholders for project meetings and facilitate the information-gathering sessions.
+<!-- endif -->
 
-## Assumptions Specific to DeviceX/SDX Solution
+<!-- if devicex -->
+## DeviceX/SDX Assumptions
 
-- The solution will be deployed once in a single production environment.
-- Video retention period, camera recording resolution, frame rate, and video bitrate assumptions (where NVR is in scope) — confirm per bid and document in the design stage. Do not carry forward assumptions from a prior engagement without validation.
-- Where selected, operations activities will take place only on the Verto Wave-implemented solution.
+- The solution is deployed once, in a single production environment.
+- Where selected, operations activities cover only the Verto Wave-implemented solution. <!-- if managed_services -->
+- Video retention period, camera recording resolution, frame rate and bitrate are confirmed during design and recorded in the design document. <!-- if module_nvr -->
+<!-- endif -->
 
-## Multi-Location / Regulatory Assumptions (where applicable)
+## Multi-Location and Regulatory Assumptions (where applicable)
 
 *[Include this subsection where the engagement spans multiple operating locations or jurisdictions; delete it otherwise. Do not assert regulatory positions that have not been confirmed.]*
 
-- The customer holds, or will obtain, all licenses and regulatory approvals required to operate the service and to carry voice and data traffic in each operating location.
-- The customer confirms that the intended cross-border flow of data to the central data center is permitted under the data protection and relevant sector regulations of each country of operation.
-- The customer is responsible for equipment import, customs clearance and in-country delivery of appliances to each site.
-- Where encryption, lawful interception or numbering restrictions apply in a location, the customer will notify Verto Wave during the envisioning phase so the design can accommodate them.
-- The customer will procure and have active at each site, and in the central data center, at least one access service meeting the minimum characteristics, before the site build for that location begins. Where a second independent service is required for resilience, the customer will procure it.
+- {{customer_short}} holds, or will obtain, all licenses and regulatory approvals required to operate the service and to carry voice and data traffic in each operating location.
+- {{customer_short}} confirms that the intended flow of data to the central site is permitted under the data protection and sector regulations of each country of operation.
+- {{customer_short}} is responsible for equipment import, customs clearance and in-country delivery of appliances to each site. <!-- if devicex -->
+- Where encryption, lawful interception or numbering restrictions apply in a location, {{customer_short}} notifies Verto Wave during envisioning so that the design can accommodate them.
+- {{customer_short}} has at least one access service meeting the minimum characteristics active at each site and at the central site before that site's build begins, and procures a second independent service where resilience requires it. <!-- if module_sdwan -->
 
 ## Dependencies
 
-- Delivery of backend and management infrastructure in the customer datacentre as per the design.
-- Secure communication channels (e.g., VPN, encrypted connections) for internal and external data exchange.
-- Availability of required network communication ports opened in the firewall per the timelines above.
-- Availability of customer technical team for requirement gathering, system design, and knowledge transfer.
-- Availability of customer administrative credentials and access.
-- Customer datacentre readiness (power, cooling, rack space, physical security) — note: civil/electrical/power/UPS work is out of scope.
+- Delivery of the backend and management infrastructure at {{customer_short}}'s data center, according to the design. <!-- if services -->
+- Secure communication channels (for example VPN or encrypted connections) for internal and external data exchange.
+- Availability of {{customer_short}}'s technical team for requirement gathering, system design and knowledge transfer. <!-- if services -->
+- Availability of administrative credentials and access. <!-- if services or managed_services -->
+- Data center readiness at the central site (power, cooling, rack space, physical security).
 
-## Risks (to be elaborated per bid in the RAID log)
+## Risks (elaborated per bid in the RAID log)
 
 *[The risk themes below are starting points for the per-bid RAID log, not a committed risk register. Validate, add, remove and re-weight per engagement.]*
 
-- Customer-provided access quality below service-quality thresholds for priority traffic — mitigate via minimum access characteristics published per bid and validated per site during design; multi-path design so a second customer service can be added where the first is insufficient; quality-based steering and adaptive media degradation; per-site quality baseline recorded before go-live commitment.
-- Customs or import delay for appliances — mitigate via early hardware forecast issued at design sign-off; core built on temporary or cloud infrastructure so the central side proceeds in parallel; location rollout sequenced by clearance readiness.
-- Regulatory restriction on cross-border data — mitigate via confirmation per location during envisioning; segmentation model supports in-country retention of designated data classes where required.
-- Delay in customer-side access, credentials or permits — mitigate via access checklist issued at kick-off with named owners and dates; tracked as a standing item in weekly governance.
-- Stakeholder availability for call flow / operating-model design — mitigate via design workshop scheduled in the first two weeks; default flows pre-designed so absence delays refinement rather than the build.
-- Physical theft or tampering of appliances at sites — mitigate via hardware-bound encryption rendering a stolen node unreadable; continuous attestation removing a tampered node from the network automatically; central revocation and remote wipe available on report of loss.
+- **Access quality below service-quality thresholds** — mitigated by publishing minimum access characteristics, validating each site during design, multi-path design with quality-based steering, and recording a per-site quality baseline before go-live. <!-- if module_sdwan -->
+- **Customs or import delay for appliances** — mitigated by an early hardware forecast at design sign-off, building the central platform in parallel, and sequencing roll-out by clearance readiness. <!-- if devicex -->
+- **Delay in access, credentials or permits** — mitigated by an access checklist issued at kick-off with named owners and dates, tracked in weekly governance. <!-- if services -->
+- **Stakeholder availability for call-flow design** — mitigated by scheduling the design workshop in the first two weeks and pre-designing default flows. <!-- if module_ipbx or module_stackx_call_center -->
+- **Theft or tampering of appliances at sites** — mitigated by hardware-bound encryption, continuous attestation that removes a tampered node automatically, and central revocation and remote wipe. <!-- if devicex -->
+- **Regulatory restriction on cross-border data** — mitigated by confirmation per location during envisioning and segmentation that supports in-country retention where required.
 
 ## Mutual Cooperation
 
-The parties acknowledge that the successful completion of the services requires full and mutual good faith cooperation. Any agreement, approval, acceptance, consent, or similar action required by either party under this proposal will not be unreasonably delayed or withheld. The customer agrees that if its failure to meet its responsibilities causes a delay or failure in Verto Wave's performance under the agreement, Verto Wave will not be liable for such delay or failure.
+The parties acknowledge that the successful completion of the services requires full and mutual good-faith cooperation. Any agreement, approval, consent or similar action required by either party under this proposal will not be unreasonably delayed or withheld. {{customer_short}} agrees that if its failure to meet its responsibilities causes a delay or failure in Verto Wave's performance, Verto Wave is not liable for that delay or failure.
 
 ---
 
-*This section is a reusable building block. The assumptions above reflect standard VertoWave engagement conditions; validate and tailor them per bid and do not assert facts about the current customer's environment that have not been confirmed. The proposal expiry terms live in the Proposal Validity section. The "not subject to customer acceptance" clause is a standard commercial clause; confirm it with Legal/Solution before issue.*
+*This section is a reusable building block. Validate and tailor it per bid. The acceptance clauses follow the offering selected in the builder; confirm them with Legal before issue.*
