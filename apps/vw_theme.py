@@ -129,9 +129,12 @@ _CSS = """
 [data-testid="stTabs"] [role="tablist"]>*:not([data-testid="stTab"]),
 [data-testid="stTabs"] [data-baseweb="tab-highlight"],[data-testid="stTabs"] [data-baseweb="tab-border"]{
   display:none !important;content:none !important}
-/* Do not match tab-strip decoration "by shape" (a childless, untagged div):
-   Streamlit draws an unchecked checkbox as exactly that, and such a rule
-   flattens every checkbox inside the tab panels into a thin line. */
+/* The selected tab's underline is a 2px bar drawn inside the tab button itself.
+   Scope strictly to [data-testid="stTab"]: checkboxes live in the tab panels,
+   never inside a tab button, so they keep their box. */
+[data-testid="stTabs"] [data-testid="stTab"] > div:not([data-testid]):empty,
+[data-testid="stTabs"] [data-testid="stTab"] div:not([data-testid]):empty{
+  display:none !important}
 
 /* ---- cards: expanders and bordered containers ------------------------ */
 [data-testid="stExpander"],[data-testid="stVerticalBlockBorderWrapper"]:has(>div>[data-testid="stVerticalBlock"]){
