@@ -129,10 +129,9 @@ _CSS = """
 [data-testid="stTabs"] [role="tablist"]>*:not([data-testid="stTab"]),
 [data-testid="stTabs"] [data-baseweb="tab-highlight"],[data-testid="stTabs"] [data-baseweb="tab-border"]{
   display:none !important;content:none !important}
-/* The moving highlight is an empty div painted with the theme's primary color and
-   sits outside the tablist, so it is matched by shape: a childless, untagged div. */
-[data-testid="stTabs"] div:not([data-testid]):not([role="tablist"]):not(:has(*)){
-  background-color:transparent !important;height:0 !important}
+/* Do not match tab-strip decoration "by shape" (a childless, untagged div):
+   Streamlit draws an unchecked checkbox as exactly that, and such a rule
+   flattens every checkbox inside the tab panels into a thin line. */
 
 /* ---- cards: expanders and bordered containers ------------------------ */
 [data-testid="stExpander"],[data-testid="stVerticalBlockBorderWrapper"]:has(>div>[data-testid="stVerticalBlock"]){
