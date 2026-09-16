@@ -19,11 +19,13 @@ import streamlit as st
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(ROOT / "apps"))
 import combine  # noqa: E402
 import library  # noqa: E402
+import vw_theme  # noqa: E402
 
-st.set_page_config(page_title="Module Library — Verto Wave", page_icon="📚", layout="wide")
-st.title("Module Library")
+vw_theme.page("Module library", "Proposal content — versioned and audited", icon="📚")
+vw_theme.nav()
 
 INDEX = combine.load_index(ROOT / "module_index.json")
 PASSWORD = os.environ.get("PROPOSAL_EDITOR_PASSWORD", "")
@@ -51,6 +53,7 @@ MODULES = {mod["token"]: mod for mod in combine.iter_modules(INDEX)}
 GROUP_SHORT = {"devicex_sdx": "DeviceX", "stackx": "StackX", "optional_sections": "Optional", "cross_cutting": "Standard"}
 
 with st.sidebar:
+    vw_theme.side_label("Editor")
     author = st.text_input("Your name (recorded with each version)", key="editor_name")
     if st.button("Lock the editor"):
         st.session_state.editor_unlocked = False

@@ -26,6 +26,7 @@ sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import combine  # noqa: E402
 import hermes_research  # noqa: E402
+import vw_theme  # noqa: E402
 
 COMBINE_PY = ROOT / "combine.py"
 INDEX = combine.load_index(ROOT / "module_index.json")
@@ -250,30 +251,42 @@ def run_build(logo_upload, use_default_logo: bool, out_name: str, issue: bool) -
 # UI
 # ---------------------------------------------------------------------------
 
-st.set_page_config(page_title="Verto Wave Proposal Builder", page_icon="📄", layout="wide")
+vw_theme.page("Build proposal")
 init_state()
 
-st.title("Verto Wave Proposal Builder")
-st.caption("Build a DeviceX/SDX & StackX technical proposal from the modular template. "
-           "Work through the tabs from left to right, then build. Pricing is excluded by design.")
-
 included, skipped, context = combine.plan_modules(INDEX, selected_tokens(), current_offering() or ["licenses"])
+customer = str(st.session_state.get("customer_name", "")).strip()
+filled = sum(1 for s in SLOTS if str(st.session_state.get(s, "")).strip())
+last_build = st.session_state.get("build_result")
+check_state = ("Not built" if not last_build else "Passing" if last_build.get("ok") else "Failed")
+
+vw_theme.hero("DeviceX / SDX & StackX technical proposal",
+              customer or "New proposal",
+              "Assembled from the module library. Work through the steps from left to right, then build. "
+              "Pricing is excluded by design and attached separately.")
+vw_theme.kpis([
+    ("Sections in this proposal", str(len(included)), "blue", "▤"),
+    ("Left out by the offering", str(len(skipped)), "violet", "▽"),
+    ("Values filled", f"{filled} of {len(SLOTS)}", "amber", "◧"),
+    ("Build checks", check_state, "emerald" if check_state != "Failed" else "amber", "✓"),
+])
+
+vw_theme.nav()
 
 with st.sidebar:
-    st.header("Cover logo")
+    vw_theme.side_label("Cover logo")
     logo_upload = st.file_uploader("Upload a logo (PNG / JPG)", type=["png", "jpg", "jpeg"],
                                    help="Replaces the default logo on the cover page for this build.")
     use_default_logo = st.checkbox("Use the default Verto Wave logo when none is uploaded",
                                    value=DEFAULT_LOGO.exists(), disabled=not DEFAULT_LOGO.exists())
-    out_name = st.text_input("Output filename", value="proposal.docx")
-    st.divider()
-    st.metric("Sections in this proposal", len(included))
-    filled = sum(1 for s in SLOTS if str(st.session_state.get(s, "")).strip())
-    st.metric("Values filled", filled, delta=f"of {len(SLOTS)}", delta_color="off")
+    vw_theme.side_label("Output")
+    out_name = st.text_input("File name", value="proposal.docx")
+    vw_theme.side_label("This proposal")
     st.button("Start a new proposal (reset)", on_click=reset_to_example)
 
 tabs = st.tabs(["1 · Offering", "2 · Modules", "3 · Sections", "4 · Customer", "5 · Compliance matrix",
                 "6 · Review & build"])
+
 
 with tabs[0]:
     st.subheader("What are we offering?")

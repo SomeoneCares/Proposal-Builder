@@ -1,0 +1,14 @@
+# Widget colors for the builder. The rest of the CRM look is in apps/vw_theme.py.
+[theme]
+base = "light"
+primaryColor = "#4666dc"
+backgroundColor = "#f8f9fc"
+secondaryBackgroundColor = "#ffffff"
+textColor = "#0f172a"
+font = "sans serif"
+
+[client]
+toolbarMode = "minimal"
+
+[browser]
+gatherUsageStats = false

@@ -19,6 +19,8 @@ maintained in this repo since 2026-09-14 and deployed to the Hermes lab host.
 | `build_base_template.py` | Styled A4 base document every build starts from |
 | `apps/proposal_builder.py` | Streamlit builder (port 8501 on the host) |
 | `apps/pages/1_Module_Library.py` | Password-protected module editor |
+| `apps/vw_theme.py` | The CRM look for both pages: colors, sidebar brand, top bar, hero banner, KPI cards |
+| `.streamlit/config.toml` | Streamlit widget colors matching the CRM (accent `#4666dc`, ground `#f8f9fc`) |
 | `apps/hermes_research.py` | Customer research through the Hermes API (drafts need human approval) |
 | `write_module.py` | Scaffold and register a new module |
 | `references/` | Module authoring contract and notes |
