@@ -411,7 +411,7 @@ with tabs[3]:
     figures = figures_in_scope()
     have = [f for f in figures if f["image"]]
     st.caption(f"{len(figures)} figures are called for by the sections you selected; {len(have)} have an image. "
-               "A draft marks the missing ones with a placeholder box; an issue copy leaves them out.")
+               "A figure with no image is left out of the document altogether, draft and issue copy alike.")
     if LIBRARY_DIR is None:
         st.error("No figure folder is configured on this server (PROPOSAL_LIBRARY_DIR), so uploads cannot be saved.")
     elif not figures:
