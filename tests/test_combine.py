@@ -53,6 +53,19 @@ def full_values() -> dict:
     return values
 
 
+class without_corporate_base:
+    """Build with the built-in shell, as a deployment without the Word template does."""
+
+    def __enter__(self):
+        self.saved = combine.BASE_TEMPLATE
+        combine.BASE_TEMPLATE = ROOT / "templates" / "no-such-base.docx"
+        return self
+
+    def __exit__(self, *exc):
+        combine.BASE_TEMPLATE = self.saved
+        return False
+
+
 def build(values: dict, tokens=None, issue: bool = False, logo=LOGO, offering=None, library_dir=None, toc_levels=2,
           named_products=None):
     doc, warnings = combine.assemble_complete_document(
@@ -67,6 +80,10 @@ def build(values: dict, tokens=None, issue: bool = False, logo=LOGO, offering=No
 
 
 def text(doc) -> str:
+    return combine.document_text(doc)
+
+
+def document_text_of(doc) -> str:
     return combine.document_text(doc)
 
 
@@ -184,14 +201,16 @@ class ConditionTests(unittest.TestCase):
 
 
 class CompleteBuildTests(unittest.TestCase):
+    """The built-in shell: its own cover module, its own logo placement."""
+
     @classmethod
     def setUpClass(cls):
-        cls.values = full_values()
-        cls.draft, cls.draft_problems, _ = build(cls.values)
-        cls.issue, cls.issue_problems, _ = build(cls.values, issue=True)
-        cls.draft_text = text(cls.draft)
-        cls.issue_text = text(cls.issue)
-
+        with without_corporate_base():
+            cls.values = full_values()
+            cls.draft, cls.draft_problems, _ = build(cls.values)
+            cls.issue, cls.issue_problems, _ = build(cls.values, issue=True)
+            cls.draft_text = text(cls.draft)
+            cls.issue_text = text(cls.issue)
     def test_draft_and_issue_pass_the_checks(self):
         self.assertEqual(self.draft_problems, [])
         self.assertEqual(self.issue_problems, [])
@@ -205,10 +224,26 @@ class CompleteBuildTests(unittest.TestCase):
         self.assertNotRegex(self.issue_text, r"(?i)\bthe customer\b")
         self.assertIn(self.values["customer_short"], self.issue_text)
 
+    def test_corporate_template_supplies_the_cover(self):
+        """The Word template's cover carries the branding and this bid's own values."""
+        self.assertTrue(combine.BASE_TEMPLATE.is_file(), "the corporate base document is missing")
+        values = full_values()
+        doc, problems, _ = build(values, tokens=["section_document_control", "module_sdwan"], issue=True)
+        self.assertEqual(problems, [])
+        # The cover sits in Word text boxes, so read the part rather than paragraph text.
+        cover_xml = doc.element.body.xml
+        self.assertIn(values["customer_name"], cover_xml)
+        self.assertIn(values["engagement_name"], cover_xml)
+        for placeholder in ("\u201cCustomer Name\u201d", "\u201cProject/Operation Name\u201d",
+                            "\u201cProposal Released Date\u201d"):
+            self.assertNotIn(placeholder, cover_xml, "a cover placeholder was left unfilled")
+        self.assertNotIn("VERTO WAVE LOGO", document_text_of(doc), "the cover module must not repeat the cover")
+        header = " ".join(p.text for p in doc.sections[0].header.paragraphs)
+        self.assertIn("Technical Proposal", header, "the template's running header is missing")
+
     def test_logo_replaces_the_placeholder(self):
         self.assertNotIn(combine.LOGO_MARKER, self.issue_text)
         self.assertEqual(len(self.issue.inline_shapes), 1)
-
     def test_front_matter_then_toc_then_numbered_sections(self):
         paragraphs = [p.text for p in self.issue.paragraphs]
         toc = paragraphs.index("Table of Contents")
@@ -219,7 +254,6 @@ class CompleteBuildTests(unittest.TestCase):
         for heading in body_h1:
             self.assertRegex(heading, r"^(\d+|Appendix [A-Z]:)" + combine.HEADING_SEPARATOR)
         self.assertTrue(any(h.startswith("Appendix A:" + combine.HEADING_SEPARATOR) for h in body_h1))
-
     def test_toc_lists_two_levels(self):
         levels = {entry[0] for entry in self.issue._vw_toc["entries"]}
         self.assertEqual(levels, {1, 2})
@@ -250,7 +284,6 @@ class CompleteBuildTests(unittest.TestCase):
                        "SECONDARY LOGO"):
             self.assertIn(phrase.lower(), self.draft_text.lower())
             self.assertNotIn(phrase.lower(), self.issue_text.lower())
-
     def test_sections_start_on_a_new_page_without_blank_pages(self):
         heading = next(p for p in self.issue.paragraphs
                        if p.text.endswith("Executive Summary") and p.style.name == "Heading 1")
@@ -258,7 +291,6 @@ class CompleteBuildTests(unittest.TestCase):
         # No separate page-break paragraphs between modules (they can leave a blank page).
         breaks = [p for p in self.issue.paragraphs if 'w:type="page"' in p._p.xml and not p.text.strip()]
         self.assertEqual(breaks, [])
-
     def test_one_level_toc_is_short(self):
         doc, problems, _ = build(self.values, issue=True, toc_levels=1)
         self.assertEqual(problems, [])
@@ -474,12 +506,13 @@ class LibraryTests(unittest.TestCase):
         self.assertEqual(self.lib.history("section_validity"), [])
 
     def test_figure_upload_is_used_by_the_build(self):
-        self.lib.save_figure("change-request-flow", LOGO.read_bytes(), ".png")
-        doc, problems, _ = build(full_values(), tokens=["section_change_mgmt"], issue=True,
-                                 library_dir=Path(self.tmp.name))
-        self.assertEqual(problems, [])
-        self.assertEqual(len(doc.inline_shapes), 2)  # cover logo is absent here; logo + figure
-        self.assertIn("Figure 1: Change request process", text(doc))
+        with without_corporate_base():
+            self.lib.save_figure("change-request-flow", LOGO.read_bytes(), ".png")
+            doc, problems, _ = build(full_values(), tokens=["section_change_mgmt"], issue=True,
+                                     library_dir=Path(self.tmp.name))
+            self.assertEqual(problems, [])
+            self.assertEqual(len(doc.inline_shapes), 2)  # the shell's cover logo plus the figure
+            self.assertIn("Figure 1: Change request process", text(doc))
 
 
 class CliTests(unittest.TestCase):

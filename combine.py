@@ -120,6 +120,15 @@ BAND_FILL = "F2F5F9"
 BORDER_COLOR = "BFBFBF"
 PLACEHOLDER_FILL = "EDEDED"
 TEXT_WIDTH_MM = 160  # A4 minus 25 mm margins, set in build_base_template
+# Verto Wave's own Word template: its cover page, styles, theme, header and footer.
+# Builds start from it when it is present; without it the built-in shell is used.
+BASE_TEMPLATE = SCRIPT_DIR / "templates" / "vertowave_base.docx"
+# The placeholders on the template's cover, exactly as Word stores them.
+COVER_FIELDS = {
+    "\u201cCustomer Name\u201d": "customer_name",
+    "\u201cProject/Operation Name\u201d": "engagement_name",
+    "\u201cProposal Released Date\u201d": "proposal_date",
+}
 HEADING_SEPARATOR = " "  # en space between a section number and its title
 
 # Table of contents: entries are written at build time with a placeholder page
@@ -922,7 +931,10 @@ def write_toc_field(doc, anchor, entries: list[tuple[int, str, bool]], levels: i
 
 
 def _normalise(text: str) -> str:
-    return re.sub(r"\s+", " ", unicodedata.normalize("NFKC", text)).strip()
+    """Compare rendered text loosely: the corporate heading styles print in all caps,
+    so a heading reads "DOCUMENT CONTROL" on the page and "Document Control" in the
+    table of contents."""
+    return re.sub(r"\s+", " ", unicodedata.normalize("NFKC", text)).strip().casefold()
 
 
 def find_heading_pages(entries: list[tuple[int, str, bool]], pages: list[str]) -> list[int | None]:
@@ -1083,6 +1095,28 @@ def load_glossary(root: Path = SCRIPT_DIR) -> dict[str, str]:
     return json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
 
 
+def fill_cover_placeholders(doc, values: dict) -> None:
+    """Replace the cover placeholders wherever Word kept them, shapes included.
+
+    Word stores a shape twice (a drawing and its fallback picture), so every
+    matching text run is replaced rather than the first one found.
+    """
+    parts = [doc.element.body]
+    for section in doc.sections:
+        for part in (section.header, section.footer, section.first_page_header, section.first_page_footer):
+            if part is not None:
+                parts.append(part._element)
+    for element in parts:
+        for node in element.iter(qn("w:t")):
+            text = node.text or ""
+            for placeholder, slot in COVER_FIELDS.items():
+                if placeholder in text:
+                    value = str(values.get(slot) or "").strip()
+                    text = text.replace(placeholder, value or placeholder)
+            if text != (node.text or ""):
+                node.text = text
+
+
 def _new_document(values: dict, template: bool):
     prepared_by = str(values.get("prepared_by") or "Verto Wave").strip()
     if template:
@@ -1092,6 +1126,14 @@ def _new_document(values: dict, template: bool):
         )
     engagement = str(values.get("engagement_name") or "").strip()
     customer = str(values.get("customer_short") or "").strip()
+    if BASE_TEMPLATE.is_file():
+        doc = Document(str(BASE_TEMPLATE))
+        fill_cover_placeholders(doc, values)
+        doc.core_properties.title = f"{engagement} — Technical Proposal" if engagement else "Technical Proposal"
+        doc.core_properties.author = prepared_by
+        doc.core_properties.category = "Technical Proposal"
+        doc._vw_corporate_base = True
+        return doc
     return build_base_template.new_document(
         title=f"{engagement} — Technical Proposal" if engagement else "Technical Proposal",
         footer_label=f"{prepared_by} — {customer} Technical Proposal" if customer else f"{prepared_by} — Technical Proposal",
@@ -1147,11 +1189,15 @@ def assemble_complete_document(
         renderer.render(parse_blocks(fill_tokens(text, values, names)))
 
     front = [t for t in FRONT_MATTER if t in included]
-    rest = [t for t in included if t not in front]
+    corporate = getattr(doc, "_vw_corporate_base", False)
+    if corporate:
+        # The template carries the cover page, so the cover module would repeat it.
+        front = [t for t in front if t != "section_cover_execsummary"]
+    rest = [t for t in included if t not in front and not (corporate and t == "section_cover_execsummary")]
     for i, token in enumerate(front):
-        renderer.break_before = i > 0
+        renderer.break_before = corporate or i > 0
         add_module(token)
-    toc_anchor = add_toc(doc, draft=not issue, page_break_before=bool(front))
+    toc_anchor = add_toc(doc, draft=not issue, page_break_before=bool(front) or corporate)
     renderer.number_headings = True
     for token in rest:
         renderer.break_before = True
@@ -1161,7 +1207,12 @@ def assemble_complete_document(
     renderer.fill_deferred(load_glossary(root))
     doc._vw_toc = write_toc_field(doc, toc_anchor, collect_headings(doc, toc_anchor, toc_levels), toc_levels)
     doc._vw_problems = renderer.problems
-    warnings.append("logo: " + embed_logo(doc, logo_path, draft=not issue))
+    if corporate:
+        # The template's cover already carries the Verto Wave branding; adding the
+        # logo again would drop a second one on top of it.
+        warnings.append("logo: the Verto Wave template cover carries the branding")
+    else:
+        warnings.append("logo: " + embed_logo(doc, logo_path, draft=not issue))
     set_update_fields_on_open(doc)
     return doc, warnings
 
