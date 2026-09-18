@@ -12,6 +12,20 @@ This Operations Level Agreement defines the service levels, priority definitions
 
 *[Response times, escalation times, coverage hours and the RACI model must be confirmed per bid against {{customer_short}}'s service-level requirements.]*
 
+## Scope of Operations
+
+Operations begin once the build stage completes and the service is handed over. For every in-scope system, Verto Wave:
+
+- Performs regular health-check assessments and addresses the issues they identify
+- Deploys supported updates and patches for the in-scope systems
+- Monitors performance and functionality, and applies the tuning and adjustments that keep operations within target
+- Manages {{customer_short}}'s team access to the in-scope systems — granting, revoking and reviewing it — on the approval of the designated stakeholder
+- Manages report generation so the agreed reports stay accurate and complete
+- Refers issues outside this scope to the responsible team within {{customer_short}}'s organization
+- Provides the information {{customer_short}}'s stakeholders and change advisory board need for decisions
+- Proposes improvements based on what the platform reports, and presents them to the agreed stakeholders
+- Coordinates communication with the vendors of the in-scope products
+
 ## Priority Definitions
 
 | Priority | Definition |
@@ -56,13 +70,40 @@ Verto Wave provides operations services 8x5, Sunday to Thursday, 9 AM to 5 PM lo
 - **Operations manager** — leads the L3 team, complex problem resolution and continuous improvement.
 - **Technical account manager** — {{customer_short}}-facing role managing the technical relationship.
 
+| Role | Responsibility | Staffing |
+| :--- | :--- | :--- |
+| L1 operations engineer | Incident and request logging, verification, basic troubleshooting and approved standard actions | {{ola_l1_engineers}} |
+| L1 operations manager | Manages L1 activity, confirms the OLA targets are met and escalates to L2 | {{ola_l1_manager}} |
+| L2 operations engineer | Advanced troubleshooting, system configuration and application operations | {{ola_l2_engineers}} |
+| L3 operations engineer | Expert troubleshooting, complex resolution and vendor coordination | Remote, on site when needed |
+| Operations team lead | Manages L2 activity and escalates to L3 | Remote, on site when needed |
+| Operations manager | Oversees L3 activity and manages escalated cases | Remote, on site when needed |
+
 ## RACI Model
 
-*[Attach or insert the RACI matrix per bid. In some engagements the operations team lead covers both the L1 and L2 lead functions.]*
+R responsible · A accountable · C consulted · I informed
+
+| Activity | L1 engineer | L1 manager | L2 engineer | Team lead | L3 engineer | Operations manager |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| Incident and request logging | R | A | — | — | — | — |
+| Basic troubleshooting | R | A | C | — | — | — |
+| Advanced troubleshooting | I | I | R | A | C | I |
+| Complex issue resolution | I | I | I | I | R | A |
+| System configuration | I | I | R | A | C | — |
+| Application operations | I | I | R | A | C | — |
+| Vendor coordination | I | I | I | I | R | A |
+| First-level escalation | I | I | R | A | — | — |
+| Second-level escalation | I | I | I | I | R | A |
+| OLA performance reporting | I | I | I | A | I | A |
+| OLA review meetings | I | I | I | A | I | A |
+
+In some engagements {{customer_short}} assigns and manages the L1 operations engineers and the L1 operations manager; where that applies, the L1 rows above sit with {{customer_short}}'s team and Verto Wave takes the L2 and L3 responsibilities.
+
+*[Confirm per bid who owns L1, and whether the operations team lead covers both the L1 and L2 lead functions.]*
 
 ## Escalation
 
-If an incident is not resolved within the specified time, it is escalated first to the operations team lead and then to the operations manager.
+A case that reaches the escalation times in the table above is escalated first to the operations team lead and then to the operations manager. Verto Wave commits to the response and escalation times stated in this agreement; restoration time is not a committed deliverable, because it depends on the fault, the vendor and {{customer_short}}'s environment.
 
 ## Reporting and Review
 
@@ -70,7 +111,7 @@ OLA performance is reported to {{customer_short}} monthly and reviewed quarterly
 
 ## OLA Conditions
 
-- The OLA clock is paused while a case is outside Verto Wave's coverage or dispatched to {{customer_short}}'s team.
+- The OLA clock is paused while a case is outside Verto Wave's coverage, dispatched to {{customer_short}}'s team, or escalated to vendor support.
 - Critical and major requests must be raised by phone or email to be eligible for the KPIs.
 
 ---

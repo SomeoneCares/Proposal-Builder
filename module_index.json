@@ -45,12 +45,15 @@
     "module_stackx_devops",
     "module_stackx_alm",
     "module_stackx_call_center",
+    "section_engagement_framework",
     "section_professional_services",
     "section_timeline",
     "section_pm_methodology",
+    "section_deliverables",
     "section_roles",
     "section_training",
     "section_ola",
+    "section_licenses_coverage",
     "section_support_warranty",
     "section_assumptions",
     "section_out_of_scope",
@@ -324,6 +327,22 @@
           "required": true,
           "summary": "Terms and abbreviations used in the proposal.",
           "appendix": true
+        },
+        {
+          "token": "section_engagement_framework",
+          "file": "modules/optional/section_engagement_framework.md",
+          "name": "Engagement Management Framework",
+          "required": false,
+          "summary": "How Verto Wave runs the engagement: approach, governance functions and accountability.",
+          "requires": "services or managed_services"
+        },
+        {
+          "token": "section_licenses_coverage",
+          "file": "modules/optional/section_licenses_coverage.md",
+          "name": "Licenses Coverage",
+          "required": false,
+          "summary": "The licensed modules in the proposal and the coverage each one carries.",
+          "requires": "licenses"
         }
       ]
     },
@@ -421,6 +440,13 @@
           "name": "Proposal Validity",
           "required": true,
           "summary": "Validity period and effective date."
+        },
+        {
+          "token": "section_deliverables",
+          "file": "modules/cross_cutting/section_deliverables.md",
+          "name": "Deliverables",
+          "required": false,
+          "summary": "What the customer receives at each stage, and how each deliverable is accepted."
         }
       ]
     }
@@ -491,7 +517,11 @@
     "timeline_training_weeks": "Implementation timeline: training and handover, in weeks",
     "support_term_months": "Software support and maintenance term, in months from license delivery (e.g. '12')",
     "hardware_warranty_months": "DeviceX hardware warranty against manufacturing defects, in months (e.g. '12')",
-    "support_coverage": "Support coverage hours (e.g. '8x5, Sunday to Thursday, 9 AM to 5 PM local time')"
+    "support_coverage": "Support coverage hours (e.g. '8x5, Sunday to Thursday, 9 AM to 5 PM local time')",
+    "ola_l1_engineers": "Staffing for L1 operations engineers, e.g. '2 on site'",
+    "ola_l1_manager": "Staffing for the L1 operations manager, e.g. '1 on site'",
+    "ola_l2_engineers": "Staffing for L2 operations engineers, e.g. '1 on site'",
+    "licenses_coverage_term": "Coverage carried by each licensed module, e.g. '36-month subscription with support and updates'"
   },
   "banned_terms": [
     "EGYCash",

@@ -62,17 +62,9 @@ The stages above describe how the project is managed; the phasing below describe
 | Training and handover | Administration training, documentation and operational handover | Training delivered and handover pack issued <!-- if section_training --> |
 | Managed operations | Managed operations start under the Operations Level Agreement | Operations running under the OLA <!-- if managed_services --> |
 
-## Deliverables by Phase
+## Deliverables
 
-| Phase | Deliverables |
-| :--- | :--- |
-| Envisioning and design | Design document for each solution; security baseline; configuration and policy design |
-| Envisioning and design | Site profile and class assignment per site; traffic classification, QoS and segmentation model; access service validation record per site <!-- if devicex --> |
-| Envisioning and design | Numbering plan and call-flow design <!-- if module_ipbx or module_stackx_call_center --> |
-| Build | Implemented and validated solution; as-built documentation |
-| Build | Per-site acceptance test record <!-- if devicex --> |
-| Training and handover | Training delivered; training documentation and recorded session; operational handover pack <!-- if section_training --> |
-| Managed operations | Operations reports and enhancement recommendations <!-- if managed_services --> |
+Every phase closes against the deliverables listed in the Deliverables section, which states what {{customer_short}} receives and how each item is accepted.
 
 ---
 

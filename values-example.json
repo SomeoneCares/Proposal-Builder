@@ -64,5 +64,9 @@
   "timeline_training_weeks": "",
   "support_term_months": "12",
   "hardware_warranty_months": "12",
-  "support_coverage": "8x5, Sunday to Thursday, 9 AM to 5 PM local time"
+  "support_coverage": "8x5, Sunday to Thursday, 9 AM to 5 PM local time",
+  "ola_l1_engineers": "2 on site",
+  "ola_l1_manager": "1 on site",
+  "ola_l2_engineers": "1 on site",
+  "licenses_coverage_term": "36-month subscription, including updates and support"
 }
