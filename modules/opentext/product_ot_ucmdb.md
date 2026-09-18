@@ -1,5 +1,5 @@
-# Configuration Management and Discovery <!-- if not vendor_names -->
-# OpenText UCMDB and Universal Discovery <!-- if vendor_names -->
+# Configuration Management and Discovery <!-- if not named_product_ot_ucmdb -->
+# OpenText UCMDB and Universal Discovery <!-- if named_product_ot_ucmdb -->
 
 **Token:** `{{product_ot_ucmdb}}`
 **Group:** OpenText Products
@@ -7,8 +7,8 @@
 
 ---
 
-Discovery finds what is deployed, and the configuration management database keeps the result as a governed record of components and the services they support. <!-- if not vendor_names -->
-OpenText Universal Discovery finds what is deployed, and OpenText UCMDB keeps the result as a governed record of components and the services they support. <!-- if vendor_names -->
+Discovery finds what is deployed, and the configuration management database keeps the result as a governed record of components and the services they support. <!-- if not named_product_ot_ucmdb -->
+OpenText Universal Discovery finds what is deployed, and OpenText UCMDB keeps the result as a governed record of components and the services they support. <!-- if named_product_ot_ucmdb -->
 
 ## What It Delivers
 

@@ -1,5 +1,5 @@
-# Log Management and Analytics <!-- if not vendor_names -->
-# Elastic Log Management <!-- if vendor_names -->
+# Log Management and Analytics <!-- if not named_product_el_logs -->
+# Elastic Log Management <!-- if named_product_el_logs -->
 
 **Token:** `{{product_el_logs}}`
 **Group:** Elastic Products
@@ -7,8 +7,8 @@
 
 ---
 
-Logs from the estate are collected centrally, parsed into a common structure, retained in tiers and made searchable for operations and investigation. <!-- if not vendor_names -->
-Elastic Log Management collects logs from the estate centrally, parses them into a common structure, retains them in tiers and makes them searchable for operations and investigation. <!-- if vendor_names -->
+Logs from the estate are collected centrally, parsed into a common structure, retained in tiers and made searchable for operations and investigation. <!-- if not named_product_el_logs -->
+Elastic Log Management collects logs from the estate centrally, parses them into a common structure, retains them in tiers and makes them searchable for operations and investigation. <!-- if named_product_el_logs -->
 
 ## What It Delivers
 

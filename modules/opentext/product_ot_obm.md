@@ -1,5 +1,5 @@
-# Event Correlation and Root-Cause Analysis <!-- if not vendor_names -->
-# OpenText OBM <!-- if vendor_names -->
+# Event Correlation and Root-Cause Analysis <!-- if not named_product_ot_obm -->
+# OpenText OBM <!-- if named_product_ot_obm -->
 
 **Token:** `{{product_ot_obm}}`
 **Group:** OpenText Products
@@ -7,8 +7,8 @@
 
 ---
 
-Events from every monitoring source arrive in one console, where correlation removes duplicates and symptoms and leaves the operator with a probable cause. <!-- if not vendor_names -->
-OpenText OBM collects events from every monitoring source into one console, where correlation removes duplicates and symptoms and leaves the operator with a probable cause. <!-- if vendor_names -->
+Events from every monitoring source arrive in one console, where correlation removes duplicates and symptoms and leaves the operator with a probable cause. <!-- if not named_product_ot_obm -->
+OpenText OBM collects events from every monitoring source into one console, where correlation removes duplicates and symptoms and leaves the operator with a probable cause. <!-- if named_product_ot_obm -->
 
 ## What It Delivers
 

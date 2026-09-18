@@ -1,5 +1,5 @@
-# Service Management Platform <!-- if not vendor_names -->
-# OpenText SMAX <!-- if vendor_names -->
+# Service Management Platform <!-- if not named_product_ot_smax -->
+# OpenText SMAX <!-- if named_product_ot_smax -->
 
 **Token:** `{{product_ot_smax}}`
 **Group:** OpenText Products
@@ -7,8 +7,8 @@
 
 ---
 
-The service management platform gives {{customer_short}} one place to raise, route and resolve work, with the service catalog, workflows and service-level targets held in the same system. <!-- if not vendor_names -->
-OpenText SMAX gives {{customer_short}} one place to raise, route and resolve work, with the service catalog, workflows and service-level targets held in the same system. <!-- if vendor_names -->
+The service management platform gives {{customer_short}} one place to raise, route and resolve work, with the service catalog, workflows and service-level targets held in the same system. <!-- if not named_product_ot_smax -->
+OpenText SMAX gives {{customer_short}} one place to raise, route and resolve work, with the service catalog, workflows and service-level targets held in the same system. <!-- if named_product_ot_smax -->
 
 ## What It Delivers
 

@@ -54,10 +54,11 @@ def full_values() -> dict:
 
 
 def build(values: dict, tokens=None, issue: bool = False, logo=LOGO, offering=None, library_dir=None, toc_levels=2,
-          vendor_names: bool = False):
+          named_products=None):
     doc, warnings = combine.assemble_complete_document(
         INDEX, tokens or ALL_TOKENS, values, str(logo) if logo else None, issue,
-        offering=offering or FULL_OFFERING, toc_levels=toc_levels, library=library_dir, vendor_names=vendor_names,
+        offering=offering or FULL_OFFERING, toc_levels=toc_levels, library=library_dir,
+        named_products=named_products,
     )
     problems, unconfirmed = combine.check_document(doc, values, INDEX["banned_terms"], "complete", issue,
                                                    INDEX["third_party_terms"],
@@ -322,9 +323,9 @@ class OfferingTests(unittest.TestCase):
             self.assertIn(present.lower(), devicex.lower(), present)
 
     def test_vendor_product_named_or_described_by_function(self):
-        """The same module ships branded or generic, and the check follows the choice."""
+        """The same module ships named or functional, and the check follows the choice."""
         tokens = CORE + ["product_ot_smax", "product_el_logs"]
-        generic, problems, _ = build(full_values(), tokens=tokens, issue=True, vendor_names=False)
+        generic, problems, _ = build(full_values(), tokens=tokens, issue=True)
         self.assertEqual(problems, [])
         generic_text = text(generic)
         for absent in ("OpenText", "SMAX", "Elastic", "Logstash"):
@@ -332,17 +333,29 @@ class OfferingTests(unittest.TestCase):
         for present in ("Service Management Platform", "Log Management and Analytics"):
             self.assertIn(present, generic_text, present)
 
-        branded, problems, _ = build(full_values(), tokens=tokens, issue=True, vendor_names=True)
+        named, problems, _ = build(full_values(), tokens=tokens, issue=True,
+                                   named_products=["product_ot_smax", "product_el_logs"])
         self.assertEqual(problems, [], "a named product must pass the third-party check")
-        branded_text = text(branded)
+        named_text = text(named)
         for present in ("OpenText SMAX", "Elastic Log Management"):
-            self.assertIn(present, branded_text, present)
+            self.assertIn(present, named_text, present)
 
-    def test_a_product_name_is_refused_when_that_product_is_not_sold(self):
-        """Naming vendors does not license every vendor name — only the ones in the proposal."""
+    def test_naming_is_per_product(self):
+        """One product may be named while another in the same proposal is not."""
+        tokens = CORE + ["product_ot_smax", "product_el_logs"]
+        doc, problems, _ = build(full_values(), tokens=tokens, issue=True, named_products=["product_ot_smax"])
+        self.assertEqual(problems, [])
+        content = text(doc)
+        self.assertIn("OpenText SMAX", content)
+        self.assertIn("Log Management and Analytics", content)
+        for absent in ("Elastic", "Logstash"):
+            self.assertNotIn(absent, content, absent)
+
+    def test_a_product_name_is_refused_when_that_product_is_not_named(self):
+        """Naming one product licenses its names only."""
         doc, _warnings = combine.assemble_complete_document(
-            INDEX, CORE + ["product_ot_smax"], full_values(), None, True,
-            offering=FULL_OFFERING, vendor_names=True)
+            INDEX, CORE + ["product_ot_smax", "product_ot_nom"], full_values(), None, True,
+            offering=FULL_OFFERING, named_products=["product_ot_smax"])
         allowed = doc._vw_allowed_terms
         self.assertIn("OpenText SMAX", allowed)
         for absent in ("OpenText NOM", "Elastic APM", "Universal Discovery"):

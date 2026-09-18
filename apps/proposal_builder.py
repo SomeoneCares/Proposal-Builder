@@ -2,7 +2,9 @@
 """
 Verto Wave Proposal Builder — Streamlit web UI around combine.py.
 
-Steps: offering → modules → sections → customer → compliance matrix → review and build.
+Steps: include → vendor/product → sections → customer → compliance matrix → review and build.
+Each third-party product carries two write-ups; its toggle in step 2 decides whether the
+proposal names it or describes it by function alone.
 The Module Library page (apps/pages) edits and versions the modules themselves.
 On the lab host this runs as the systemd user unit `proposal-builder`
 (scripts/proposal-builder.service).
@@ -95,7 +97,9 @@ def init_state() -> None:
     for flag in OFFERING_LABELS:
         st.session_state.setdefault(f"off_{flag}", flag in combine.DEFAULT_OFFERING)
     st.session_state.setdefault("toc_levels", 1)
-    st.session_state.setdefault("vendor_names", False)
+    for token, mod in MODULES.items():
+        if mod.get("vendor_name"):
+            st.session_state.setdefault(f"name_{token}", False)
     # The data editor edits compliance_base; its output is kept in compliance_rows. Feeding the output back
     # in as the editor's input would re-apply edits, so a new base gets a new editor key instead.
     st.session_state.setdefault("compliance_base", [])
@@ -108,6 +112,12 @@ def set_compliance_rows(rows: list[dict]) -> None:
     st.session_state.compliance_base = rows
     st.session_state.compliance_rows = rows
     st.session_state.editor_version = st.session_state.get("editor_version", 0) + 1
+
+
+def named_products() -> list[str]:
+    """Vendor products this proposal names; the rest are described by function."""
+    return [t for t, mod in MODULES.items()
+            if mod.get("vendor_name") and st.session_state.get(f"mod_{t}") and st.session_state.get(f"name_{t}")]
 
 
 def selected_tokens() -> list[str]:
@@ -128,12 +138,12 @@ def bid_file() -> dict:
     return {"bid_file_version": 1, "values": {s: st.session_state.get(s, "") for s in SLOTS},
             "offering": current_offering(), "modules": selected_tokens(),
             "compliance_matrix": st.session_state.compliance_rows, "toc_levels": st.session_state.toc_levels,
-            "vendor_names": bool(st.session_state.vendor_names)}
+            "named_products": named_products()}
 
 
 def reset_to_example() -> None:
     for key in list(st.session_state.keys()):
-        if key.startswith(("mod_", "off_", "ai_")) or key in SLOTS:
+        if key.startswith(("mod_", "off_", "ai_", "name_")) or key in SLOTS:
             del st.session_state[key]
     set_compliance_rows([])
     st.session_state.build_result = None
@@ -165,8 +175,10 @@ def load_bid_file() -> None:
         set_compliance_rows(loaded["compliance_matrix"])
     if loaded.get("toc_levels") in (1, 2):
         st.session_state.toc_levels = loaded["toc_levels"]
-    if isinstance(loaded.get("vendor_names"), bool):
-        st.session_state.vendor_names = loaded["vendor_names"]
+    if isinstance(loaded.get("named_products"), list):
+        for token, mod in MODULES.items():
+            if mod.get("vendor_name"):
+                st.session_state[f"name_{token}"] = token in loaded["named_products"]
     st.session_state.upload_message = ("success", f"Loaded {uploaded.name}.")
 
 
@@ -223,8 +235,9 @@ def run_build(logo_upload, use_default_logo: bool, out_name: str, issue: bool) -
         cmd = [sys.executable, str(COMBINE_PY), "--values", str(values_path), "--mode", "complete",
                "--modules", ",".join(selected), "--offering", ",".join(offering),
                "--toc-levels", str(st.session_state.toc_levels), "--out", str(out_path)]
-        if st.session_state.vendor_names:
-            cmd.append("--vendor-names")
+        named = named_products()
+        if named:
+            cmd += ["--named-products", ",".join(named)]
         if issue:
             cmd.append("--issue")
         if logo_upload is not None:
@@ -261,7 +274,7 @@ vw_theme.page("Build proposal")
 init_state()
 
 included, skipped, context = combine.plan_modules(INDEX, selected_tokens(), current_offering() or ["licenses"],
-                                                  bool(st.session_state.vendor_names))
+                                                  named_products())
 customer = str(st.session_state.get("customer_name", "")).strip()
 filled = sum(1 for s in SLOTS if str(st.session_state.get(s, "")).strip())
 last_build = st.session_state.get("build_result")
@@ -291,12 +304,12 @@ with st.sidebar:
     vw_theme.side_label("This proposal")
     st.button("Start a new proposal (reset)", on_click=reset_to_example)
 
-tabs = st.tabs(["1 · Offering", "2 · Modules", "3 · Vendor products", "4 · Sections", "5 · Customer",
-                "6 · Compliance matrix", "7 · Review & build"])
+tabs = st.tabs(["1 · Include", "2 · Vendor / product", "3 · Sections", "4 · Customer",
+                "5 · Compliance matrix", "6 · Review & build"])
 
 
 with tabs[0]:
-    st.subheader("What are we offering?")
+    st.subheader("What does this proposal include?")
     st.caption("The offering decides which sections, clauses and lines appear. Anything that does not apply is left out.")
     for flag, label in OFFERING_LABELS.items():
         st.checkbox(label, key=f"off_{flag}", help=OFFERING_HELP[flag])
@@ -305,40 +318,49 @@ with tabs[0]:
     if st.session_state.get("off_premier_support") and not st.session_state.get("off_licenses"):
         st.warning("Premier Support applies to licensed software — select software licenses as well.")
 
-for tab, group_key in ((tabs[1], "devicex_sdx"), (tabs[1], "stackx")):
-    with tab:
-        group = GROUPS[group_key]
-        with st.expander(group["group"], expanded=True):
-            st.caption(group.get("description", ""))
-            for mod in group["modules"]:
-                token = mod["token"]
-                st.checkbox(mod["name"], key=f"mod_{token}", help=mod.get("notes") or mod.get("summary"))
-                if st.session_state.get(f"mod_{token}") and token in skipped:
-                    st.caption(f"↳ Left out: requires {mod['requires'].replace('_', ' ')}.")
+def product_rows(group_key: str, heading: str | None = None) -> None:
+    """Checkbox per module, plus a name toggle for a vendor product."""
+    group = GROUPS[group_key]
+    if heading:
+        st.markdown(f"**{heading}**")
+        st.caption(group.get("description", ""))
+    for mod in group["modules"]:
+        token = mod["token"]
+        if mod.get("vendor_name"):
+            picked, naming = st.columns([4, 2])
+            with picked:
+                st.checkbox(mod["name"], key=f"mod_{token}", help=mod.get("summary"))
+            with naming:
+                st.toggle(f"Name it: {mod['vendor_name']}", key=f"name_{token}",
+                          disabled=not st.session_state.get(f"mod_{token}"),
+                          help="On: the proposal names the product. Off: it is described by function only, "
+                               "and the product name stays refused by the build check.")
+        else:
+            st.checkbox(mod["name"], key=f"mod_{token}", help=mod.get("notes") or mod.get("summary"))
+        if st.session_state.get(f"mod_{token}") and token in skipped:
+            st.caption(f"↳ Left out: requires {mod['requires'].replace('_', ' ')}.")
+
+
+with tabs[1]:
+    st.subheader("Vendors and products")
+    st.caption("Pick any combination. Each third-party product can carry its own name or be described by "
+               "function alone — the choice is per product.")
+    with st.expander("Vybe — Verto Wave platforms", expanded=True):
+        product_rows("stackx", GROUPS["stackx"]["group"])
+        st.divider()
+        product_rows("devicex_sdx", GROUPS["devicex_sdx"]["group"])
+    with st.expander(GROUPS["opentext"]["group"], expanded=True):
+        product_rows("opentext")
+    with st.expander(GROUPS["elastic"]["group"], expanded=True):
+        product_rows("elastic")
+    named = named_products()
+    if named:
+        names = combine.display_names(INDEX, named)
+        st.info("Named in this proposal: " + ", ".join(sorted(names[t] for t in named)))
+    st.caption("Products without the toggle on are described by function only; their product names are refused "
+               "by the build check.")
 
 with tabs[2]:
-    st.subheader("Vendor products")
-    st.caption("Products Verto Wave implements alongside its own platforms. Pick any combination; each one can be "
-               "named or described by function alone.")
-    st.radio("How are these products described in the proposal?", [False, True], key="vendor_names", horizontal=True,
-             format_func=lambda named: "By product name (OpenText, Elastic)" if named
-             else "By function only — no vendor or product names",
-             help="Naming a product also allows its name past the build check. With names off, every product is "
-                  "described by what it does and the check still refuses vendor names.")
-    for group_key in ("opentext", "elastic"):
-        group = GROUPS[group_key]
-        with st.expander(group["group"], expanded=True):
-            st.caption(group.get("description", ""))
-            for mod in group["modules"]:
-                token = mod["token"]
-                label = mod["name"]
-                if mod.get("vendor_name"):
-                    label = f"{mod['vendor_name']} — {mod['name']}" if st.session_state.vendor_names \
-                        else f"{mod['name']} ({mod['vendor_name']})"
-                st.checkbox(label, key=f"mod_{token}", help=mod.get("summary"))
-    st.caption("The label in brackets is for you: with naming off, the proposal itself never shows it.")
-
-with tabs[3]:
     optional = GROUPS["optional_sections"]
     with st.expander(optional["group"], expanded=True):
         st.caption(optional.get("description", ""))
@@ -358,7 +380,7 @@ with tabs[3]:
     st.radio("Table of contents depth", [1, 2], key="toc_levels", horizontal=True,
              format_func=lambda n: "Main sections only" if n == 1 else "Sections and subsections")
 
-with tabs[4]:
+with tabs[3]:
     with st.expander("Draft the customer profile with Hermes (a person must approve it)", expanded=False):
         st.caption("Hermes searches public web pages and drafts the executive-summary fields. Nothing is used "
                    "until you review it, choose what to keep and approve it with your name.")
@@ -408,7 +430,7 @@ with tabs[4]:
                 else:
                     st.text_input(slot, key=slot, help=SLOTS.get(slot, ""))
 
-with tabs[5]:
+with tabs[4]:
     if "section_compliance_matrix" not in context:
         st.info("Tick “Compliance Matrix” in the Sections tab to include this appendix.")
     st.caption("Upload the RFP's requirement list as CSV (from Excel: File → Save As → CSV UTF-8). Columns: "
@@ -436,7 +458,7 @@ with tabs[5]:
     st.caption("Codes: C-DX / C-SX native DeviceX / StackX · CC on configuration · IS integrated solution · "
                "AS assurance and supervision · PC partial · NC not compliant.")
 
-with tabs[6]:
+with tabs[5]:
     st.subheader("This proposal will contain")
     names = combine.display_names(INDEX)
     st.markdown("\n".join(f"{i}. {names[t]}" for i, t in enumerate(included, 1)) or "_Nothing selected._")

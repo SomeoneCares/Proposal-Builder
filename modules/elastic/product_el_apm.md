@@ -1,5 +1,5 @@
-# Application Performance Monitoring <!-- if not vendor_names -->
-# Elastic APM <!-- if vendor_names -->
+# Application Performance Monitoring <!-- if not named_product_el_apm -->
+# Elastic APM <!-- if named_product_el_apm -->
 
 **Token:** `{{product_el_apm}}`
 **Group:** Elastic Products
@@ -7,8 +7,8 @@
 
 ---
 
-Application monitoring instruments the services in scope and shows transaction performance, dependencies and errors as users experience them. <!-- if not vendor_names -->
-Elastic APM instruments the services in scope and shows transaction performance, dependencies and errors as users experience them. <!-- if vendor_names -->
+Application monitoring instruments the services in scope and shows transaction performance, dependencies and errors as users experience them. <!-- if not named_product_el_apm -->
+Elastic APM instruments the services in scope and shows transaction performance, dependencies and errors as users experience them. <!-- if named_product_el_apm -->
 
 ## What It Delivers
 

@@ -1,5 +1,5 @@
-# Network Operations Management <!-- if not vendor_names -->
-# OpenText NOM <!-- if vendor_names -->
+# Network Operations Management <!-- if not named_product_ot_nom -->
+# OpenText NOM <!-- if named_product_ot_nom -->
 
 **Token:** `{{product_ot_nom}}`
 **Group:** OpenText Products
@@ -7,8 +7,8 @@
 
 ---
 
-Network monitoring discovers the routed and switched estate, keeps its topology current, and reports faults and performance against it. <!-- if not vendor_names -->
-OpenText NOM discovers the routed and switched estate, keeps its topology current, and reports faults and performance against it. <!-- if vendor_names -->
+Network monitoring discovers the routed and switched estate, keeps its topology current, and reports faults and performance against it. <!-- if not named_product_ot_nom -->
+OpenText NOM discovers the routed and switched estate, keeps its topology current, and reports faults and performance against it. <!-- if named_product_ot_nom -->
 
 ## What It Delivers
 

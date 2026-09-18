@@ -1,5 +1,5 @@
-# Server and Infrastructure Monitoring <!-- if not vendor_names -->
-# Elastic Observability <!-- if vendor_names -->
+# Server and Infrastructure Monitoring <!-- if not named_product_el_observability -->
+# Elastic Observability <!-- if named_product_el_observability -->
 
 **Token:** `{{product_el_observability}}`
 **Group:** Elastic Products
@@ -7,8 +7,8 @@
 
 ---
 
-Server and infrastructure monitoring collects metrics from physical, virtual and containerized systems and turns them into health, capacity and performance views. <!-- if not vendor_names -->
-Elastic Observability collects metrics from physical, virtual and containerized systems and turns them into health, capacity and performance views. <!-- if vendor_names -->
+Server and infrastructure monitoring collects metrics from physical, virtual and containerized systems and turns them into health, capacity and performance views. <!-- if not named_product_el_observability -->
+Elastic Observability collects metrics from physical, virtual and containerized systems and turns them into health, capacity and performance views. <!-- if named_product_el_observability -->
 
 ## What It Delivers
 

@@ -80,10 +80,14 @@ DEFAULT_INDEX = SCRIPT_DIR / "module_index.json"
 GLOSSARY_FILE = "glossary.json"
 GROUP_ORDER = ("devicex_sdx", "stackx", "opentext", "elastic", "optional_sections", "cross_cutting")
 FAMILY_FLAGS = {"devicex_sdx": "devicex", "stackx": "stackx", "opentext": "opentext", "elastic": "elastic"}
-# Vendor products can be named, or described by function alone. A module carries
-# both write-ups and this flag chooses between them; it also decides whether the
-# vendor's product names are allowed past the check.
-VENDOR_NAMES_FLAG = "vendor_names"
+# A vendor product can be named, or described by function alone, one product at a
+# time. A module carries both write-ups; the condition "named_<token>" chooses
+# between them and also decides whether that product's names pass the check.
+NAMING_PREFIX = "named_"
+
+
+def naming_token(token: str) -> str:
+    return NAMING_PREFIX + token
 OFFERINGS = ("licenses", "services", "managed_services", "premier_support")
 DEFAULT_OFFERING = ("licenses", "services")
 # Sections placed before the table of contents, in this order.
@@ -155,25 +159,24 @@ def find_module(index: dict, token: str) -> dict | None:
     return next((mod for mod in iter_modules(index) if mod.get("token") == token), None)
 
 
-def display_names(index: dict, vendor_names: bool = False) -> dict[str, str]:
+def display_names(index: dict, named_products: set[str] | list[str] | None = None) -> dict[str, str]:
     """Module names for listings. A vendor product shows its product name only
-    when the proposal names vendors; otherwise it shows its functional name."""
+    when that product is named in this proposal; otherwise its functional name."""
+    named = set(named_products or ())
     names = {}
     for mod in iter_modules(index):
         name = mod.get("name") or mod["token"]
-        if vendor_names and mod.get("vendor_name"):
+        if mod.get("vendor_name") and mod["token"] in named:
             name = mod["vendor_name"]
         names[mod["token"]] = name
     return names
 
 
 def allowed_vendor_terms(index: dict, context: set[str]) -> set[str]:
-    """Product names this proposal may use: its own vendor modules, named on purpose."""
-    if VENDOR_NAMES_FLAG not in context:
-        return set()
+    """Product names this proposal may use: the products in it that are named on purpose."""
     allowed = set()
     for mod in iter_modules(index):
-        if mod["token"] in context:
+        if mod["token"] in context and naming_token(mod["token"]) in context:
             allowed.update(mod.get("vendor_terms", []))
             if mod.get("vendor_name"):
                 allowed.add(mod["vendor_name"])
@@ -281,8 +284,8 @@ def condition_names(tree) -> set[str]:
 
 
 def known_condition_names(index: dict) -> set[str]:
-    return ({mod["token"] for mod in iter_modules(index)} | set(OFFERINGS)
-            | set(FAMILY_FLAGS.values()) | {VENDOR_NAMES_FLAG})
+    return ({mod["token"] for mod in iter_modules(index)} | set(OFFERINGS) | set(FAMILY_FLAGS.values())
+            | {naming_token(mod["token"]) for mod in iter_modules(index) if mod.get("vendor_name")})
 
 
 def conditions_in(text: str) -> list[str]:
@@ -324,10 +327,12 @@ def apply_conditions(text: str, context: set[str]) -> str:
     return "\n".join(out)
 
 
-def build_context(index: dict, selected: list[str], offering: list[str], vendor_names: bool = False) -> set[str]:
+def build_context(index: dict, selected: list[str], offering: list[str],
+                  named_products: set[str] | list[str] | None = None) -> set[str]:
     context = set(selected) | set(offering)
-    if vendor_names:
-        context.add(VENDOR_NAMES_FLAG)
+    for token in set(named_products or ()):
+        if token in context:
+            context.add(naming_token(token))
     for group_key, flag in FAMILY_FLAGS.items():
         if any(module_group(index, t) == group_key for t in selected):
             context.add(flag)
@@ -1094,16 +1099,17 @@ def _new_document(values: dict, template: bool):
     )
 
 
-def plan_modules(index: dict, selected: list[str], offering: list[str], vendor_names: bool = False) -> tuple[list[str], list[str], set[str]]:
+def plan_modules(index: dict, selected: list[str], offering: list[str],
+                 named_products: set[str] | list[str] | None = None) -> tuple[list[str], list[str], set[str]]:
     """Return (included tokens in document order, skipped tokens, condition context)."""
-    context = build_context(index, selected, offering, vendor_names)
+    context = build_context(index, selected, offering, named_products)
     included, skipped = [], []
     for token in document_order(index):
         if token not in selected:
             continue
         (included if module_applies(find_module(index, token) or {}, context) else skipped).append(token)
     # Modules that were left out no longer count for conditions.
-    context = build_context(index, included, offering, vendor_names)
+    context = build_context(index, included, offering, named_products)
     return included, skipped, context
 
 
@@ -1117,14 +1123,14 @@ def assemble_complete_document(
     offering: list[str] | None = None,
     toc_levels: int = 2,
     library: Path | None = None,
-    vendor_names: bool = False,
+    named_products: set[str] | list[str] | None = None,
 ):
     offering = list(offering or DEFAULT_OFFERING)
     doc = _new_document(values, template=False)
-    included, skipped, context = plan_modules(index, selected_tokens, offering, vendor_names)
+    included, skipped, context = plan_modules(index, selected_tokens, offering, named_products)
     renderer = Renderer(doc, draft=not issue, context=context, index=index, values=values,
                         root=root, library=library)
-    names = display_names(index, vendor_names)
+    names = display_names(index, named_products)
     doc._vw_allowed_terms = allowed_vendor_terms(index, context)
     warnings = [f"{names.get(t, t)} left out — it does not apply to this offering." for t in skipped]
 
@@ -1253,9 +1259,11 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     p.add_argument("--library", default=os.environ.get("PROPOSAL_LIBRARY_DIR"),
                    help="Module Library folder with portal overrides (default: $PROPOSAL_LIBRARY_DIR)")
     p.add_argument("--logo", default=None, help="Logo image (PNG/JPG) for the cover page")
-    p.add_argument("--vendor-names", action="store_true",
-                   help="Name the vendor products (OpenText, Elastic). Without it they are described by "
-                        "function only and their product names are refused by the check.")
+    p.add_argument("--named-products", default="",
+                   help="Comma-separated product tokens to name (for example product_ot_smax). Any vendor "
+                        "product not listed is described by function only, and its product names stay refused.")
+    p.add_argument("--name-all-products", action="store_true",
+                   help="Name every selected vendor product.")
     p.add_argument("--toc-levels", type=int, choices=[1, 2, 3], default=1,
                    help="Heading levels listed in the table of contents (default 1: main sections)")
     p.add_argument("--no-toc-pages", action="store_true",
@@ -1297,10 +1305,14 @@ def main(argv: list[str] | None = None) -> int:
             print(f"WARNING: {mod.get('name', mod['token'])} is a placeholder module — not for live bids.",
                   file=sys.stderr)
 
+    named_products = [t.strip() for t in args.named_products.split(",") if t.strip()]
+    if args.name_all_products:
+        named_products = [mod["token"] for mod in iter_modules(index) if mod.get("vendor_name")]
+
     try:
         if args.mode == "complete":
             doc, warnings = assemble_complete_document(index, selected, values, args.logo, args.issue, root,
-                                                       offering, args.toc_levels, library, args.vendor_names)
+                                                       offering, args.toc_levels, library, named_products)
         else:
             doc, warnings = assemble_template_document(index, selected, values, args.logo, root, library)
     except ValueError as exc:

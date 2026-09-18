@@ -1,5 +1,5 @@
-# Runbook Automation and Orchestration <!-- if not vendor_names -->
-# OpenText Operations Orchestration <!-- if vendor_names -->
+# Runbook Automation and Orchestration <!-- if not named_product_ot_oo -->
+# OpenText Operations Orchestration <!-- if named_product_ot_oo -->
 
 **Token:** `{{product_ot_oo}}`
 **Group:** OpenText Products
@@ -7,8 +7,8 @@
 
 ---
 
-Repeatable operational work runs as a governed flow instead of a manual procedure, started by an operator, by the service desk or by an event. <!-- if not vendor_names -->
-OpenText Operations Orchestration runs repeatable operational work as a governed flow instead of a manual procedure, started by an operator, by the service desk or by an event. <!-- if vendor_names -->
+Repeatable operational work runs as a governed flow instead of a manual procedure, started by an operator, by the service desk or by an event. <!-- if not named_product_ot_oo -->
+OpenText Operations Orchestration runs repeatable operational work as a governed flow instead of a manual procedure, started by an operator, by the service desk or by an event. <!-- if named_product_ot_oo -->
 
 ## What It Delivers
 
