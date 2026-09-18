@@ -433,6 +433,17 @@ with tabs[0]:
     if st.session_state.get("off_premier_support") and not st.session_state.get("off_licenses"):
         st.warning("Premier Support applies to licensed software — select software licenses as well.")
 
+def product_group(group_key: str, expanded: bool = False) -> None:
+    """One collapsible panel per platform, saying how many of it are selected."""
+    group = GROUPS[group_key]
+    picked = sum(1 for mod in group["modules"] if st.session_state.get(f"mod_{mod['token']}"))
+    label = f"{group['group']} — {picked} selected" if picked else group["group"]
+    with st.expander(label, expanded=expanded or bool(picked)):
+        if group.get("description"):
+            st.caption(group["description"])
+        product_rows(group_key)
+
+
 def product_rows(group_key: str, heading: str | None = None) -> None:
     """Checkbox per module, plus a name toggle for a vendor product."""
     group = GROUPS[group_key]
@@ -471,14 +482,12 @@ with tabs[1]:
                    "confirm them against the release being quoted — the note prints in a draft and is "
                    "stripped from an issue copy.")
     st.divider()
-    with st.expander("Vybe — Verto Wave platforms", expanded=True):
-        product_rows("stackx", GROUPS["stackx"]["group"])
-        st.divider()
-        product_rows("devicex_sdx", GROUPS["devicex_sdx"]["group"])
-    with st.expander(GROUPS["opentext"]["group"], expanded=True):
-        product_rows("opentext")
-    with st.expander(GROUPS["elastic"]["group"], expanded=True):
-        product_rows("elastic")
+    st.markdown("**Vybe — Verto Wave platforms**")
+    product_group("stackx")
+    product_group("devicex_sdx")
+    st.markdown("**Third-party products**")
+    product_group("opentext")
+    product_group("elastic")
     named = named_products()
     if named:
         names = combine.display_names(INDEX, named)
