@@ -362,6 +362,23 @@ class OfferingTests(unittest.TestCase):
         for present in ("DeviceX Appliance Specifications", "Site Sizing Classes", "Rack space"):
             self.assertIn(present.lower(), devicex.lower(), present)
 
+    def test_the_services_scope_follows_the_products_sold(self):
+        """The scope of work names the work each selected product needs, not a generic phase list."""
+        stackx = self.issue_text(CORE + ["module_stackx_network_ops",
+                                         "module_stackx_automation_orchestration"], FULL_OFFERING).lower()
+        opentext = self.issue_text(CORE + ["product_ot_smax", "product_ot_ucmdb",
+                                           "product_ot_obm"], FULL_OFFERING).lower()
+        elastic = self.issue_text(CORE + ["product_el_observability", "product_el_logs",
+                                          "product_el_apm"], FULL_OFFERING).lower()
+        for phrase in ("catalog items and request workflows", "configuration item classes",
+                       "event sources"):
+            self.assertIn(phrase, opentext, phrase)
+            self.assertNotIn(phrase, stackx, phrase)
+            self.assertNotIn(phrase, elastic, phrase)
+        for phrase in ("log sources", "hosts and services"):
+            self.assertIn(phrase, elastic, phrase)
+            self.assertNotIn(phrase, opentext, phrase)
+
     def test_vendor_product_named_or_described_by_function(self):
         """The same module ships named or functional, and the check follows the choice."""
         tokens = CORE + ["product_ot_smax", "product_el_logs"]

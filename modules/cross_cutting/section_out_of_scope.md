@@ -31,8 +31,12 @@ The following activities are out of scope unless explicitly stated otherwise in 
 - Operating third-party systems, and managing systems or devices that offer no supported means of integration.
 - Implementing new systems or solutions, development and debugging, and migration activities.
 - Deploying or configuring third-party endpoint security products, and managing devices that cannot be integrated with StackX Endpoint Management. <!-- if module_stackx_endpoint_mgmt -->
-- Migrating historical tickets, records or data from an existing service management platform. <!-- if module_stackx_itSM -->
-- Onboarding log sources that offer no supported collection interface. <!-- if module_stackx_event_log_mgmt or module_stackx_security -->
+- Migrating historical tickets, records or data from an existing service management platform. <!-- if module_stackx_itSM or product_ot_smax -->
+- Redesigning {{customer_short}}'s service management processes; the platform is configured to the processes agreed in the design stage. <!-- if product_ot_smax -->
+- Populating the configuration model from sources that expose no supported discovery interface, and cleansing or de-duplicating data in the source systems. <!-- if product_ot_ucmdb -->
+- Remediating the faults raised by event correlation; the scope covers detection and routing, not the fix in the monitored system. <!-- if product_ot_obm -->
+- Writing or modifying application code to make it observable where the language or framework has no supported agent. <!-- if product_el_apm -->
+- Onboarding log sources that offer no supported collection interface. <!-- if module_stackx_event_log_mgmt or module_stackx_security or product_el_logs -->
 - Writing or modifying application code, or fixing application defects, within the release pipeline. <!-- if module_stackx_devops or module_stackx_alm -->
 
 ## Workloads, Operating Systems and Databases <!-- if module_virtualization or module_business_workloads -->

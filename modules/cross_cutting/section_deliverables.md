@@ -14,8 +14,18 @@ The table below lists what {{customer_short}} receives at each stage of this eng
 | Envisioning, design and planning | A design document covering each in-scope module, the security baseline, the configuration and policy design, and a detailed project plan listing the implementation activities and their schedule. <!-- if services --> |
 | Envisioning, design and planning | Site profile and class assignment per site; traffic classification, QoS and segmentation model; access service validation record per site. <!-- if services and devicex --> |
 | Envisioning, design and planning | Numbering plan and call-flow design. <!-- if services and (module_ipbx or module_stackx_call_center) --> |
+| Envisioning, design and planning | Process and workflow design for the service management platform, with the service catalog definition. <!-- if services and product_ot_smax --> |
+| Envisioning, design and planning | Configuration model design with the class model, discovery source list and reconciliation rules. <!-- if services and product_ot_ucmdb --> |
+| Envisioning, design and planning | Log collection and retention design, listing each source, its parsing rules and its retention tier. <!-- if services and product_el_logs --> |
 | Building | The build activities listed in the professional services scope, an as-built configuration record, and the test evidence agreed for each phase. <!-- if services --> |
 | Building | Per-site acceptance test record. <!-- if services and devicex --> |
+| Building | Configured service catalog, request workflows and the supporting process configuration. <!-- if services and product_ot_smax --> |
+| Building | Populated configuration model with a discovery coverage report. <!-- if services and product_ot_ucmdb --> |
+| Building | Correlation and alert routing rule set, with the event source integration record. <!-- if services and product_ot_obm --> |
+| Building | Automation content for the workflows listed in scope, with their run records. <!-- if services and product_ot_oo --> |
+| Building | Dashboards, alerting rules and the agent deployment record. <!-- if services and product_el_observability --> |
+| Building | Log pipeline configuration and an onboarding record per source. <!-- if services and product_el_logs --> |
+| Building | Instrumented application services with their trace and dependency views. <!-- if services and product_el_apm --> |
 | Training and knowledge transfer | The sessions listed in the training section, their materials and an attendance record. <!-- if section_training --> |
 | Operations | The Operations Level Agreement, regular health-check reports, operations reports and improvement recommendations. <!-- if managed_services --> |
 | Handover | The operational handover pack. <!-- if services --> |
