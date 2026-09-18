@@ -200,16 +200,26 @@ def document_order(index: dict) -> list[str]:
     return listed + [mod["token"] for mod in iter_modules(index) if mod["token"] not in listed]
 
 
-def resolve_module_file(token: str, index: dict, root: Path = SCRIPT_DIR, library: Path | None = None) -> Path | None:
+def resolve_module_file(token: str, index: dict, root: Path = SCRIPT_DIR, library: Path | None = None,
+                        long_form: bool = False) -> Path | None:
+    """The module's source file, preferring the long write-up when one is asked for.
+
+    A module without a long write-up falls back to its only one, so a long
+    proposal still builds when only some products carry both.
+    """
     if library is not None:
-        override = Path(library) / "modules" / token / "current.md"
-        if override.is_file():
-            return override
+        for name in (["current.long.md"] if long_form else []) + ["current.md"]:
+            override = Path(library) / "modules" / token / name
+            if override.is_file():
+                return override
     mod = find_module(index, token)
     if mod is None or not mod.get("file"):
         return None
-    candidate = root / mod["file"]
-    return candidate if candidate.exists() else None
+    for key in (["long_file"] if long_form else []) + ["file"]:
+        rel = mod.get(key)
+        if rel and (root / rel).exists():
+            return root / rel
+    return None
 
 
 def resolve_figure(slug: str, root: Path = SCRIPT_DIR, library: Path | None = None) -> Path | None:
@@ -1196,6 +1206,7 @@ def assemble_complete_document(
     toc_levels: int = 2,
     library: Path | None = None,
     named_products: set[str] | list[str] | None = None,
+    long_writeups: bool = False,
 ):
     offering = list(offering or DEFAULT_OFFERING)
     doc = _new_document(values, template=False)
@@ -1207,7 +1218,7 @@ def assemble_complete_document(
     warnings = [f"{names.get(t, t)} left out — it does not apply to this offering." for t in skipped]
 
     def add_module(token: str) -> None:
-        path = resolve_module_file(token, index, root, library)
+        path = resolve_module_file(token, index, root, library, long_form=long_writeups)
         if path is None:
             warnings.append(f"module '{token}': source file not found; skipped.")
             renderer.note(f"[Module {token}: source file not found]")
@@ -1345,6 +1356,9 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     p.add_argument("--named-products", default="",
                    help="Comma-separated product tokens to name (for example product_ot_smax). Any vendor "
                         "product not listed is described by function only, and its product names stay refused.")
+    p.add_argument("--writeups", choices=("short", "long"), default="short",
+                   help="Vendor product write-up length: the short original (default), or the long form "
+                        "carrying components, integration, exclusions, acceptance and its own hardware.")
     p.add_argument("--name-all-products", action="store_true",
                    help="Name every selected vendor product.")
     p.add_argument("--toc-levels", type=int, choices=[1, 2, 3], default=1,
@@ -1395,7 +1409,8 @@ def main(argv: list[str] | None = None) -> int:
     try:
         if args.mode == "complete":
             doc, warnings = assemble_complete_document(index, selected, values, args.logo, args.issue, root,
-                                                       offering, args.toc_levels, library, named_products)
+                                                       offering, args.toc_levels, library, named_products,
+                                                       args.writeups == "long")
         else:
             doc, warnings = assemble_template_document(index, selected, values, args.logo, root, library)
     except ValueError as exc:

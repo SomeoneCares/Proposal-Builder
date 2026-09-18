@@ -67,11 +67,11 @@ class without_corporate_base:
 
 
 def build(values: dict, tokens=None, issue: bool = False, logo=LOGO, offering=None, library_dir=None, toc_levels=2,
-          named_products=None):
+          named_products=None, long_writeups=False):
     doc, warnings = combine.assemble_complete_document(
         INDEX, tokens or ALL_TOKENS, values, str(logo) if logo else None, issue,
         offering=offering or FULL_OFFERING, toc_levels=toc_levels, library=library_dir,
-        named_products=named_products,
+        named_products=named_products, long_writeups=long_writeups,
     )
     problems, unconfirmed = combine.check_document(doc, values, INDEX["banned_terms"], "complete", issue,
                                                    INDEX["third_party_terms"],
@@ -94,7 +94,8 @@ def headings(doc, level: int | None = None) -> list[str]:
 
 class ModuleSourceTests(unittest.TestCase):
     def test_every_registered_module_file_exists_and_every_file_is_registered(self):
-        registered = {(ROOT / mod["file"]).resolve() for mod in combine.iter_modules(INDEX)}
+        registered = {(ROOT / mod[key]).resolve() for mod in combine.iter_modules(INDEX)
+                      for key in ("file", "long_file") if mod.get(key)}
         for path in registered:
             self.assertTrue(path.is_file(), path)
         self.assertEqual({p.resolve() for p in MODULE_FILES}, registered)
@@ -111,7 +112,8 @@ class ModuleSourceTests(unittest.TestCase):
 
     def test_modules_name_no_third_party_product(self):
         """Only the vendor product modules may name a product, and only their own."""
-        vendor_files = {Path(mod["file"]).name for mod in combine.iter_modules(INDEX) if mod.get("vendor_name")}
+        vendor_files = {Path(mod[key]).name for mod in combine.iter_modules(INDEX) if mod.get("vendor_name")
+                        for key in ("file", "long_file") if mod.get(key)}
         for md in MODULE_FILES:
             if md.name in vendor_files:
                 continue
@@ -123,9 +125,13 @@ class ModuleSourceTests(unittest.TestCase):
             if not mod.get("vendor_name"):
                 continue
             own = set(mod.get("vendor_terms", [])) | {mod["vendor_name"]}
-            text_ = (ROOT / mod["file"]).read_text(encoding="utf-8")
             others = [t for t in INDEX["third_party_terms"] if t not in own]
-            self.assertEqual(combine._term_problems(text_, others, {}, "name", ignore_case=False), [], mod["token"])
+            for key in ("file", "long_file"):
+                if not mod.get(key):
+                    continue
+                text_ = (ROOT / mod[key]).read_text(encoding="utf-8")
+                self.assertEqual(combine._term_problems(text_, others, {}, "name", ignore_case=False), [],
+                                 f"{mod['token']} ({key})")
 
     def test_registry_is_clean(self):
         self.assertIsNone(BANNED_RE.search(json.dumps(INDEX["modules"])))
@@ -165,8 +171,19 @@ class ModuleSourceTests(unittest.TestCase):
             self.assertNotIn("VertoWave", content, md.name)
 
     def test_figure_slugs_are_unique(self):
-        slugs = [s for md in MODULE_FILES for s, _ in library.FIGURE_RE.findall(md.read_text(encoding="utf-8"))]
-        self.assertEqual(len(slugs), len(set(slugs)))
+        """One slug, one figure — counted per write-up length, since a module's short and
+        long forms are alternatives and never appear in the same document."""
+        for long_form in (False, True):
+            slugs = []
+            for md in MODULE_FILES:
+                is_long = md.name.endswith(".long.md")
+                has_long = md.with_name(md.name.replace(".md", ".long.md")).is_file()
+                if is_long and not long_form:
+                    continue
+                if long_form and not is_long and has_long:
+                    continue  # this module's long form is counted in its place
+                slugs += [s for s, _ in library.FIGURE_RE.findall(md.read_text(encoding="utf-8"))]
+            self.assertEqual(len(slugs), len(set(slugs)), "long" if long_form else "short")
 
 
 class ConditionTests(unittest.TestCase):
@@ -378,6 +395,20 @@ class OfferingTests(unittest.TestCase):
         for phrase in ("log sources", "hosts and services"):
             self.assertIn(phrase, elastic, phrase)
             self.assertNotIn(phrase, opentext, phrase)
+
+    def test_a_product_ships_a_short_and_a_long_write_up(self):
+        """The same selection builds either length, and both pass every check."""
+        tokens = CORE + ["product_ot_smax", "product_el_logs"]
+        short, problems, _ = build(full_values(), tokens=tokens, issue=True)
+        self.assertEqual(problems, [])
+        long_, problems, _ = build(full_values(), tokens=tokens, issue=True, long_writeups=True)
+        self.assertEqual(problems, [])
+        short_text, long_text = text(short), text(long_)
+        self.assertGreater(len(long_text), len(short_text) * 1.5)
+        # The long form is the one that carries hardware and acceptance per product.
+        for phrase in ("Hardware Requirements", "vCPU"):
+            self.assertIn(phrase.lower(), long_text.lower(), phrase)
+            self.assertNotIn(phrase.lower(), short_text.lower(), phrase)
 
     def test_vendor_product_named_or_described_by_function(self):
         """The same module ships named or functional, and the check follows the choice."""

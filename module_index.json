@@ -287,7 +287,8 @@
             "OpenText"
           ],
           "required": false,
-          "summary": "Service desk, incident, request, change, problem, release and service-level management."
+          "summary": "Service desk, incident, request, change, problem, release and service-level management.",
+          "long_file": "modules/opentext/product_ot_smax.long.md"
         },
         {
           "token": "product_ot_ucmdb",
@@ -302,7 +303,8 @@
             "OpenText"
           ],
           "required": false,
-          "summary": "Automated discovery, dependency mapping and a governed configuration management database."
+          "summary": "Automated discovery, dependency mapping and a governed configuration management database.",
+          "long_file": "modules/opentext/product_ot_ucmdb.long.md"
         },
         {
           "token": "product_ot_obm",
@@ -316,7 +318,8 @@
             "OpenText"
           ],
           "required": false,
-          "summary": "Consolidates events from every monitoring source, suppresses noise and presents a probable cause."
+          "summary": "Consolidates events from every monitoring source, suppresses noise and presents a probable cause.",
+          "long_file": "modules/opentext/product_ot_obm.long.md"
         },
         {
           "token": "product_ot_nom",
@@ -331,7 +334,8 @@
             "OpenText"
           ],
           "required": false,
-          "summary": "Network discovery, fault and performance monitoring across the routed and switched estate."
+          "summary": "Network discovery, fault and performance monitoring across the routed and switched estate.",
+          "long_file": "modules/opentext/product_ot_nom.long.md"
         },
         {
           "token": "product_ot_oo",
@@ -345,7 +349,8 @@
             "OpenText"
           ],
           "required": false,
-          "summary": "Automated runbooks and orchestration flows triggered by the service desk or by monitoring."
+          "summary": "Automated runbooks and orchestration flows triggered by the service desk or by monitoring.",
+          "long_file": "modules/opentext/product_ot_oo.long.md"
         }
       ]
     },
@@ -367,7 +372,8 @@
             "Beats"
           ],
           "required": false,
-          "summary": "Metric collection, health and capacity monitoring for physical, virtual and containerized servers."
+          "summary": "Metric collection, health and capacity monitoring for physical, virtual and containerized servers.",
+          "long_file": "modules/elastic/product_el_observability.long.md"
         },
         {
           "token": "product_el_logs",
@@ -384,7 +390,8 @@
             "Beats"
           ],
           "required": false,
-          "summary": "Central log collection, parsing, retention tiers and search across the estate."
+          "summary": "Central log collection, parsing, retention tiers and search across the estate.",
+          "long_file": "modules/elastic/product_el_logs.long.md"
         },
         {
           "token": "product_el_apm",
@@ -399,7 +406,8 @@
             "Beats"
           ],
           "required": false,
-          "summary": "Transaction tracing, service dependency mapping and error analysis for instrumented applications."
+          "summary": "Transaction tracing, service dependency mapping and error analysis for instrumented applications.",
+          "long_file": "modules/elastic/product_el_apm.long.md"
         }
       ]
     },

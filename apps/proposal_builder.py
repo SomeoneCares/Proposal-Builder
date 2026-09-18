@@ -100,6 +100,7 @@ def init_state() -> None:
     for flag in OFFERING_LABELS:
         st.session_state.setdefault(f"off_{flag}", flag in combine.DEFAULT_OFFERING)
     st.session_state.setdefault("toc_levels", 1)
+    st.session_state.setdefault("writeups", "short")
     for token, mod in MODULES.items():
         if mod.get("vendor_name"):
             st.session_state.setdefault(f"name_{token}", False)
@@ -140,6 +141,7 @@ def current_values() -> dict:
 def bid_file() -> dict:
     return {"bid_file_version": 1, "values": {s: st.session_state.get(s, "") for s in SLOTS},
             "offering": current_offering(), "modules": selected_tokens(),
+            "writeups": st.session_state.get("writeups", "short"),
             "compliance_matrix": st.session_state.compliance_rows, "toc_levels": st.session_state.toc_levels,
             "named_products": named_products()}
 
@@ -178,6 +180,8 @@ def load_bid_file() -> None:
         set_compliance_rows(loaded["compliance_matrix"])
     if loaded.get("toc_levels") in (1, 2):
         st.session_state.toc_levels = loaded["toc_levels"]
+    if loaded.get("writeups") in ("short", "long"):
+        st.session_state.writeups = loaded["writeups"]
     if isinstance(loaded.get("named_products"), list):
         for token, mod in MODULES.items():
             if mod.get("vendor_name"):
@@ -237,7 +241,8 @@ def run_build(logo_upload, use_default_logo: bool, out_name: str, issue: bool) -
         out_path = tmp_path / out_name
         cmd = [sys.executable, str(COMBINE_PY), "--values", str(values_path), "--mode", "complete",
                "--modules", ",".join(selected), "--offering", ",".join(offering),
-               "--toc-levels", str(st.session_state.toc_levels), "--out", str(out_path)]
+               "--toc-levels", str(st.session_state.toc_levels), "--out", str(out_path),
+               "--writeups", st.session_state.get("writeups", "short")]
         named = named_products()
         if named:
             cmd += ["--named-products", ",".join(named)]
@@ -344,10 +349,31 @@ def product_rows(group_key: str, heading: str | None = None) -> None:
             st.caption(f"↳ Left out: requires {mod['requires'].replace('_', ' ')}.")
 
 
+WRITEUP_LABELS = {
+    "short": "Short — the original write-up",
+    "long": "Long — components, integration, exclusions, acceptance and hardware",
+}
+
+
+def long_writeups() -> bool:
+    return st.session_state.get("writeups", "short") == "long"
+
+
 with tabs[1]:
     st.subheader("Vendors and products")
     st.caption("Pick any combination. Each third-party product can carry its own name or be described by "
                "function alone — the choice is per product.")
+    st.radio("Write-up length", list(WRITEUP_LABELS), key="writeups", horizontal=True,
+             format_func=WRITEUP_LABELS.get,
+             help="Short is the original one-page write-up per product. Long adds the product's own "
+                  "components, a full integration section, the technical scope of work, what the product "
+                  "does not cover, acceptance criteria and its own hardware sizing tables. "
+                  "Products without a long write-up use their only one either way.")
+    if long_writeups():
+        st.caption("Long write-ups carry indicative hardware figures. Each table asks the product team to "
+                   "confirm them against the release being quoted — the note prints in a draft and is "
+                   "stripped from an issue copy.")
+    st.divider()
     with st.expander("Vybe — Verto Wave platforms", expanded=True):
         product_rows("stackx", GROUPS["stackx"]["group"])
         st.divider()
@@ -390,7 +416,7 @@ def figures_in_scope() -> list[dict]:
     """Every figure the selected modules ask for, in document order."""
     found = []
     for token in included:
-        path = combine.resolve_module_file(token, INDEX, ROOT, LIBRARY_DIR)
+        path = combine.resolve_module_file(token, INDEX, ROOT, LIBRARY_DIR, long_form=long_writeups())
         if path is None:
             continue
         mod = MODULES.get(token, {})
@@ -525,6 +551,8 @@ with tabs[6]:
     st.subheader("This proposal will contain")
     names = combine.display_names(INDEX)
     st.markdown("\n".join(f"{i}. {names[t]}" for i, t in enumerate(included, 1)) or "_Nothing selected._")
+    st.caption("Vendor product write-ups: "
+               + WRITEUP_LABELS[st.session_state.get("writeups", "short")].lower())
     if skipped:
         st.caption("Left out because they do not apply to the offering: " + ", ".join(names[t] for t in skipped))
     st.subheader("Build")
