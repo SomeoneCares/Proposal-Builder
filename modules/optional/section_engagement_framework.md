@@ -17,7 +17,7 @@ Verto Wave's engagement management approach aims at a working relationship with 
 4. **Seeking {{customer_short}}'s feedback** — the proposed architecture is reviewed with {{customer_short}} and adjusted until it matches the requirement.
 5. **Beyond completion** — the close of implementation begins the operating relationship, with continuous improvement driven by what the platform reports. <!-- if managed_services -->
 
-[[figure: engagement_org_chart | Verto Wave engagement organization]]
+[[figure: engagement-org-chart | Verto Wave engagement organization]]
 
 ## Engagement Functions
 

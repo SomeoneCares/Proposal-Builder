@@ -11,6 +11,9 @@
 <!-- if devicex -->
 Every class runs the complete module set; the class determines capacity, not capability.
 
+[[figure: hardware-site-classes | Site classes and platform sizing]]
+
+
 | Reference configuration | Processor | Memory | Storage | Network interfaces |
 | :--- | :--- | :--- | :--- | :--- |
 | DeviceX Mid-Range | Multi-core x86 processor | 64 GB DDR4 | 2 × 4 TB SATA and 2 × 256 GB NVMe | 8 × 1 GbE RJ45 and 2 × 10 GbE SFP+ |

@@ -19,6 +19,9 @@ OpenText OBM collects events from every monitoring source into one console, wher
 - Automatic runbook execution for known faults <!-- if product_ot_oo -->
 - Operator views per service, with the event history that led to the current state
 
+
+[[figure: ot-obm-correlation | From raw events to a probable cause]]
+
 ## Build Activities <!-- if services -->
 
 <!-- if services -->

@@ -19,6 +19,9 @@ Elastic APM instruments the services in scope and shows transaction performance,
 - Alerting on latency, error rate and throughput against agreed targets
 - Correlation with the logs of the same service <!-- if product_el_logs -->
 
+
+[[figure: el-apm-traces | Transaction traces and service dependencies]]
+
 ## Build Activities <!-- if services -->
 
 <!-- if services -->

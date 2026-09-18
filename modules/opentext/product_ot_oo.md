@@ -19,6 +19,9 @@ OpenText Operations Orchestration runs repeatable operational work as a governed
 - Triggering from an event, so a known fault is acted on before it is escalated <!-- if product_ot_obm -->
 - A credential store, so flows run without passwords held in the flow itself
 
+
+[[figure: ot-oo-automation | A runbook from trigger to result]]
+
 ## Build Activities <!-- if services -->
 
 <!-- if services -->

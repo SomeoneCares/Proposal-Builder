@@ -10,6 +10,9 @@
 
 ## About {{customer_short}}
 
+[[figure: exec-summary-outcomes | What this proposal delivers for {{customer_short}}]]
+
+
 {{customer_profile}}
 
 {{customer_name}} operates a distributed footprint that spans {{esg_footprint}}. Its IT infrastructure plays a critical role in modernizing {{customer_short}}'s operations — enabling {{esg_value_1}}, supporting {{esg_value_2}} and ensuring {{esg_outcome}}. From {{esg_example_a}} to {{esg_example_b}}, this environment supports the organization's operational and service objectives.

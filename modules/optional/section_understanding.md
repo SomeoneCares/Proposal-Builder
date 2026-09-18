@@ -22,6 +22,9 @@ The requirement applies across {{site_count}}.
 
 {{customer_short}}'s solution must align with {{compliance_frameworks}}. Verto Wave's response identifies how each relevant control is met, and which controls remain with {{customer_short}} or its other suppliers.
 
+
+[[figure: understanding-requirements | Requirements and the design response to each]]
+
 ## How This Proposal Responds
 
 - The solution architecture section explains how the proposed components fit together. <!-- if section_solution_architecture -->

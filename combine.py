@@ -22,8 +22,9 @@ that family selected), and / or / not and parentheses. A module whose
 module_index.json "requires" expression is false is left out.
 
 Directives (a line on its own):
-  [[figure: slug | Caption]]   image from the library or assets/figures/<slug>.png|jpg;
-                               a placeholder box in a draft, omitted from an issue copy
+  [[figure: slug | Caption]]   image from the library or assets/figures/<slug>.png|jpg,
+                               fitted to the page and never stretched. A figure with no
+                               image is left out of the document and reported as a warning.
   [[scope_table]]              the selected modules with their one-line summaries
   [[compliance_matrix]]        rows from the values key "compliance_matrix"
   [[glossary]]                 glossary.json terms that appear in the document
@@ -120,6 +121,7 @@ BAND_FILL = "F2F5F9"
 BORDER_COLOR = "BFBFBF"
 PLACEHOLDER_FILL = "EDEDED"
 TEXT_WIDTH_MM = 160  # A4 minus 25 mm margins, set in build_base_template
+FIGURE_MAX_HEIGHT_MM = 170  # keeps a figure and its caption on one page
 # Verto Wave's own Word template: its cover page, styles, theme, header and footer.
 # Builds start from it when it is present; without it the built-in shell is used.
 BASE_TEMPLATE = SCRIPT_DIR / "templates" / "vertowave_base.docx"
@@ -646,6 +648,7 @@ class Renderer:
         self.counters = [0, 0, 0]
         self.appendix_count = 0
         self.figure_count = 0
+        self.missing_figures: list[str] = []
         self.deferred: list[tuple[str, object]] = []
         self.problems: list[str] = []
 
@@ -767,17 +770,44 @@ class Renderer:
         else:
             self.problems.append(f"unknown directive [[{name}]]")
 
+    @staticmethod
+    def figure_size(image: Path, max_width_mm: float = TEXT_WIDTH_MM - 10,
+                    max_height_mm: float = FIGURE_MAX_HEIGHT_MM) -> tuple[float, float]:
+        """Width and height in mm for an image, keeping its aspect ratio.
+
+        The image is never stretched: it is placed at its natural size when that
+        fits the text column, and scaled down to whichever bound it meets first.
+        """
+        try:
+            from PIL import Image  # pillow ships with the builder
+            with Image.open(image) as opened:
+                width_px, height_px = opened.size
+                dpi = (opened.info.get("dpi") or (96, 96))[0] or 96
+        except Exception:
+            return max_width_mm, 0.0  # unreadable metadata: fall back to the column width
+        if not width_px or not height_px:
+            return max_width_mm, 0.0
+        natural_w = width_px / float(dpi) * 25.4
+        natural_h = height_px / float(dpi) * 25.4
+        scale = min(max_width_mm / natural_w, max_height_mm / natural_h, 1.0)
+        return natural_w * scale, natural_h * scale
+
     def _figure(self, arg: str) -> None:
         slug, _, caption = (part.strip() for part in arg.partition("|"))
         image = resolve_figure(slug, self.root, self.library)
-        if image is None and not self.draft:
+        if image is None:
+            self.missing_figures.append(f"{caption or slug} ({slug})")
             return
         self.figure_count += 1
         label = f"Figure {self.figure_count}: {caption or slug}"
         if image is not None:
             p = self.doc.add_paragraph()
             p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-            p.add_run().add_picture(str(image), width=Mm(TEXT_WIDTH_MM - 10))
+            width_mm, height_mm = self.figure_size(image)
+            if height_mm:
+                p.add_run().add_picture(str(image), width=Mm(width_mm), height=Mm(height_mm))
+            else:
+                p.add_run().add_picture(str(image), width=Mm(width_mm))
         else:
             box = self.doc.add_table(rows=1, cols=1)
             box.autofit = False
@@ -1205,6 +1235,8 @@ def assemble_complete_document(
     renderer.break_before = False
 
     renderer.fill_deferred(load_glossary(root))
+    if renderer.missing_figures:
+        warnings.append("figures left out (no image uploaded): " + ", ".join(renderer.missing_figures))
     doc._vw_toc = write_toc_field(doc, toc_anchor, collect_headings(doc, toc_anchor, toc_levels), toc_levels)
     doc._vw_problems = renderer.problems
     if corporate:

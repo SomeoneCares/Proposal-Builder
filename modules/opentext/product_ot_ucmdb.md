@@ -19,6 +19,9 @@ OpenText Universal Discovery finds what is deployed, and OpenText UCMDB keeps th
 - Reconciliation rules that merge findings from several sources without creating duplicates
 - Impact views used when a change is approved or an incident is triaged
 
+
+[[figure: ot-ucmdb-model | Discovery and the configuration model]]
+
 ## Build Activities <!-- if services -->
 
 <!-- if services -->

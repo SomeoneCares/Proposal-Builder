@@ -125,6 +125,9 @@ This section defines the professional services for the architecture, design, imp
 - Acceptance test records for {{services_acceptance_sites}} sites. <!-- if devicex -->
 - As-built documentation.
 
+
+[[figure: services-scope-overview | Scope at a glance]]
+
 ## Acceptance
 
 Each phase is accepted against the acceptance criteria agreed in the design stage. Acceptance tests are executed jointly, and the signed acceptance record closes the phase or site.

@@ -10,6 +10,9 @@
 
 This Operations Level Agreement defines the service levels, priority definitions, response and escalation times, authority matrix and RACI model for the managed services Verto Wave provides to {{customer_short}}. Its aim is timely and effective handling of incidents and requests, to keep the in-scope services performing and available.
 
+[[figure: ola-escalation-path | Support and escalation path]]
+
+
 *[Response times, escalation times, coverage hours and the RACI model must be confirmed per bid against {{customer_short}}'s service-level requirements.]*
 
 ## Scope of Operations

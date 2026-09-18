@@ -19,6 +19,9 @@ Elastic Observability collects metrics from physical, virtual and containerized 
 - Threshold and baseline alerting, with maintenance windows to keep planned work quiet
 - Dashboards per server group, and reporting on capacity trends
 
+
+[[figure: el-observability-collection | Metric collection and health views]]
+
 ## Build Activities <!-- if services -->
 
 <!-- if services -->

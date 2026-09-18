@@ -2,7 +2,9 @@
 """
 Verto Wave Proposal Builder — Streamlit web UI around combine.py.
 
-Steps: include → vendor/product → sections → customer → compliance matrix → review and build.
+Steps: include → vendor/product → sections → graphs → customer → compliance matrix → review and build.
+The Graphs step lists the figures the selected sections ask for and takes a PNG or JPG for
+each; a figure with no image is left out of the built document rather than shown empty.
 Each third-party product carries two write-ups; its toggle in step 2 decides whether the
 proposal names it or describes it by function alone.
 The Module Library page (apps/pages) edits and versions the modules themselves.
@@ -28,6 +30,7 @@ sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import combine  # noqa: E402
 import hermes_research  # noqa: E402
+import library  # noqa: E402
 import vw_theme  # noqa: E402
 
 COMBINE_PY = ROOT / "combine.py"
@@ -304,8 +307,8 @@ with st.sidebar:
     vw_theme.side_label("This proposal")
     st.button("Start a new proposal (reset)", on_click=reset_to_example)
 
-tabs = st.tabs(["1 · Include", "2 · Vendor / product", "3 · Sections", "4 · Customer",
-                "5 · Compliance matrix", "6 · Review & build"])
+tabs = st.tabs(["1 · Include", "2 · Vendor / product", "3 · Sections", "4 · Graphs", "5 · Customer",
+                "6 · Compliance matrix", "7 · Review & build"])
 
 
 with tabs[0]:
@@ -380,7 +383,67 @@ with tabs[2]:
     st.radio("Table of contents depth", [1, 2], key="toc_levels", horizontal=True,
              format_func=lambda n: "Main sections only" if n == 1 else "Sections and subsections")
 
+LIBRARY_DIR = library.default_library_dir()
+
+
+def figures_in_scope() -> list[dict]:
+    """Every figure the selected modules ask for, in document order."""
+    found = []
+    for token in included:
+        path = combine.resolve_module_file(token, INDEX, ROOT, LIBRARY_DIR)
+        if path is None:
+            continue
+        mod = MODULES.get(token, {})
+        text_ = combine.apply_conditions(path.read_text(encoding="utf-8"), context)
+        for slug, caption in library.FIGURE_RE.findall(text_):
+            image = combine.resolve_figure(slug, ROOT, LIBRARY_DIR)
+            found.append({"slug": slug, "caption": caption.strip(), "token": token,
+                          "section": display_names_now().get(token, token), "image": image})
+    return found
+
+
+def display_names_now() -> dict:
+    return combine.display_names(INDEX, named_products())
+
+
 with tabs[3]:
+    st.subheader("Graphs and diagrams")
+    figures = figures_in_scope()
+    have = [f for f in figures if f["image"]]
+    st.caption(f"{len(figures)} figures are called for by the sections you selected; {len(have)} have an image. "
+               "A draft marks the missing ones with a placeholder box; an issue copy leaves them out.")
+    if LIBRARY_DIR is None:
+        st.error("No figure folder is configured on this server (PROPOSAL_LIBRARY_DIR), so uploads cannot be saved.")
+    elif not figures:
+        st.info("Select modules and sections first — the figures they ask for appear here.")
+    else:
+        lib = library.Library(LIBRARY_DIR, INDEX, ROOT)
+        for group_key in combine.GROUP_ORDER:
+            group_figures = [f for f in figures if combine.module_group(INDEX, f["token"]) == group_key]
+            if not group_figures:
+                continue
+            st.markdown(f"**{GROUPS[group_key]['group']}**")
+            for figure in group_figures:
+                slug = figure["slug"]
+                with st.expander(f"{figure['caption'] or slug} — {figure['section']}"
+                                 + ("" if figure["image"] else "  ·  no image yet"), expanded=False):
+                    if figure["image"]:
+                        st.image(str(figure["image"]), width=360)
+                        if st.button("Remove this image", key=f"rm_{slug}"):
+                            Path(figure["image"]).unlink(missing_ok=True)
+                            st.rerun()
+                    upload = st.file_uploader("PNG or JPG", type=["png", "jpg", "jpeg"], key=f"fig_{slug}")
+                    if upload is not None and st.button("Use this image", key=f"save_fig_{slug}", type="primary"):
+                        try:
+                            saved = lib.save_figure(slug, upload.getvalue(), Path(upload.name).suffix)
+                            st.success(f"Saved {saved.name}. The next build places it in {figure['section']}.")
+                            st.rerun()
+                        except ValueError as exc:
+                            st.error(str(exc))
+                    st.caption(f"Figure name: `{slug}` · goes into {figure['section']} · scaled to fit the page "
+                               "width, keeping its proportions.")
+
+with tabs[4]:
     with st.expander("Draft the customer profile with Hermes (a person must approve it)", expanded=False):
         st.caption("Hermes searches public web pages and drafts the executive-summary fields. Nothing is used "
                    "until you review it, choose what to keep and approve it with your name.")
@@ -430,7 +493,7 @@ with tabs[3]:
                 else:
                     st.text_input(slot, key=slot, help=SLOTS.get(slot, ""))
 
-with tabs[4]:
+with tabs[5]:
     if "section_compliance_matrix" not in context:
         st.info("Tick “Compliance Matrix” in the Sections tab to include this appendix.")
     st.caption("Upload the RFP's requirement list as CSV (from Excel: File → Save As → CSV UTF-8). Columns: "
@@ -458,7 +521,7 @@ with tabs[4]:
     st.caption("Codes: C-DX / C-SX native DeviceX / StackX · CC on configuration · IS integrated solution · "
                "AS assurance and supervision · PC partial · NC not compliant.")
 
-with tabs[5]:
+with tabs[6]:
     st.subheader("This proposal will contain")
     names = combine.display_names(INDEX)
     st.markdown("\n".join(f"{i}. {names[t]}" for i, t in enumerate(included, 1)) or "_Nothing selected._")

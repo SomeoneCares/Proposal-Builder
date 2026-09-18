@@ -20,6 +20,9 @@ The table below lists what {{customer_short}} receives at each stage of this eng
 | Operations | The Operations Level Agreement, regular health-check reports, operations reports and improvement recommendations. <!-- if managed_services --> |
 | Handover | The operational handover pack. <!-- if services --> |
 
+
+[[figure: deliverables-by-stage | Deliverables by stage]]
+
 ## Acceptance of Deliverables
 
 Professional services deliverables are accepted against the acceptance criteria agreed during the designing and planning stage. <!-- if services -->

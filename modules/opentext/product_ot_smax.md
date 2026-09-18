@@ -19,6 +19,9 @@ OpenText SMAX gives {{customer_short}} one place to raise, route and resolve wor
 - Approval routes for changes and for catalog items that carry cost or risk
 - Reporting on volumes, ageing, first-line resolution and service-level attainment
 
+
+[[figure: ot-smax-flow | Service management flow]]
+
 ## Build Activities <!-- if services -->
 
 <!-- if services -->

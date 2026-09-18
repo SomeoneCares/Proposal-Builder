@@ -10,6 +10,9 @@
 
 The DeviceX and StackX licenses in this proposal include support and maintenance for {{support_term_months}} months from license delivery, covering:
 
+[[figure: support-coverage | Support coverage and response path]]
+
+
 - Software updates and new releases of the licensed modules
 - Security patches and fixes
 - Technical support for the licensed software through the Verto Wave service desk

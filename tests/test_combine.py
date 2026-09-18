@@ -273,11 +273,19 @@ class CompleteBuildTests(unittest.TestCase):
         self.assertIn(f'w:fill="{combine.HEADER_FILL}"', xml)
         self.assertIn("w:tblHeader", xml)
 
-    def test_figures_are_placeholders_in_a_draft_and_absent_from_an_issue_copy(self):
-        self.assertIn("Figure placeholder", self.draft_text)
-        self.assertIn("Figure 1:", self.draft_text)
-        self.assertNotIn("Figure placeholder", self.issue_text)
-        self.assertNotRegex(self.issue_text, r"Figure \d+:")
+    def test_a_figure_without_an_image_is_left_out_entirely(self):
+        """An empty box in front of a customer is worse than no figure, draft included."""
+        for content in (self.draft_text, self.issue_text):
+            self.assertNotIn("Figure placeholder", content)
+            self.assertNotRegex(content, r"Figure \d+:")
+
+    def test_the_build_reports_the_figures_it_left_out(self):
+        with without_corporate_base():
+            _doc, warnings = combine.assemble_complete_document(
+                INDEX, ["module_sdwan"], full_values(), offering=["licenses", "services"])
+        left_out = [w for w in warnings if w.startswith("figures left out")]
+        self.assertTrue(left_out, "the build must say which figures had no image")
+        self.assertIn("sdwan-topology", left_out[0])
 
     def test_issue_copy_drops_bid_team_material(self):
         for phrase in ("for the bid team", "This module is a reusable building block", "Author per bid",
