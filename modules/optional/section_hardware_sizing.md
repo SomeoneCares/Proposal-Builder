@@ -1,4 +1,4 @@
-# DeviceX Hardware Specifications and Sizing
+# Hardware Specifications and Sizing
 
 **Token:** `{{section_hardware_sizing}}`  
 **Group:** Optional Proposal Sections  
@@ -6,9 +6,10 @@
 
 ---
 
-## DeviceX Appliance Specifications
+## DeviceX Appliance Specifications <!-- if devicex -->
 
-DeviceX appliances are standard Verto Wave hardware running the SDX platform. Every class runs the complete module set; the class determines capacity, not capability.
+<!-- if devicex -->
+Every class runs the complete module set; the class determines capacity, not capability.
 
 | Reference configuration | Processor | Memory | Storage | Network interfaces |
 | :--- | :--- | :--- | :--- | :--- |
@@ -17,7 +18,7 @@ DeviceX appliances are standard Verto Wave hardware running the SDX platform. Ev
 
 *[Confirm the current model names and specifications with the Verto Wave product team before issue. Specifications are indicative and may be superseded by equivalent or higher configurations.]*
 
-## Site Sizing Classes
+## Site Sizing Classes <!-- if devicex -->
 
 Each site is assigned to a standard class during the design stage, based on the number of concurrent priority real-time sessions and the workloads it hosts.
 
@@ -34,10 +35,12 @@ Each site is assigned to a standard class during the design stage, based on the 
 
 - Sites in scope: {{site_count}}
 - Quantity basis: {{devicex_qty_note}}
+<!-- endif -->
 
-## Central Management Infrastructure
+## Central Management Infrastructure <!-- if devicex -->
 
-The DeviceX central management components run on virtual machines provided by {{customer_short}} at the central site:
+<!-- if devicex -->
+Virtual machines at the central site for the DeviceX central management components:
 
 | Role | Specification | Quantity |
 | :--- | :--- | :--- |
@@ -45,11 +48,12 @@ The DeviceX central management components run on virtual machines provided by {{
 | Backend | 4 vCPU, 12 GB memory, 250 GB disk | 3 |
 | Management console | 4 vCPU, 8 GB memory, 250 GB disk | 1 |
 | Load balancer for the backend | HTTPS load balancing with a TLS certificate for the console and backend addresses | 1 |
+<!-- endif -->
 
 ## StackX Platform Infrastructure <!-- if stackx -->
 
 <!-- if stackx -->
-Indicative sizing for the StackX components in scope, confirmed during the design stage against data volumes and retention:
+Virtual machines for the StackX components in scope. Sizing is indicative and confirmed during the design stage against data volumes and retention:
 
 | Component | Indicative sizing |
 | :--- | :--- |
@@ -64,6 +68,24 @@ Indicative sizing for the StackX components in scope, confirmed during the desig
 <!-- endif -->
 
 *[Sizing is indicative. Final sizing depends on the number of monitored devices, event and log volumes, retention periods and user counts, and is confirmed in the design document.]*
+
+## Site and Data Center Requirements
+
+The environment must meet the following before deployment:
+
+- Rack space and mounting for the appliances at each site in scope <!-- if devicex -->
+- Power at each site, with a protected supply for the appliance <!-- if devicex -->
+- Power and cooling at the central site sized for the virtual infrastructure above
+- Redundant power feed and redundant network connectivity at the central site
+- Stable internet or WAN access at each site, at or above the class bandwidth stated above <!-- if devicex -->
+- Stable network connectivity between the monitored estate and the StackX platform <!-- if stackx -->
+- Physical security for the equipment rooms housing the appliances and central infrastructure
+- Structured cabling and switch ports for the interfaces listed in the specifications
+- Virtualization capacity, storage and backup for the virtual machines listed above
+- Time synchronization and name resolution available to every deployed component
+- Network paths and firewall rules for the flows documented in the design
+
+*[Confirm quantities, power and rack details against the site survey before issue.]*
 
 ---
 

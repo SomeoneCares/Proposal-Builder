@@ -291,10 +291,10 @@
         {
           "token": "section_hardware_sizing",
           "file": "modules/optional/section_hardware_sizing.md",
-          "name": "DeviceX Hardware Specifications & Sizing",
+          "name": "Hardware Specifications & Sizing",
           "required": false,
-          "summary": "Appliance specifications, site classes and central infrastructure sizing.",
-          "requires": "devicex"
+          "summary": "Appliance specifications, site classes, central infrastructure sizing and environment requirements.",
+          "requires": "devicex or stackx"
         },
         {
           "token": "section_timeline",

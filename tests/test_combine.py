@@ -283,9 +283,21 @@ class OfferingTests(unittest.TestCase):
 
     def test_stackx_only_bid_has_no_devicex_material(self):
         content = self.issue_text(CORE + ["module_stackx_itSM", "section_hardware_sizing"], FULL_OFFERING)
-        for absent in ("DeviceX/SDX Assumptions", "Connectivity, Carriers", "Hardware Specifications",
-                       "site roll-out", "customs"):
+        for absent in ("DeviceX/SDX Assumptions", "Connectivity, Carriers", "site roll-out", "customs"):
             self.assertNotIn(absent.lower(), content.lower(), absent)
+
+    def test_hardware_section_covers_stackx_without_devicex_specifics(self):
+        """A StackX-only bid still states its infrastructure and environment requirements."""
+        content = self.issue_text(CORE + ["module_stackx_itSM", "section_hardware_sizing"], FULL_OFFERING)
+        for present in ("Hardware Specifications", "StackX Platform Infrastructure",
+                        "Site and Data Center Requirements"):
+            self.assertIn(present.lower(), content.lower(), present)
+        for absent in ("DeviceX Appliance Specifications", "Site Sizing Classes", "Mid-Range",
+                       "## Central Management"):
+            self.assertNotIn(absent.lower(), content.lower(), absent)
+        devicex = self.issue_text(CORE + ["module_sdwan", "section_hardware_sizing"], FULL_OFFERING)
+        for present in ("DeviceX Appliance Specifications", "Site Sizing Classes", "Rack space"):
+            self.assertIn(present.lower(), devicex.lower(), present)
 
     def test_premier_support_is_optional(self):
         self.assertNotIn("Premier Support", self.issue_text(CORE, ["licenses"]))
