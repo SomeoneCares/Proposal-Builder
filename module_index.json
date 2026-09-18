@@ -434,7 +434,7 @@
           "name": "Hardware Specifications & Sizing",
           "required": false,
           "summary": "Appliance specifications, site classes, central infrastructure sizing and environment requirements.",
-          "requires": "devicex or stackx"
+          "requires": "devicex or stackx or opentext or elastic"
         },
         {
           "token": "section_timeline",
@@ -450,7 +450,7 @@
           "name": "Support & Warranty",
           "required": false,
           "summary": "Software support, hardware warranty and support coverage.",
-          "requires": "licenses"
+          "requires": "licenses or premier_support"
         },
         {
           "token": "section_compliance_matrix",
