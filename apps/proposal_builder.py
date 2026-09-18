@@ -95,6 +95,7 @@ def init_state() -> None:
     for flag in OFFERING_LABELS:
         st.session_state.setdefault(f"off_{flag}", flag in combine.DEFAULT_OFFERING)
     st.session_state.setdefault("toc_levels", 1)
+    st.session_state.setdefault("vendor_names", False)
     # The data editor edits compliance_base; its output is kept in compliance_rows. Feeding the output back
     # in as the editor's input would re-apply edits, so a new base gets a new editor key instead.
     st.session_state.setdefault("compliance_base", [])
@@ -126,7 +127,8 @@ def current_values() -> dict:
 def bid_file() -> dict:
     return {"bid_file_version": 1, "values": {s: st.session_state.get(s, "") for s in SLOTS},
             "offering": current_offering(), "modules": selected_tokens(),
-            "compliance_matrix": st.session_state.compliance_rows, "toc_levels": st.session_state.toc_levels}
+            "compliance_matrix": st.session_state.compliance_rows, "toc_levels": st.session_state.toc_levels,
+            "vendor_names": bool(st.session_state.vendor_names)}
 
 
 def reset_to_example() -> None:
@@ -163,6 +165,8 @@ def load_bid_file() -> None:
         set_compliance_rows(loaded["compliance_matrix"])
     if loaded.get("toc_levels") in (1, 2):
         st.session_state.toc_levels = loaded["toc_levels"]
+    if isinstance(loaded.get("vendor_names"), bool):
+        st.session_state.vendor_names = loaded["vendor_names"]
     st.session_state.upload_message = ("success", f"Loaded {uploaded.name}.")
 
 
@@ -219,6 +223,8 @@ def run_build(logo_upload, use_default_logo: bool, out_name: str, issue: bool) -
         cmd = [sys.executable, str(COMBINE_PY), "--values", str(values_path), "--mode", "complete",
                "--modules", ",".join(selected), "--offering", ",".join(offering),
                "--toc-levels", str(st.session_state.toc_levels), "--out", str(out_path)]
+        if st.session_state.vendor_names:
+            cmd.append("--vendor-names")
         if issue:
             cmd.append("--issue")
         if logo_upload is not None:
@@ -254,7 +260,8 @@ def run_build(logo_upload, use_default_logo: bool, out_name: str, issue: bool) -
 vw_theme.page("Build proposal")
 init_state()
 
-included, skipped, context = combine.plan_modules(INDEX, selected_tokens(), current_offering() or ["licenses"])
+included, skipped, context = combine.plan_modules(INDEX, selected_tokens(), current_offering() or ["licenses"],
+                                                  bool(st.session_state.vendor_names))
 customer = str(st.session_state.get("customer_name", "")).strip()
 filled = sum(1 for s in SLOTS if str(st.session_state.get(s, "")).strip())
 last_build = st.session_state.get("build_result")
@@ -284,8 +291,8 @@ with st.sidebar:
     vw_theme.side_label("This proposal")
     st.button("Start a new proposal (reset)", on_click=reset_to_example)
 
-tabs = st.tabs(["1 · Offering", "2 · Modules", "3 · Sections", "4 · Customer", "5 · Compliance matrix",
-                "6 · Review & build"])
+tabs = st.tabs(["1 · Offering", "2 · Modules", "3 · Vendor products", "4 · Sections", "5 · Customer",
+                "6 · Compliance matrix", "7 · Review & build"])
 
 
 with tabs[0]:
@@ -310,6 +317,28 @@ for tab, group_key in ((tabs[1], "devicex_sdx"), (tabs[1], "stackx")):
                     st.caption(f"↳ Left out: requires {mod['requires'].replace('_', ' ')}.")
 
 with tabs[2]:
+    st.subheader("Vendor products")
+    st.caption("Products Verto Wave implements alongside its own platforms. Pick any combination; each one can be "
+               "named or described by function alone.")
+    st.radio("How are these products described in the proposal?", [False, True], key="vendor_names", horizontal=True,
+             format_func=lambda named: "By product name (OpenText, Elastic)" if named
+             else "By function only — no vendor or product names",
+             help="Naming a product also allows its name past the build check. With names off, every product is "
+                  "described by what it does and the check still refuses vendor names.")
+    for group_key in ("opentext", "elastic"):
+        group = GROUPS[group_key]
+        with st.expander(group["group"], expanded=True):
+            st.caption(group.get("description", ""))
+            for mod in group["modules"]:
+                token = mod["token"]
+                label = mod["name"]
+                if mod.get("vendor_name"):
+                    label = f"{mod['vendor_name']} — {mod['name']}" if st.session_state.vendor_names \
+                        else f"{mod['name']} ({mod['vendor_name']})"
+                st.checkbox(label, key=f"mod_{token}", help=mod.get("summary"))
+    st.caption("The label in brackets is for you: with naming off, the proposal itself never shows it.")
+
+with tabs[3]:
     optional = GROUPS["optional_sections"]
     with st.expander(optional["group"], expanded=True):
         st.caption(optional.get("description", ""))
@@ -329,7 +358,7 @@ with tabs[2]:
     st.radio("Table of contents depth", [1, 2], key="toc_levels", horizontal=True,
              format_func=lambda n: "Main sections only" if n == 1 else "Sections and subsections")
 
-with tabs[3]:
+with tabs[4]:
     with st.expander("Draft the customer profile with Hermes (a person must approve it)", expanded=False):
         st.caption("Hermes searches public web pages and drafts the executive-summary fields. Nothing is used "
                    "until you review it, choose what to keep and approve it with your name.")
@@ -379,7 +408,7 @@ with tabs[3]:
                 else:
                     st.text_input(slot, key=slot, help=SLOTS.get(slot, ""))
 
-with tabs[4]:
+with tabs[5]:
     if "section_compliance_matrix" not in context:
         st.info("Tick “Compliance Matrix” in the Sections tab to include this appendix.")
     st.caption("Upload the RFP's requirement list as CSV (from Excel: File → Save As → CSV UTF-8). Columns: "
@@ -407,7 +436,7 @@ with tabs[4]:
     st.caption("Codes: C-DX / C-SX native DeviceX / StackX · CC on configuration · IS integrated solution · "
                "AS assurance and supervision · PC partial · NC not compliant.")
 
-with tabs[5]:
+with tabs[6]:
     st.subheader("This proposal will contain")
     names = combine.display_names(INDEX)
     st.markdown("\n".join(f"{i}. {names[t]}" for i, t in enumerate(included, 1)) or "_Nothing selected._")

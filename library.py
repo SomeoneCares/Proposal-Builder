@@ -29,8 +29,12 @@ def default_library_dir() -> Path | None:
     return Path(value) if value else None
 
 
-def validate_module_text(text: str, index: dict) -> list[str]:
-    """Problems that would stop a module version from being saved."""
+def validate_module_text(text: str, index: dict, token: str | None = None) -> list[str]:
+    """Problems that would stop a module version from being saved.
+
+    A vendor product module may name its own product; every other product name
+    stays refused, in a module and in the built document alike.
+    """
     problems: list[str] = []
     stripped = text.lstrip()
     if not stripped.startswith("# "):
@@ -55,8 +59,12 @@ def validate_module_text(text: str, index: dict) -> list[str]:
         if token.strip() not in slots:
             problems.append(f"unknown value token {{{{{token}}}}} — add it to customer_slots first")
     problems += combine._term_problems(text, index.get("banned_terms", []), {}, "banned term")
-    problems += combine._term_problems(text, index.get("third_party_terms", []), {}, "third-party product name",
-                                       ignore_case=False)
+    own = set()
+    if token:
+        entry = combine.find_module(index, token) or {}
+        own = {term for term in list(entry.get("vendor_terms", [])) + [entry.get("vendor_name")] if term}
+    products = [t for t in index.get("third_party_terms", []) if t not in own]
+    problems += combine._term_problems(text, products, {}, "third-party product name", ignore_case=False)
     return problems
 
 
@@ -97,7 +105,7 @@ class Library:
         (self.module_dir(token) / "history.json").write_text(json.dumps(history, indent=2), encoding="utf-8")
 
     def save(self, token: str, text: str, author: str, note: str, source: str = "editor") -> dict:
-        problems = validate_module_text(text, self.index)
+        problems = validate_module_text(text, self.index, token)
         if problems:
             raise ValueError("; ".join(problems))
         folder = self.module_dir(token)

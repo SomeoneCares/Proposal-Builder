@@ -53,13 +53,15 @@ def full_values() -> dict:
     return values
 
 
-def build(values: dict, tokens=None, issue: bool = False, logo=LOGO, offering=None, library_dir=None, toc_levels=2):
+def build(values: dict, tokens=None, issue: bool = False, logo=LOGO, offering=None, library_dir=None, toc_levels=2,
+          vendor_names: bool = False):
     doc, warnings = combine.assemble_complete_document(
         INDEX, tokens or ALL_TOKENS, values, str(logo) if logo else None, issue,
-        offering=offering or FULL_OFFERING, toc_levels=toc_levels, library=library_dir,
+        offering=offering or FULL_OFFERING, toc_levels=toc_levels, library=library_dir, vendor_names=vendor_names,
     )
     problems, unconfirmed = combine.check_document(doc, values, INDEX["banned_terms"], "complete", issue,
-                                                   INDEX["third_party_terms"])
+                                                   INDEX["third_party_terms"],
+                                                   getattr(doc, "_vw_allowed_terms", set()))
     return doc, list(doc._vw_problems) + problems, unconfirmed
 
 
@@ -90,18 +92,37 @@ class ModuleSourceTests(unittest.TestCase):
                 self.assertIsNone(BANNED_RE.search(line), f"{md.name}:{n}: {line[:80]}")
 
     def test_modules_name_no_third_party_product(self):
+        """Only the vendor product modules may name a product, and only their own."""
+        vendor_files = {Path(mod["file"]).name for mod in combine.iter_modules(INDEX) if mod.get("vendor_name")}
         for md in MODULE_FILES:
+            if md.name in vendor_files:
+                continue
             for n, line in enumerate(md.read_text(encoding="utf-8").splitlines(), 1):
                 self.assertIsNone(THIRD_PARTY_RE.search(line), f"{md.name}:{n}: {line[:80]}")
 
+    def test_vendor_modules_name_only_their_own_product(self):
+        for mod in combine.iter_modules(INDEX):
+            if not mod.get("vendor_name"):
+                continue
+            own = set(mod.get("vendor_terms", [])) | {mod["vendor_name"]}
+            text_ = (ROOT / mod["file"]).read_text(encoding="utf-8")
+            others = [t for t in INDEX["third_party_terms"] if t not in own]
+            self.assertEqual(combine._term_problems(text_, others, {}, "name", ignore_case=False), [], mod["token"])
+
     def test_registry_is_clean(self):
         self.assertIsNone(BANNED_RE.search(json.dumps(INDEX["modules"])))
-        self.assertIsNone(THIRD_PARTY_RE.search(json.dumps(INDEX["modules"])))
+        # Product names live only in the vendor fields, which exist to carry them.
+        without_vendor_fields = json.dumps([
+            {k: v for k, v in mod.items() if k not in ("vendor_name", "vendor_terms")}
+            for mod in combine.iter_modules(INDEX)])
+        self.assertIsNone(THIRD_PARTY_RE.search(without_vendor_fields))
         self.assertNotIn("VertoWave", json.dumps(INDEX["modules"]))
 
     def test_modules_pass_library_validation(self):
+        by_file = {Path(mod["file"]).name: mod["token"] for mod in combine.iter_modules(INDEX)}
         for md in MODULE_FILES:
-            self.assertEqual(library.validate_module_text(md.read_text(encoding="utf-8"), INDEX), [], md.name)
+            problems = library.validate_module_text(md.read_text(encoding="utf-8"), INDEX, by_file.get(md.name))
+            self.assertEqual(problems, [], md.name)
 
     def test_every_requires_expression_is_valid(self):
         known = combine.known_condition_names(INDEX)
@@ -241,7 +262,8 @@ class CompleteBuildTests(unittest.TestCase):
         doc, problems, _ = build(self.values, issue=True, toc_levels=1)
         self.assertEqual(problems, [])
         self.assertEqual({entry[0] for entry in doc._vw_toc["entries"]}, {1})
-        self.assertLess(len(doc._vw_toc["entries"]), 50)
+        # One entry per selected module; the registry now carries 57 of them.
+        self.assertLess(len(doc._vw_toc["entries"]), 70)
 
 
 class OfferingTests(unittest.TestCase):
@@ -298,6 +320,33 @@ class OfferingTests(unittest.TestCase):
         devicex = self.issue_text(CORE + ["module_sdwan", "section_hardware_sizing"], FULL_OFFERING)
         for present in ("DeviceX Appliance Specifications", "Site Sizing Classes", "Rack space"):
             self.assertIn(present.lower(), devicex.lower(), present)
+
+    def test_vendor_product_named_or_described_by_function(self):
+        """The same module ships branded or generic, and the check follows the choice."""
+        tokens = CORE + ["product_ot_smax", "product_el_logs"]
+        generic, problems, _ = build(full_values(), tokens=tokens, issue=True, vendor_names=False)
+        self.assertEqual(problems, [])
+        generic_text = text(generic)
+        for absent in ("OpenText", "SMAX", "Elastic", "Logstash"):
+            self.assertNotIn(absent, generic_text, absent)
+        for present in ("Service Management Platform", "Log Management and Analytics"):
+            self.assertIn(present, generic_text, present)
+
+        branded, problems, _ = build(full_values(), tokens=tokens, issue=True, vendor_names=True)
+        self.assertEqual(problems, [], "a named product must pass the third-party check")
+        branded_text = text(branded)
+        for present in ("OpenText SMAX", "Elastic Log Management"):
+            self.assertIn(present, branded_text, present)
+
+    def test_a_product_name_is_refused_when_that_product_is_not_sold(self):
+        """Naming vendors does not license every vendor name — only the ones in the proposal."""
+        doc, _warnings = combine.assemble_complete_document(
+            INDEX, CORE + ["product_ot_smax"], full_values(), None, True,
+            offering=FULL_OFFERING, vendor_names=True)
+        allowed = doc._vw_allowed_terms
+        self.assertIn("OpenText SMAX", allowed)
+        for absent in ("OpenText NOM", "Elastic APM", "Universal Discovery"):
+            self.assertNotIn(absent, allowed, absent)
 
     def test_premier_support_is_optional(self):
         self.assertNotIn("Premier Support", self.issue_text(CORE, ["licenses"]))
@@ -371,8 +420,14 @@ class TemplateModeTests(unittest.TestCase):
         self.assertIn("{{module_sdwan}}", content)
         self.assertNotRegex(content, r"(?<!\{)\{module_sdwan\}(?!\})")
         problems, _ = combine.check_document(doc, EXAMPLE_VALUES, INDEX["banned_terms"], "template", False,
-                                             INDEX["third_party_terms"])
+                                             INDEX["third_party_terms"], doc._vw_allowed_terms)
         self.assertEqual(problems, [])
+
+    def test_template_may_name_every_product_it_carries(self):
+        """The internal template lists every module, so it names every product we sell."""
+        doc, _warnings = combine.assemble_template_document(INDEX, ALL_TOKENS, EXAMPLE_VALUES)
+        self.assertIn("OpenText SMAX", doc._vw_allowed_terms)
+        self.assertIn("Elastic APM", doc._vw_allowed_terms)
 
 
 class LibraryTests(unittest.TestCase):

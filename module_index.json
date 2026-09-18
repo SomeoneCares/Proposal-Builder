@@ -45,6 +45,14 @@
     "module_stackx_devops",
     "module_stackx_alm",
     "module_stackx_call_center",
+    "product_ot_smax",
+    "product_ot_ucmdb",
+    "product_ot_obm",
+    "product_ot_nom",
+    "product_ot_oo",
+    "product_el_observability",
+    "product_el_logs",
+    "product_el_apm",
     "section_engagement_framework",
     "section_professional_services",
     "section_timeline",
@@ -260,6 +268,138 @@
           "name": "StackX Call Center Management",
           "required": false,
           "summary": "Omnichannel contact center with skills-based routing, IVR and quality management."
+        }
+      ]
+    },
+    "opentext": {
+      "group": "OpenText Products",
+      "description": "OpenText products Verto Wave implements. Each is described by function alone unless the proposal names vendors.",
+      "modules": [
+        {
+          "token": "product_ot_smax",
+          "file": "modules/opentext/product_ot_smax.md",
+          "name": "Service Management Platform",
+          "vendor_name": "OpenText SMAX",
+          "vendor_terms": [
+            "OpenText SMAX",
+            "SMAX",
+            "Service Management Automation X",
+            "OpenText"
+          ],
+          "required": false,
+          "summary": "Service desk, incident, request, change, problem, release and service-level management."
+        },
+        {
+          "token": "product_ot_ucmdb",
+          "file": "modules/opentext/product_ot_ucmdb.md",
+          "name": "Configuration Management and Discovery",
+          "vendor_name": "OpenText UCMDB and Universal Discovery",
+          "vendor_terms": [
+            "OpenText UCMDB",
+            "UCMDB",
+            "Universal CMDB",
+            "Universal Discovery",
+            "OpenText"
+          ],
+          "required": false,
+          "summary": "Automated discovery, dependency mapping and a governed configuration management database."
+        },
+        {
+          "token": "product_ot_obm",
+          "file": "modules/opentext/product_ot_obm.md",
+          "name": "Event Correlation and Root-Cause Analysis",
+          "vendor_name": "OpenText OBM",
+          "vendor_terms": [
+            "OpenText OBM",
+            "OBM",
+            "Operations Bridge",
+            "OpenText"
+          ],
+          "required": false,
+          "summary": "Consolidates events from every monitoring source, suppresses noise and presents a probable cause."
+        },
+        {
+          "token": "product_ot_nom",
+          "file": "modules/opentext/product_ot_nom.md",
+          "name": "Network Operations Management",
+          "vendor_name": "OpenText NOM",
+          "vendor_terms": [
+            "OpenText NOM",
+            "NOM",
+            "Network Operations Management",
+            "NNMi",
+            "OpenText"
+          ],
+          "required": false,
+          "summary": "Network discovery, fault and performance monitoring across the routed and switched estate."
+        },
+        {
+          "token": "product_ot_oo",
+          "file": "modules/opentext/product_ot_oo.md",
+          "name": "Runbook Automation and Orchestration",
+          "vendor_name": "OpenText Operations Orchestration",
+          "vendor_terms": [
+            "OpenText Operations Orchestration",
+            "Operations Orchestration",
+            "OpenText OO",
+            "OpenText"
+          ],
+          "required": false,
+          "summary": "Automated runbooks and orchestration flows triggered by the service desk or by monitoring."
+        }
+      ]
+    },
+    "elastic": {
+      "group": "Elastic Products",
+      "description": "Elastic products Verto Wave implements. Each is described by function alone unless the proposal names vendors.",
+      "modules": [
+        {
+          "token": "product_el_observability",
+          "file": "modules/elastic/product_el_observability.md",
+          "name": "Server and Infrastructure Monitoring",
+          "vendor_name": "Elastic Observability",
+          "vendor_terms": [
+            "Elastic Observability",
+            "Elastic",
+            "Elasticsearch",
+            "Elastic Stack",
+            "Kibana",
+            "Beats"
+          ],
+          "required": false,
+          "summary": "Metric collection, health and capacity monitoring for physical, virtual and containerized servers."
+        },
+        {
+          "token": "product_el_logs",
+          "file": "modules/elastic/product_el_logs.md",
+          "name": "Log Management and Analytics",
+          "vendor_name": "Elastic Log Management",
+          "vendor_terms": [
+            "Elastic Log Management",
+            "Elastic",
+            "Elasticsearch",
+            "Logstash",
+            "Kibana",
+            "Elastic Common Schema",
+            "Beats"
+          ],
+          "required": false,
+          "summary": "Central log collection, parsing, retention tiers and search across the estate."
+        },
+        {
+          "token": "product_el_apm",
+          "file": "modules/elastic/product_el_apm.md",
+          "name": "Application Performance Monitoring",
+          "vendor_name": "Elastic APM",
+          "vendor_terms": [
+            "Elastic APM",
+            "Elastic",
+            "Elasticsearch",
+            "Kibana",
+            "Beats"
+          ],
+          "required": false,
+          "summary": "Transaction tracing, service dependency mapping and error analysis for instrumented applications."
         }
       ]
     },
@@ -611,6 +751,27 @@
     "Intel",
     "Xeon",
     "Ubuntu",
-    "Asterisk"
+    "Asterisk",
+    "OpenText SMAX",
+    "Service Management Automation X",
+    "OpenText UCMDB",
+    "UCMDB",
+    "Universal CMDB",
+    "Universal Discovery",
+    "OpenText OBM",
+    "OBM",
+    "Operations Bridge",
+    "OpenText NOM",
+    "NOM",
+    "NNMi",
+    "OpenText Operations Orchestration",
+    "Operations Orchestration",
+    "OpenText OO",
+    "Elastic Observability",
+    "Elastic Log Management",
+    "Elastic APM",
+    "Elastic",
+    "Beats",
+    "ELK"
   ]
 }

@@ -89,7 +89,7 @@ with tab_edit:
     note = st.text_input("What changed and why (required)", key=f"note_{token}")
     col1, col2 = st.columns(2)
     if col1.button("Check", key=f"check_{token}"):
-        problems = library.validate_module_text(text, INDEX)
+        problems = library.validate_module_text(text, INDEX, token)
         if problems:
             for problem in problems:
                 st.error(problem)
@@ -115,7 +115,7 @@ with tab_upload:
             st.error("The file must be UTF-8 text.")
             uploaded_text = ""
         if uploaded_text:
-            problems = library.validate_module_text(uploaded_text, INDEX)
+            problems = library.validate_module_text(uploaded_text, INDEX, token)
             for problem in problems:
                 st.error(problem)
             if not problems and st.button("Save the uploaded file as a new version", type="primary",
