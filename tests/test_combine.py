@@ -181,6 +181,18 @@ class ModuleSourceTests(unittest.TestCase):
                     printed |= set(SLOT_TOKEN_RE.findall((ROOT / mod[key]).read_text(encoding="utf-8")))
         self.assertEqual(set(INDEX["customer_slots"]) - printed, set())
 
+    def test_a_built_proposal_renders_to_pdf(self):
+        """The bid team gets a Word file to work in and a PDF to send out."""
+        if not (shutil.which("soffice") or shutil.which("libreoffice")):
+            self.skipTest("LibreOffice is not installed")
+        doc = build(full_values(), tokens=CORE[:4])[0]
+        with tempfile.TemporaryDirectory() as tmp:
+            docx_path = Path(tmp) / "proposal.docx"
+            doc.save(docx_path)
+            pdf = combine.render_pdf(docx_path, Path(tmp))
+            self.assertIsNotNone(pdf, "LibreOffice produced no PDF")
+            self.assertTrue(pdf.read_bytes().startswith(b"%PDF"))
+
     def test_figure_slugs_are_unique(self):
         """One slug, one figure — counted per write-up length, since a module's short and
         long forms are alternatives and never appear in the same document."""

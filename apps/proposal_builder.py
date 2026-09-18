@@ -355,6 +355,13 @@ def run_build(logo_upload, use_default_logo: bool, out_name: str, issue: bool) -
             result["errors"] = result["errors"] or [f"combine.py exited with code {proc.returncode}."]
             return result
         result.update(ok=True, out_name=out_name, data=out_path.read_bytes())
+        # The customer copy is a PDF rendered from the file that was just built, so
+        # its table of contents carries the page numbers the .docx ended up with.
+        pdf_path = combine.render_pdf(out_path, tmp_path)
+        if pdf_path is None:
+            result["warnings"].append("PDF not produced — LibreOffice is not available on this server.")
+        else:
+            result.update(pdf_name=pdf_path.name, pdf=pdf_path.read_bytes())
         return result
 
 
@@ -723,9 +730,20 @@ with tabs[6]:
     if result:
         if result["ok"]:
             st.success(f"Build complete — {result['out_name']}")
-            st.download_button("Download proposal .docx", data=result["data"], file_name=result["out_name"],
-                               mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-                               type="primary")
+            docx_col, pdf_col = st.columns(2)
+            with docx_col:
+                st.download_button("Download Word (.docx)", data=result["data"], file_name=result["out_name"],
+                                   mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                                   help="For internal work: review, mark up and edit.", width="stretch")
+            with pdf_col:
+                if result.get("pdf"):
+                    st.download_button("Download PDF", data=result["pdf"], file_name=result["pdf_name"],
+                                       mime="application/pdf", type="primary",
+                                       help="The copy to send to the customer.", width="stretch")
+                else:
+                    st.button("Download PDF", disabled=True, width="stretch",
+                              help="The PDF could not be produced on this server.")
+            st.caption("The Word file is for internal review and editing. Send the PDF to the customer.")
         else:
             for error in result["errors"]:
                 st.error(error)

@@ -1004,6 +1004,26 @@ def find_heading_pages(entries: list[tuple[int, str, bool]], pages: list[str]) -
     return numbers
 
 
+def render_pdf(docx_path: Path, out_dir: Path, timeout: int = 240) -> Path | None:
+    """Convert a .docx to PDF with LibreOffice. None when it is not installed or fails.
+
+    The .docx is never round-tripped: the PDF is a separate rendering of it.
+    """
+    soffice = shutil.which("soffice") or shutil.which("libreoffice")
+    if not soffice:
+        return None
+    try:
+        subprocess.run(
+            [soffice, f"-env:UserInstallation={(Path(out_dir) / 'lo-profile').as_uri()}",
+             "--headless", "--convert-to", "pdf", "--outdir", str(out_dir), str(docx_path)],
+            capture_output=True, timeout=timeout, check=True,
+        )
+    except (subprocess.SubprocessError, OSError):
+        return None
+    pdf = Path(out_dir) / (Path(docx_path).stem + ".pdf")
+    return pdf if pdf.is_file() else None
+
+
 def fill_toc_page_numbers(doc) -> tuple[bool, str]:
     """Render the document with LibreOffice and put real page numbers in the TOC entries.
 
@@ -1013,20 +1033,16 @@ def fill_toc_page_numbers(doc) -> tuple[bool, str]:
     toc = getattr(doc, "_vw_toc", None)
     if not toc or not toc["runs"]:
         return True, "no table of contents entries"
-    soffice = shutil.which("soffice") or shutil.which("libreoffice")
     pdftotext = shutil.which("pdftotext")
-    if not soffice or not pdftotext:
+    if not (shutil.which("soffice") or shutil.which("libreoffice")) or not pdftotext:
         return False, "page numbers not filled — LibreOffice or pdftotext is not installed"
     with tempfile.TemporaryDirectory(prefix="vw_toc_") as tmp:
         tmp_path = Path(tmp)
         docx_path = tmp_path / "toc-pass.docx"
         doc.save(docx_path)
+        if render_pdf(docx_path, tmp_path) is None:
+            return False, "page numbers not filled — the render failed"
         try:
-            subprocess.run(
-                [soffice, f"-env:UserInstallation={(tmp_path / 'lo-profile').as_uri()}",
-                 "--headless", "--convert-to", "pdf", "--outdir", str(tmp_path), str(docx_path)],
-                capture_output=True, timeout=240, check=True,
-            )
             text = subprocess.run(
                 [pdftotext, "-layout", str(tmp_path / "toc-pass.pdf"), "-"],
                 capture_output=True, text=True, timeout=120, check=True,
