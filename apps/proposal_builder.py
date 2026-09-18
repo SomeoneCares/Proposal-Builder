@@ -44,7 +44,7 @@ MODULES = {mod["token"]: mod for mod in combine.iter_modules(INDEX)}
 GROUPS = INDEX["modules"]
 
 OFFERING_LABELS = {
-    "licenses": "Software licenses (DeviceX / StackX)",
+    "licenses": "Software licenses",
     "services": "Professional services — architecture, design, implementation and roll-out",
     "managed_services": "Managed services — operation under an Operations Level Agreement",
     "premier_support": "Premier Support visits (with licenses)",
@@ -394,16 +394,11 @@ def slots_in_scope() -> set[str]:
     return found
 
 
-customer = str(st.session_state.get("customer_name", "")).strip()
 needed_slots = slots_in_scope()
 filled = sum(1 for s in needed_slots if str(st.session_state.get(s, "")).strip())
 last_build = st.session_state.get("build_result")
 check_state = ("Not built" if not last_build else "Passing" if last_build.get("ok") else "Failed")
 
-vw_theme.hero("DeviceX / SDX & StackX technical proposal",
-              customer or "New proposal",
-              "Assembled from the module library. Work through the steps from left to right, then build. "
-              "Pricing is excluded by design and attached separately.")
 vw_theme.kpis([
     ("Sections in this proposal", str(len(included)), "blue", "▤"),
     ("Left out by the offering", str(len(skipped)), "violet", "▽"),
