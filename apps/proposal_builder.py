@@ -17,9 +17,11 @@ from __future__ import annotations
 import csv
 import io
 import json
+import re
 import subprocess
 import sys
 import tempfile
+from datetime import datetime
 from pathlib import Path
 
 import pandas as pd
@@ -53,8 +55,17 @@ OFFERING_HELP = {
     "managed_services": "Adds the OLA, operations roles and SOC operations. When not selected, managed services are not mentioned anywhere.",
     "premier_support": "Adds monthly, then quarterly, on-site Premier Support visits to the support section.",
 }
+SLOT_TOKEN_RE = re.compile(r"\{\{([a-z0-9_]+)\}\}")
 CODES = ["C-DX", "C-SX", "CC", "IS", "AS", "PC", "NC"]
 TEXT_AREAS = {"customer_profile", "requirement_summary", "key_requirements"}
+# The registry description is the field's real name; the prefixes only repeated
+# which section it belonged to, which the group heading already says.
+LABEL_PREFIXES = ("Professional Services: ", "Implementation timeline: ", "SD-WAN target: ")
+DATE_SLOTS = {"proposal_date", "effective_date"}
+DERIVED_SLOTS = {"proposal_date_iso"}  # written from the date picker, never typed
+CHOICE_SLOTS = {"proposal_status": ["Draft", "For review", "Issued", "Final"]}
+# Fields the corporate cover fills, which no module prints as a {{token}}.
+COVER_SLOTS = set(combine.COVER_FIELDS.values()) | {"customer_short"}
 BLANK_RULE = "Blank fields are marked TO CONFIRM in a draft and block an issue copy."
 # (title, caption, slot names or a slot-name prefix, module token that uses the slots)
 SLOT_GROUPS = [
@@ -124,6 +135,78 @@ def named_products() -> list[str]:
             if mod.get("vendor_name") and st.session_state.get(f"mod_{t}") and st.session_state.get(f"name_{t}")]
 
 
+def count_slots() -> set[str]:
+    """Slots holding a plain count, which are asked for as a number."""
+    return {slot for slot in SLOTS
+            if slot.startswith(("services_", "timeline_")) or slot.endswith("_months")}
+
+
+def slot_label(slot: str) -> str:
+    text = SLOTS.get(slot, slot)
+    for prefix in LABEL_PREFIXES:
+        if text.startswith(prefix):
+            text = text[len(prefix):]
+            break
+    for cut in (" (e.g.", ", e.g.", " (default"):
+        text = text.split(cut)[0]
+    text = text.strip().rstrip(".")
+    return (text[:1].upper() + text[1:]) if text else slot
+
+
+def slot_help(slot: str) -> str:
+    return f"{SLOTS.get(slot, '')}\n\nTemplate field: `{{{{{slot}}}}}`"
+
+
+def parse_date(raw: str):
+    for fmt in ("%d %B %Y", "%Y-%m-%d", "%d/%m/%Y", "%d %b %Y"):
+        try:
+            return datetime.strptime(raw.strip(), fmt).date()
+        except ValueError:
+            continue
+    return None
+
+
+def slot_field(slot: str, disabled: bool = False) -> None:
+    """One field, in the control that suits what it holds."""
+    label, help_text = slot_label(slot), slot_help(slot)
+    if slot in DATE_SLOTS:
+        key = f"date_{slot}"
+        if key not in st.session_state:
+            st.session_state[key] = parse_date(str(st.session_state.get(slot, "")))
+        picked = st.date_input(label, key=key, help=help_text, format="DD/MM/YYYY", disabled=disabled)
+        if picked:
+            st.session_state[slot] = f"{picked.day} {picked.strftime('%B %Y')}"
+            if slot == "proposal_date":
+                st.session_state["proposal_date_iso"] = picked.isoformat()
+    elif slot in CHOICE_SLOTS:
+        options = list(CHOICE_SLOTS[slot])
+        current = str(st.session_state.get(slot, "")).strip()
+        if current and current not in options:
+            options.insert(0, current)
+        key = f"pick_{slot}"
+        st.session_state.setdefault(key, current or options[0])
+        st.selectbox(label, options, key=key, help=help_text, disabled=disabled)
+        st.session_state[slot] = st.session_state[key]
+    elif slot in count_slots():
+        key = f"num_{slot}"
+        if key not in st.session_state:
+            raw = str(st.session_state.get(slot, "")).strip()
+            st.session_state[key] = int(raw) if raw.isdigit() else None
+        st.number_input(label, key=key, min_value=0, step=1, help=help_text, disabled=disabled)
+        value = st.session_state[key]
+        st.session_state[slot] = "" if value is None else str(int(value))
+    elif slot in TEXT_AREAS:
+        st.text_area(label, key=slot, help=help_text, disabled=disabled)
+    else:
+        st.text_input(label, key=slot, help=help_text, disabled=disabled)
+
+
+def forget_typed_widgets() -> None:
+    """Drop the typed widgets' own state so they re-read a freshly loaded proposal."""
+    for key in [k for k in st.session_state if k.startswith(("num_", "date_", "pick_"))]:
+        del st.session_state[key]
+
+
 def selected_tokens() -> list[str]:
     return [t for t in MODULES if st.session_state.get(f"mod_{t}")]
 
@@ -182,6 +265,7 @@ def load_bid_file() -> None:
         st.session_state.toc_levels = loaded["toc_levels"]
     if loaded.get("writeups") in ("short", "long"):
         st.session_state.writeups = loaded["writeups"]
+    forget_typed_widgets()
     if isinstance(loaded.get("named_products"), list):
         for token, mod in MODULES.items():
             if mod.get("vendor_name"):
@@ -281,10 +365,38 @@ def run_build(logo_upload, use_default_logo: bool, out_name: str, issue: bool) -
 vw_theme.page("Build proposal")
 init_state()
 
+WRITEUP_LABELS = {
+    "short": "Short — the original write-up",
+    "long": "Long — components, integration, exclusions, acceptance and hardware",
+}
+LIBRARY_DIR = library.default_library_dir()
+
+
+def long_writeups() -> bool:
+    return st.session_state.get("writeups", "short") == "long"
+
+
 included, skipped, context = combine.plan_modules(INDEX, selected_tokens(), current_offering() or ["licenses"],
                                                   named_products())
+def slots_in_scope() -> set[str]:
+    """Every field the selected modules will print, plus the ones the cover fills.
+
+    The modules are read with their conditions applied, so a field whose only
+    line is conditional on a module that is not selected is not asked for.
+    """
+    found = set(COVER_SLOTS)
+    for token in included:
+        path = combine.resolve_module_file(token, INDEX, ROOT, LIBRARY_DIR, long_form=long_writeups())
+        if path is None:
+            continue
+        text_ = combine.apply_conditions(path.read_text(encoding="utf-8"), context)
+        found |= {name for name in SLOT_TOKEN_RE.findall(text_) if name in SLOTS}
+    return found
+
+
 customer = str(st.session_state.get("customer_name", "")).strip()
-filled = sum(1 for s in SLOTS if str(st.session_state.get(s, "")).strip())
+needed_slots = slots_in_scope()
+filled = sum(1 for s in needed_slots if str(st.session_state.get(s, "")).strip())
 last_build = st.session_state.get("build_result")
 check_state = ("Not built" if not last_build else "Passing" if last_build.get("ok") else "Failed")
 
@@ -295,7 +407,7 @@ vw_theme.hero("DeviceX / SDX & StackX technical proposal",
 vw_theme.kpis([
     ("Sections in this proposal", str(len(included)), "blue", "▤"),
     ("Left out by the offering", str(len(skipped)), "violet", "▽"),
-    ("Values filled", f"{filled} of {len(SLOTS)}", "amber", "◧"),
+    ("Values filled", f"{filled} of {len(needed_slots)}", "amber", "◧"),
     ("Build checks", check_state, "emerald" if check_state != "Failed" else "amber", "✓"),
 ])
 
@@ -349,16 +461,6 @@ def product_rows(group_key: str, heading: str | None = None) -> None:
             st.caption(f"↳ Left out: requires {mod['requires'].replace('_', ' ')}.")
 
 
-WRITEUP_LABELS = {
-    "short": "Short — the original write-up",
-    "long": "Long — components, integration, exclusions, acceptance and hardware",
-}
-
-
-def long_writeups() -> bool:
-    return st.session_state.get("writeups", "short") == "long"
-
-
 with tabs[1]:
     st.subheader("Vendors and products")
     st.caption("Pick any combination. Each third-party product can carry its own name or be described by "
@@ -389,28 +491,38 @@ with tabs[1]:
     st.caption("Products without the toggle on are described by function only; their product names are refused "
                "by the build check.")
 
+def section_rows(group_key: str, expanded: bool) -> int:
+    """List the sections this offering can carry; return how many it cannot."""
+    group = GROUPS[group_key]
+    applies = [m for m in group["modules"] if combine.module_applies(m, context)]
+    blocked = [m for m in group["modules"] if m not in applies]
+    with st.expander(f"{group['group']} — {len(applies)} available", expanded=expanded):
+        st.caption(group.get("description", ""))
+        for mod in applies:
+            st.checkbox(mod["name"], key=f"mod_{mod['token']}", help=mod.get("summary"))
+        if blocked and st.session_state.get("show_all_sections"):
+            st.divider()
+            st.caption("Not available with the offering selected in step 1.")
+            for mod in blocked:
+                st.checkbox(f"{mod['name']} — needs {mod['requires'].replace('_', ' ')}",
+                            value=False, disabled=True, key=f"blocked_{mod['token']}")
+    return len(blocked)
+
+
 with tabs[2]:
-    optional = GROUPS["optional_sections"]
-    with st.expander(optional["group"], expanded=True):
-        st.caption(optional.get("description", ""))
-        for mod in optional["modules"]:
-            token = mod["token"]
-            st.checkbox(mod["name"], key=f"mod_{token}", help=mod.get("summary"))
-            if st.session_state.get(f"mod_{token}") and token in skipped:
-                st.caption(f"↳ Left out: requires {mod['requires'].replace('_', ' ')}.")
-    cross = GROUPS["cross_cutting"]
-    with st.expander(cross["group"], expanded=False):
-        st.caption(cross.get("description", ""))
-        for mod in cross["modules"]:
-            token = mod["token"]
-            st.checkbox(mod["name"], key=f"mod_{token}", help=mod.get("summary"))
-            if st.session_state.get(f"mod_{token}") and token in skipped:
-                st.caption(f"↳ Left out: requires {mod['requires'].replace('_', ' ')}.")
+    blocked_count = sum(1 for key in ("optional_sections", "cross_cutting")
+                        for m in GROUPS[key]["modules"] if not combine.module_applies(m, context))
+    st.caption("Only the sections this offering can carry are listed. "
+               + (f"{blocked_count} more {'needs' if blocked_count == 1 else 'need'} a different offering "
+                  "— change it in step 1."
+                  if blocked_count else "Every section is available with the offering selected."))
+    if blocked_count:
+        st.toggle("Show all sections", key="show_all_sections",
+                  help="Reveals the sections the current offering cannot carry, and what each one needs.")
+    section_rows("optional_sections", expanded=True)
+    section_rows("cross_cutting", expanded=False)
     st.radio("Table of contents depth", [1, 2], key="toc_levels", horizontal=True,
              format_func=lambda n: "Main sections only" if n == 1 else "Sections and subsections")
-
-LIBRARY_DIR = library.default_library_dir()
-
 
 def figures_in_scope() -> list[dict]:
     """Every figure the selected modules ask for, in document order."""
@@ -469,7 +581,47 @@ with tabs[3]:
                     st.caption(f"Figure name: `{slug}` · goes into {figure['section']} · scaled to fit the page "
                                "width, keeping its proportions.")
 
+
 with tabs[4]:
+    in_scope = needed_slots
+    blank = [slot for slot in in_scope if not str(st.session_state.get(slot, "")).strip()]
+    left, right = st.columns([3, 2])
+    with left:
+        st.subheader("Customer and proposal details")
+        st.caption(f"{len(in_scope)} of {len(SLOTS)} fields appear in this proposal. The rest belong to "
+                   "sections and products you have not selected.")
+    with right:
+        if blank:
+            st.warning(f"{len(blank)} still to fill. {BLANK_RULE}")
+        else:
+            st.success("Every field this proposal uses is filled.")
+
+    grouped: set[str] = set()
+    groups: list[tuple[str, str | None, list[str]]] = []
+    for title, caption, spec, token in SLOT_GROUPS:
+        names = [x for x in SLOTS if x.startswith(spec)] if isinstance(spec, str) else [x for x in spec if x in SLOTS]
+        grouped |= set(names)
+        names = [x for x in names if x in in_scope and x not in DERIVED_SLOTS]
+        if names:
+            groups.append((title, caption, names))
+    # Anything the document prints that no group claims is still asked for, so a
+    # field can never be unreachable because a group was forgotten.
+    orphans = sorted(x for x in in_scope if x not in grouped and x not in DERIVED_SLOTS)
+    if orphans:
+        groups.append(("Other fields", "Used by a section in this proposal.", orphans))
+
+    def render_group(title: str, caption: str | None, names: list[str]) -> None:
+        empty = [x for x in names if not str(st.session_state.get(x, "")).strip()]
+        label = f"{title} — {len(names) - len(empty)} of {len(names)} filled"
+        with st.expander(label, expanded=bool(empty)):
+            if caption:
+                st.caption(caption)
+            for slot in names:
+                slot_field(slot)
+
+    if groups:
+        render_group(*groups[0])
+
     with st.expander("Draft the customer profile with Hermes (a person must approve it)", expanded=False):
         st.caption("Hermes searches public web pages and drafts the executive-summary fields. Nothing is used "
                    "until you review it, choose what to keep and approve it with your name.")
@@ -505,19 +657,19 @@ with tabs[4]:
         if message:
             st.success(message)
 
-    for title, caption, spec, token in SLOT_GROUPS:
-        names = [s for s in SLOTS if s.startswith(spec)] if isinstance(spec, str) else [s for s in spec if s in SLOTS]
-        needed = token is None or token in context
-        with st.expander(title, expanded=needed and token is None):
-            if caption:
-                st.caption(caption)
-            if not needed:
-                st.info(f"Not used in this proposal — {MODULES[token]['name']} is not included.")
-            for slot in names:
-                if slot in TEXT_AREAS:
-                    st.text_area(slot, key=slot, help=SLOTS.get(slot, ""))
-                else:
-                    st.text_input(slot, key=slot, help=SLOTS.get(slot, ""))
+    for group in groups[1:]:
+        render_group(*group)
+
+    out_of_scope = sorted(x for x in SLOTS if x not in in_scope and x not in DERIVED_SLOTS)
+    if out_of_scope:
+        st.divider()
+        st.toggle(f"Show all fields ({len(out_of_scope)} more)", key="show_all_fields",
+                  help="The fields the sections and products in this proposal do not print. "
+                       "Filling one changes nothing until a section that uses it is selected.")
+        if st.session_state.get("show_all_fields"):
+            st.caption("Not used by this proposal as it stands.")
+            for slot in out_of_scope:
+                slot_field(slot)
 
 with tabs[5]:
     if "section_compliance_matrix" not in context:

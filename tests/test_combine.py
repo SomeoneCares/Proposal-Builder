@@ -38,6 +38,7 @@ THIRD_PARTY_RE = re.compile(
     r"(?<![A-Za-z0-9])(" + "|".join(re.escape(t) for t in INDEX["third_party_terms"]) + r")(?![A-Za-z0-9])"
 )
 MODULE_FILES = sorted((ROOT / "modules").rglob("*.md"))
+SLOT_TOKEN_RE = re.compile(r"\{\{([a-z0-9_]+)\}\}")
 
 
 def full_values() -> dict:
@@ -169,6 +170,16 @@ class ModuleSourceTests(unittest.TestCase):
             content = md.read_text(encoding="utf-8")
             self.assertIsNone(uk.search(content), f"{md.name}: {uk.search(content)}")
             self.assertNotIn("VertoWave", content, md.name)
+
+    def test_every_customer_field_is_printed_somewhere(self):
+        """The builder asks for the fields the modules print, so a field no module
+        prints could never be filled and would block an issue copy forever."""
+        printed = set(combine.COVER_FIELDS.values())
+        for mod in combine.iter_modules(INDEX):
+            for key in ("file", "long_file"):
+                if mod.get(key):
+                    printed |= set(SLOT_TOKEN_RE.findall((ROOT / mod[key]).read_text(encoding="utf-8")))
+        self.assertEqual(set(INDEX["customer_slots"]) - printed, set())
 
     def test_figure_slugs_are_unique(self):
         """One slug, one figure — counted per write-up length, since a module's short and
