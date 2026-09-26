@@ -46,8 +46,7 @@ Business owners confirm that the service works as intended, user journeys are va
 A structured go/no-go review confirms that approvals are complete, test evidence is attached, rollback is ready, monitoring is configured, support teams are informed, deployment ownership is clear and post-go-live checks are assigned.
 
 <!-- Diagram guidance: source → build → test → security scan → approval gate → release → deploy → monitor, across Development, Staging and Production. -->
-[[figure: devops-pipeline | Governed release pipeline]]
-
+[[figure: devops-pipeline | Governed release pipeline | Diagram | Architect]]
 ## Practices
 
 - **Continuous integration and deployment** — automated pipelines that deliver updates with minimal disruption.
@@ -61,6 +60,33 @@ A structured go/no-go review confirms that approvals are complete, test evidence
 - Change records are raised and approved in StackX ITSM. <!-- if module_stackx_itSM -->
 - Performance and functional tests run from StackX ALM as pipeline gates. <!-- if module_stackx_alm -->
 - Deployments are executed through StackX Automation & Orchestration. <!-- if module_stackx_automation_orchestration -->
+
+<!-- if per_product_sizing -->
+
+## Sizing Basis
+
+| Dimension | Counted As | Confirmed Figure |
+| :--- | :--- | :--- |
+| Applications on-boarded | Applications / repositories | {{sizing_stackx_devops_applications_on}} |
+| Pipelines | Build and release pipelines | {{sizing_stackx_devops_pipelines}} |
+| Environments | Per application | {{sizing_stackx_devops_environments}} |
+
+*[Confirm every figure for this bid against the confirmed requirement. Do not carry numbers forward from a prior engagement.]*
+
+<!-- endif -->
+
+<!-- if services -->
+
+## Acceptance Tests
+
+The tests below are executed jointly and form part of the acceptance test plan for this module.
+
+| Test | Method | Pass Criterion |
+| :--- | :--- | :--- |
+| Gates | Commit code with a known vulnerable library | Pipeline blocks release |
+| Traceability | Release a change end to end | Change record holds all evidence |
+
+<!-- endif -->
 
 ---
 

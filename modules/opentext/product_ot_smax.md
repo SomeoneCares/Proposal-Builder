@@ -20,8 +20,7 @@ OpenText SMAX gives {{customer_short}} one place to raise, route and resolve wor
 - Reporting on volumes, ageing, first-line resolution and service-level attainment
 
 
-[[figure: ot-smax-flow | Service management flow]]
-
+[[figure: ot-smax-flow | Service management flow | Diagram | Architect]]
 ## Build Activities <!-- if services -->
 
 <!-- if services -->

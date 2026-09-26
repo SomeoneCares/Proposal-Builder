@@ -30,8 +30,7 @@ The platform covers physical servers, virtual machines and container platforms, 
 - **Scalability** — horizontal scaling for large data volumes, deployable on premises or in the cloud.
 
 <!-- Diagram guidance: sources → agents → ingestion → analytics engine → dashboards and alerts, with traces and service maps for APM. No application or metric names that reveal a customer's business. -->
-[[figure: observability-flow | Observability data flow]]
-
+[[figure: observability-flow | Observability data flow | Diagram | Architect]]
 ## Application Performance Monitoring
 
 APM gives deep visibility into distributed applications, from services to serverless functions. It maps service dependencies automatically, detects anomalies and simplifies investigation of outliers, with support for popular programming languages, OpenTelemetry and distributed tracing.
@@ -49,6 +48,34 @@ Service level objectives (SLOs) are defined and tracked through service level in
 - Raises and closes incidents automatically in StackX ITSM. <!-- if module_stackx_itSM -->
 - Triggers remediation workflows in StackX Automation & Orchestration. <!-- if module_stackx_automation_orchestration -->
 - Shares telemetry with the StackX security modules for enrichment. <!-- if module_stackx_security or module_stackx_soc -->
+
+<!-- if per_product_sizing -->
+
+## Sizing Basis
+
+| Dimension | Counted As | Confirmed Figure |
+| :--- | :--- | :--- |
+| Monitored hosts | Servers and workloads with an agent | {{sizing_stackx_observability_apm_monitored_hosts}} |
+| Applications instrumented | Applications carrying traces | {{sizing_stackx_observability_apm_applications_instrumented}} |
+| Service-level objectives | SLOs defined with error budgets | {{sizing_stackx_observability_apm_service_level}} |
+| Dashboards | Named dashboards | {{sizing_stackx_observability_apm_dashboards}} |
+
+*[Confirm every figure for this bid against the confirmed requirement. Do not carry numbers forward from a prior engagement.]*
+
+<!-- endif -->
+
+<!-- if services -->
+
+## Acceptance Tests
+
+The tests below are executed jointly and form part of the acceptance test plan for this module.
+
+| Test | Method | Pass Criterion |
+| :--- | :--- | :--- |
+| Instrumentation | Execute a test transaction | End-to-end trace visible |
+| SLO | Simulate error burst | Burn-rate alert raised; ITSM ticket created |
+
+<!-- endif -->
 
 ---
 

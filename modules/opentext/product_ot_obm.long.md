@@ -61,8 +61,7 @@ In this project the console is the point at which every monitoring source in sco
 - Operator and management dashboards, and reporting on event volumes, the sources that produce them and the rules that suppress them
 
 
-[[figure: ot-obm-correlation | From raw events to a probable cause]]
-
+[[figure: ot-obm-correlation | From raw events to a probable cause | Diagram | Architect]]
 ## Integration
 
 The links below are configured only where both platforms are part of this proposal.

@@ -19,8 +19,7 @@ StackX provides the operations layer: it collects telemetry from infrastructure,
 <!-- endif -->
 
 <!-- Diagram guidance: layered view — sites with DeviceX at the bottom, the encrypted overlay, the central site with the DeviceX backend and StackX platform, and integrations with the customer's systems. Generic labels only. -->
-[[figure: solution-architecture | Solution architecture overview]]
-
+[[figure: solution-architecture | Solution architecture overview | Diagram | Architect]]
 ## Architecture Layers
 
 | Layer | Components | Role |

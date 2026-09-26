@@ -20,8 +20,7 @@ Elastic APM instruments the services in scope and shows transaction performance,
 - Correlation with the logs of the same service <!-- if product_el_logs -->
 
 
-[[figure: el-apm-traces | Transaction traces and service dependencies]]
-
+[[figure: el-apm-traces | Transaction traces and service dependencies | Diagram | Architect]]
 ## Build Activities <!-- if services -->
 
 <!-- if services -->

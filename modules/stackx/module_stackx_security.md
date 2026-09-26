@@ -55,8 +55,7 @@ Vulnerability findings are correlated with active exploitation trends and asset 
 A ticketing and workflow engine inside the StackX console links alerts to human resolution: evidence is attached automatically (packet captures, endpoint logs, threat intelligence), access is role-based, handlers collaborate in the case, and SLA dashboards show response performance.
 
 <!-- Diagram guidance: layered defense — external boundary, internal visibility and control, identity, data and system integrity, recovery, and assurance — annotated with the Native / Integrated / Assured delivery modes. -->
-[[figure: security-architecture | Security capability layers and delivery modes]]
-
+[[figure: security-architecture | Security capability layers and delivery modes | Diagram | Architect]]
 ## Extended Security Services (Optional)
 
 Where {{customer_short}} prefers one accountable party across a wider picture, Verto Wave can deliver the services below around the platform. Each is scoped per service area and forms part of the platform build only if explicitly selected and quoted.
@@ -75,6 +74,35 @@ Where {{customer_short}} prefers one accountable party across a wider picture, V
 - Recovery targets are agreed, not assumed; recovery point and time objectives are set during design.
 - Where {{customer_short}} has issued a formal cybersecurity requirements document, Verto Wave provides a point-by-point compliance response mapping each requirement to a delivery mode. <!-- if not section_compliance_matrix -->
 - Each security requirement is mapped to a delivery mode in the compliance matrix appendix. <!-- if section_compliance_matrix -->
+
+<!-- if per_product_sizing -->
+
+## Sizing Basis
+
+| Dimension | Counted As | Confirmed Figure |
+| :--- | :--- | :--- |
+| Log sources to SIEM | Source types | {{sizing_stackx_security_log_sources}} |
+| EPS | Sustained | {{sizing_stackx_security_eps}} |
+| Endpoints with EDR | Agents | {{sizing_stackx_security_endpoints_edr}} |
+| Detection use cases | Rules enabled | {{sizing_stackx_security_detection_use}} |
+
+*[Confirm every figure for this bid against the confirmed requirement. Do not carry numbers forward from a prior engagement.]*
+
+<!-- endif -->
+
+<!-- if services -->
+
+## Acceptance Tests
+
+The tests below are executed jointly and form part of the acceptance test plan for this module.
+
+| Test | Method | Pass Criterion |
+| :--- | :--- | :--- |
+| Source onboarding | Verify each agreed source reaches the platform | Parsed, normalised and searchable |
+| Detection | Replay a test technique for an enabled use case | Alert raised and mapped to the framework |
+| Response | Run a containment playbook against a test host | Action executed and recorded in the case |
+
+<!-- endif -->
 
 ---
 

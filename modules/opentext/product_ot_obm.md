@@ -20,8 +20,7 @@ OpenText OBM collects events from every monitoring source into one console, wher
 - Operator views per service, with the event history that led to the current state
 
 
-[[figure: ot-obm-correlation | From raw events to a probable cause]]
-
+[[figure: ot-obm-correlation | From raw events to a probable cause | Diagram | Architect]]
 ## Build Activities <!-- if services -->
 
 <!-- if services -->

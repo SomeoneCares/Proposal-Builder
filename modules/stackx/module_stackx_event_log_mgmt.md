@@ -34,13 +34,41 @@ StackX Event & Log Management centralizes {{customer_short}}'s log data in one p
 - **Business KPI mapping** — log insight correlated with service-level objectives and executive KPIs.
 
 <!-- Diagram guidance: sources → collection → parsing and enrichment → tiered storage → search, dashboards and alerts. No source names or retention figures. -->
-[[figure: log-management-flow | Log collection, retention and analysis]]
-
+[[figure: log-management-flow | Log collection, retention and analysis | Diagram | Architect]]
 ## Integration
 
 - Provides the log foundation for threat detection in StackX Security. <!-- if module_stackx_security -->
 - Creates tickets in StackX ITSM from log events. <!-- if module_stackx_itSM -->
 - Supplies retained logs as audit evidence to StackX Compliance Assurance. <!-- if module_stackx_compliance -->
+
+<!-- if per_product_sizing -->
+
+## Sizing Basis
+
+| Dimension | Counted As | Confirmed Figure |
+| :--- | :--- | :--- |
+| Log sources | Integrated source types | {{sizing_stackx_event_log_mgmt_log_sources}} |
+| Events per second | Sustained / peak | {{sizing_stackx_event_log_mgmt_events_second}} |
+| Daily volume | GB/day ingested | {{sizing_stackx_event_log_mgmt_daily_volume}} |
+| Reports | Agreed reports | {{sizing_stackx_event_log_mgmt_reports}} |
+
+*[Confirm every figure for this bid against the confirmed requirement. Do not carry numbers forward from a prior engagement.]*
+
+<!-- endif -->
+
+<!-- if services -->
+
+## Acceptance Tests
+
+The tests below are executed jointly and form part of the acceptance test plan for this module.
+
+| Test | Method | Pass Criterion |
+| :--- | :--- | :--- |
+| Source onboarding | Verify each agreed source is parsed | All fields mapped; no parse errors |
+| Retention | Inspect lifecycle policies | Match the agreed table |
+| Integrity | Alter a stored record in test | Tampering detected |
+
+<!-- endif -->
 
 ---
 

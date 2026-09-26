@@ -63,8 +63,7 @@ Its scope in this project is the process model, the service catalog and the work
 - Reporting on volumes, ageing, first-line resolution, reopened records, backlog and service-level attainment, per service and per group
 
 
-[[figure: ot-smax-flow | Service management flow]]
-
+[[figure: ot-smax-flow | Service management flow | Diagram | Architect]]
 ## Integration
 
 The links below are configured only where both platforms are part of this proposal.

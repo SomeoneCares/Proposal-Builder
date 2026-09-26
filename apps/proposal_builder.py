@@ -112,6 +112,7 @@ def init_state() -> None:
         st.session_state.setdefault(f"off_{flag}", flag in combine.DEFAULT_OFFERING)
     st.session_state.setdefault("toc_levels", 1)
     st.session_state.setdefault("writeups", "short")
+    st.session_state.setdefault("sizing", "generic")
     for token, mod in MODULES.items():
         if mod.get("vendor_name"):
             st.session_state.setdefault(f"name_{token}", False)
@@ -225,6 +226,7 @@ def bid_file() -> dict:
     return {"bid_file_version": 1, "values": {s: st.session_state.get(s, "") for s in SLOTS},
             "offering": current_offering(), "modules": selected_tokens(),
             "writeups": st.session_state.get("writeups", "short"),
+            "sizing": st.session_state.get("sizing", "generic"),
             "compliance_matrix": st.session_state.compliance_rows, "toc_levels": st.session_state.toc_levels,
             "named_products": named_products()}
 
@@ -265,6 +267,8 @@ def load_bid_file() -> None:
         st.session_state.toc_levels = loaded["toc_levels"]
     if loaded.get("writeups") in ("short", "long"):
         st.session_state.writeups = loaded["writeups"]
+    if loaded.get("sizing") in ("generic", "per-product"):
+        st.session_state.sizing = loaded["sizing"]
     forget_typed_widgets()
     if isinstance(loaded.get("named_products"), list):
         for token, mod in MODULES.items():
@@ -326,7 +330,8 @@ def run_build(logo_upload, use_default_logo: bool, out_name: str, issue: bool) -
         cmd = [sys.executable, str(COMBINE_PY), "--values", str(values_path), "--mode", "complete",
                "--modules", ",".join(selected), "--offering", ",".join(offering),
                "--toc-levels", str(st.session_state.toc_levels), "--out", str(out_path),
-               "--writeups", st.session_state.get("writeups", "short")]
+               "--writeups", st.session_state.get("writeups", "short"),
+               "--sizing", st.session_state.get("sizing", "generic")]
         named = named_products()
         if named:
             cmd += ["--named-products", ",".join(named)]
@@ -376,6 +381,10 @@ WRITEUP_LABELS = {
     "short": "Short — the original write-up",
     "long": "Long — components, integration, exclusions, acceptance and hardware",
 }
+SIZING_LABELS = {
+    "generic": "One shared table — all scope numbers together in Professional Services",
+    "per-product": "Per product — a sizing basis inside each product section",
+}
 LIBRARY_DIR = library.default_library_dir()
 
 
@@ -383,8 +392,12 @@ def long_writeups() -> bool:
     return st.session_state.get("writeups", "short") == "long"
 
 
+def build_options() -> set[str]:
+    return {"per_product_sizing"} if st.session_state.get("sizing") == "per-product" else set()
+
+
 included, skipped, context = combine.plan_modules(INDEX, selected_tokens(), current_offering() or ["licenses"],
-                                                  named_products())
+                                                  named_products(), build_options())
 def slots_in_scope() -> set[str]:
     """Every field the selected modules will print, plus the ones the cover fills.
 
@@ -484,6 +497,11 @@ with tabs[1]:
                   "components, a full integration section, the technical scope of work, what the product "
                   "does not cover, acceptance criteria and its own hardware sizing tables. "
                   "Products without a long write-up use their only one either way.")
+    st.radio("Scope numbers", list(SIZING_LABELS), key="sizing", horizontal=False,
+             format_func=SIZING_LABELS.get,
+             help="One shared table keeps every figure in the professional services section. "
+                  "Per product puts a sizing basis in each product section, stating what that "
+                  "product is counted by — and the builder then asks for those figures in step 5.")
     if long_writeups():
         st.caption("Long write-ups carry indicative hardware figures. Each table asks the product team to "
                    "confirm them against the release being quoted — the note prints in a draft and is "
@@ -544,10 +562,12 @@ def figures_in_scope() -> list[dict]:
             continue
         mod = MODULES.get(token, {})
         text_ = combine.apply_conditions(path.read_text(encoding="utf-8"), context)
-        for slug, caption in library.FIGURE_RE.findall(text_):
+        for slug, rest in library.FIGURE_RE.findall(text_):
+            _, caption, kind, owner = combine.parse_figure(f"{slug} | {rest}")
             image = combine.resolve_figure(slug, ROOT, LIBRARY_DIR)
-            found.append({"slug": slug, "caption": caption.strip(), "token": token,
-                          "section": display_names_now().get(token, token), "image": image})
+            found.append({"slug": slug, "caption": caption, "kind": kind, "owner": owner,
+                          "token": token, "section": display_names_now().get(token, token),
+                          "image": image})
     return found
 
 
@@ -589,8 +609,13 @@ with tabs[3]:
                             st.rerun()
                         except ValueError as exc:
                             st.error(str(exc))
-                    st.caption(f"Figure name: `{slug}` · goes into {figure['section']} · scaled to fit the page "
-                               "width, keeping its proportions.")
+                    detail = [f"Figure name: `{slug}`", f"goes into {figure['section']}"]
+                    if figure["kind"]:
+                        detail.append(f"needs a {figure['kind'].lower()}")
+                    if figure["owner"]:
+                        detail.append(f"supplied by {figure['owner']}")
+                    st.caption(" · ".join(detail)
+                               + " · scaled to fit the page width, keeping its proportions.")
 
 
 with tabs[4]:
@@ -715,7 +740,9 @@ with tabs[6]:
     names = combine.display_names(INDEX)
     st.markdown("\n".join(f"{i}. {names[t]}" for i, t in enumerate(included, 1)) or "_Nothing selected._")
     st.caption("Vendor product write-ups: "
-               + WRITEUP_LABELS[st.session_state.get("writeups", "short")].lower())
+               + WRITEUP_LABELS[st.session_state.get("writeups", "short")].lower()
+               + "  ·  scope numbers: "
+               + SIZING_LABELS[st.session_state.get("sizing", "generic")].lower())
     if skipped:
         st.caption("Left out because they do not apply to the offering: " + ", ".join(names[t] for t in skipped))
     st.subheader("Build")

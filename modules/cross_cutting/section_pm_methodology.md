@@ -19,8 +19,7 @@ The Verto Wave project management methodology has five stages, mapped to the PMI
 | Closing | Closure |
 
 <!-- Diagram guidance: the five stages as a left-to-right flow, with Monitoring and Controlling spanning underneath. -->
-[[figure: pm-stages | Verto Wave project management stages]]
-
+[[figure: pm-stages | Verto Wave project management stages | Diagram | Architect]]
 ## Project Stages
 
 ### Envisioning

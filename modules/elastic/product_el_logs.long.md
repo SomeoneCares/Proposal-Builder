@@ -53,8 +53,7 @@ This module covers the log layer of {{customer_short}}'s estate: what the system
 
 *[Restate the specific requirement this module answers in {{customer_short}}'s own terms per bid, including the retention obligation and the source classes it applies to. Do not leave this paragraph generic in a competitive bid.]*
 
-[[figure: el-logs-pipeline | Log pipeline and retention tiers]]
-
+[[figure: el-logs-pipeline | Log pipeline and retention tiers | Diagram | Architect]]
 ## Deployment Model
 
 The platform is deployed either on infrastructure under {{customer_short}}'s control or consumed as a managed cloud service. The choice is made in the design stage and it determines the licensing basis, the node sizing below, and which party operates the platform itself. The proposal assumes one production deployment.

@@ -19,8 +19,7 @@ StackX Call Center Management is an integrated contact center suite that helps {
 - **Quality management** — call recording and whisper mode let supervisors monitor calls and coach agents in real time.
 
 <!-- Diagram guidance: channels (voice, email, chat, social) → routing and IVR → agent groups → supervisor dashboards and quality management. No queue or agent names. -->
-[[figure: contact-center | Omnichannel contact center flow]]
-
+[[figure: contact-center | Omnichannel contact center flow | Diagram | Architect]]
 ## Value
 
 - **Better customer experience** — faster responses and accurate routing raise satisfaction.
@@ -33,6 +32,34 @@ StackX Call Center Management is an integrated contact center suite that helps {
 The contact center runs on the DeviceX IP-PBX for voice, adding the agent, routing and quality layer on top of site telephony. <!-- if module_ipbx -->
 
 Customer requests that need back-office work are raised as tickets in StackX ITSM. <!-- if module_stackx_itSM -->
+
+<!-- if per_product_sizing -->
+
+## Sizing Basis
+
+| Dimension | Counted As | Confirmed Figure |
+| :--- | :--- | :--- |
+| Agents | Named / concurrent | {{sizing_stackx_call_center_agents}} |
+| Supervisors | Named | {{sizing_stackx_call_center_supervisors}} |
+| IVR flows | Menus | {{sizing_stackx_call_center_ivr_flows}} |
+| Recording retention | Days | {{sizing_stackx_call_center_recording_retention}} |
+
+*[Confirm every figure for this bid against the confirmed requirement. Do not carry numbers forward from a prior engagement.]*
+
+<!-- endif -->
+
+<!-- if services -->
+
+## Acceptance Tests
+
+The tests below are executed jointly and form part of the acceptance test plan for this module.
+
+| Test | Method | Pass Criterion |
+| :--- | :--- | :--- |
+| Routing | Place calls per skill | Delivered to correct skill queue |
+| Screen-pop | Inbound call from a known number | CRM record opens |
+
+<!-- endif -->
 
 ---
 

@@ -55,8 +55,7 @@ This module covers the application layer of {{customer_short}}'s estate: the ser
 
 *[Restate the specific requirement this module answers in {{customer_short}}'s own terms per bid, naming the business services the requirement is really about. Do not leave this paragraph generic in a competitive bid.]*
 
-[[figure: el-apm-traces | Transaction traces and service dependencies]]
-
+[[figure: el-apm-traces | Transaction traces and service dependencies | Diagram | Architect]]
 ## Deployment Model
 
 The platform is deployed either on infrastructure under {{customer_short}}'s control or consumed as a managed cloud service. The choice is made in the design stage and it determines the licensing basis, the node sizing below, and which party operates the platform itself. The proposal assumes one production deployment; instrumenting a non-production environment as well is a separate line of scope, and is normally worth doing because it is where a regression is cheapest to find.

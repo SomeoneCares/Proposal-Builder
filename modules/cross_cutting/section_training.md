@@ -32,8 +32,7 @@ Training is delivered remotely. Documentation and a recorded session are provide
 | StackX backup and recovery | Up to 5 technical staff | 1 day <!-- if module_stackx_backup --> |
 
 <!-- Diagram guidance: a training path from administration to advanced operations for the selected courses. -->
-[[figure: training-path | Training and knowledge transfer path]]
-
+[[figure: training-path | Training and knowledge transfer path | Diagram | Architect]]
 ## Training Content
 
 Administration training covers:

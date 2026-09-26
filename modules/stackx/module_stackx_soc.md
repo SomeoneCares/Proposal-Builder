@@ -41,8 +41,7 @@ StackX SOC Operations is the security operations service Verto Wave runs for {{c
 6. **Learn** — a post-incident review records the root cause and improvements.
 
 <!-- Diagram guidance: the SOC tiers around the incident response lifecycle, with escalation paths to the customer's teams. -->
-[[figure: soc-operations | SOC tiers and incident response lifecycle]]
-
+[[figure: soc-operations | SOC tiers and incident response lifecycle | Diagram | Architect]]
 ## Reporting and Service Reviews
 
 - Monthly security operations report: alert volumes, incidents, response times and posture trends
@@ -54,6 +53,34 @@ StackX SOC Operations is the security operations service Verto Wave runs for {{c
 The service operates the capabilities described in StackX Security — SIEM, SOAR, EDR/XDR, NDR, threat intelligence, behavior analytics and case management. <!-- if module_stackx_security -->
 
 The service operates on the StackX security platform, whose capabilities are confirmed in the design. <!-- if not module_stackx_security -->
+
+<!-- if per_product_sizing -->
+
+## Sizing Basis
+
+| Dimension | Counted As | Confirmed Figure |
+| :--- | :--- | :--- |
+| Monitored sources | Sources under SOC monitoring | {{sizing_stackx_soc_monitored_sources}} |
+| Coverage | Hours of monitoring | {{sizing_stackx_soc_coverage}} |
+| Detection use cases | Use cases tuned and in service | {{sizing_stackx_soc_detection_use}} |
+
+*[Confirm every figure for this bid against the confirmed requirement. Do not carry numbers forward from a prior engagement.]*
+
+<!-- endif -->
+
+<!-- if services -->
+
+## Acceptance Tests
+
+The tests below are executed jointly and form part of the acceptance test plan for this module.
+
+| Test | Method | Pass Criterion |
+| :--- | :--- | :--- |
+| Triage | Inject a test alert at each severity | Acknowledged and triaged within the agreed targets |
+| Escalation | Raise a test case needing customer approval | Escalated through the agreed authority path |
+| Reporting | Produce the first monthly report | Volumes, cases and targets reported as agreed |
+
+<!-- endif -->
 
 ---
 

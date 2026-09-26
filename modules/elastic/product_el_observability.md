@@ -20,8 +20,7 @@ Elastic Observability collects metrics from physical, virtual and containerized 
 - Dashboards per server group, and reporting on capacity trends
 
 
-[[figure: el-observability-collection | Metric collection and health views]]
-
+[[figure: el-observability-collection | Metric collection and health views | Diagram | Architect]]
 ## Build Activities <!-- if services -->
 
 <!-- if services -->

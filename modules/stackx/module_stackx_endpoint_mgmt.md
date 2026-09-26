@@ -50,8 +50,7 @@ Live or on-demand monitoring covers:
 - Define role-based administrator privileges
 
 <!-- Diagram guidance: managed endpoints reporting through agents to the central server, with dashboards for inventory, compliance and alerts. No endpoint or site names. -->
-[[figure: endpoint-management | Endpoint management overview]]
-
+[[figure: endpoint-management | Endpoint management overview | Diagram | Architect]]
 ## Analytics
 
 The analytics engine correlates collected data to give behavior, performance and cost insight — for example, renewing licenses only for the users who actually need them:
@@ -75,6 +74,33 @@ StackX Print Management centralizes control of the printing estate:
 
 - Provides configuration-item context and endpoint tickets to StackX ITSM. <!-- if module_stackx_itSM -->
 - Shares endpoint telemetry with the StackX security modules. <!-- if module_stackx_security or module_stackx_soc -->
+
+<!-- if per_product_sizing -->
+
+## Sizing Basis
+
+| Dimension | Counted As | Confirmed Figure |
+| :--- | :--- | :--- |
+| Endpoints | Managed devices | {{sizing_stackx_endpoint_mgmt_endpoints}} |
+| Packages | Maintained packages | {{sizing_stackx_endpoint_mgmt_packages}} |
+
+*[Confirm every figure for this bid against the confirmed requirement. Do not carry numbers forward from a prior engagement.]*
+
+<!-- endif -->
+
+<!-- if services -->
+
+## Acceptance Tests
+
+The tests below are executed jointly and form part of the acceptance test plan for this module.
+
+| Test | Method | Pass Criterion |
+| :--- | :--- | :--- |
+| Inventory | Compare a sample of endpoints against the console | Hardware, software and version match |
+| Patch deployment | Deploy an agreed package to a test group | Installed and reported within the window |
+| Remote support | Open a remote session on a test endpoint | User consent requested and the session recorded |
+
+<!-- endif -->
 
 ---
 

@@ -39,13 +39,39 @@ StackX functional testing accelerates end-to-end testing with one enterprise sol
 - **Integration** — connects to test management and continuous-integration platforms.
 
 <!-- Diagram guidance: test assets → load and functional test execution → results analysis → release gate in the delivery pipeline. -->
-[[figure: alm-testing | Performance and functional testing in the release cycle]]
-
+[[figure: alm-testing | Performance and functional testing in the release cycle | Diagram | Architect]]
 ## Value
 
 - Performance problems found before release, not by users
 - More tests per cycle in less time through automation
 - Consistent quality measures shared by developers, testers and business analysts
+
+<!-- if per_product_sizing -->
+
+## Sizing Basis
+
+| Dimension | Counted As | Confirmed Figure |
+| :--- | :--- | :--- |
+| Applications | Under test | {{sizing_stackx_alm_applications}} |
+| Performance scripts | Initial set | {{sizing_stackx_alm_performance_scripts}} |
+| Functional scripts | Initial set | {{sizing_stackx_alm_functional_scripts}} |
+
+*[Confirm every figure for this bid against the confirmed requirement. Do not carry numbers forward from a prior engagement.]*
+
+<!-- endif -->
+
+<!-- if services -->
+
+## Acceptance Tests
+
+The tests below are executed jointly and form part of the acceptance test plan for this module.
+
+| Test | Method | Pass Criterion |
+| :--- | :--- | :--- |
+| Load test | Run the agreed scenario at peak VUs | Report produced vs pass criteria |
+| Regression | Run the functional suite from the pipeline | Results stored and linked to release |
+
+<!-- endif -->
 
 ---
 

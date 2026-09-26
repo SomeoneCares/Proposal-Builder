@@ -20,8 +20,7 @@ Elastic Log Management collects logs from the estate centrally, parses them into
 - Dashboards per source type and per service
 
 
-[[figure: el-logs-pipeline | Log pipeline and retention tiers]]
-
+[[figure: el-logs-pipeline | Log pipeline and retention tiers | Diagram | Architect]]
 ## Build Activities <!-- if services -->
 
 <!-- if services -->

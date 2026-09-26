@@ -33,8 +33,7 @@ StackX Orchestration defines, executes and monitors end-to-end workflows across 
 StackX ships with an integration builder, so network and system engineers can add actions, workflows and vendors without writing code.
 
 <!-- Diagram guidance: workflow definition → trigger → execution across devices → approval gate → reporting. No workflow or system names. -->
-[[figure: orchestration-pipeline | Automation and orchestration workflow]]
-
+[[figure: orchestration-pipeline | Automation and orchestration workflow | Diagram | Architect]]
 ## Central Management Stack
 
 The central management stack receives actions from network, security and system operators and translates them into native actions on each managed device, using CLI, REST API or web calls. Actions can target a single device or many, giving central configuration management and governance.
@@ -52,6 +51,35 @@ The central management stack receives actions from network, security and system 
 - Runs remediation workflows triggered by StackX Observability & APM. <!-- if module_stackx_observability_apm -->
 - Executes approved standard changes and requests from StackX ITSM. <!-- if module_stackx_itSM -->
 - Applies configuration changes to DeviceX appliances as part of multi-vendor workflows. <!-- if devicex -->
+
+<!-- if per_product_sizing -->
+
+## Sizing Basis
+
+| Dimension | Counted As | Confirmed Figure |
+| :--- | :--- | :--- |
+| Workflows | Workflows built and handed over | {{sizing_stackx_automation_orchestration_workflows}} |
+| Managed devices | Devices reachable by the workers | {{sizing_stackx_automation_orchestration_managed_devices}} |
+| Integrations | Systems the workflows act on | {{sizing_stackx_automation_orchestration_integrations}} |
+
+*[Confirm every figure for this bid against the confirmed requirement. Do not carry numbers forward from a prior engagement.]*
+
+<!-- endif -->
+
+<!-- if services -->
+
+## Acceptance Tests
+
+The tests below are executed jointly and form part of the acceptance test plan for this module.
+
+| Test | Method | Pass Criterion |
+| :--- | :--- | :--- |
+| Dry run | Run a workflow in dry-run mode | Planned actions listed; nothing changed on the target |
+| Rollback | Force a failure mid-run | The change is reversed where the target supports it, and the run is recorded |
+| Approval gate | Run a workflow that requires approval | Execution is held until approved |
+| Audit record | Review the run history | Every action attributed to a named identity |
+
+<!-- endif -->
 
 ---
 

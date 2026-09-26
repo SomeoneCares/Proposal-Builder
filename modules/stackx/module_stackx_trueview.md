@@ -17,8 +17,7 @@ TrueView aggregates real-time information from diverse sources — enterprise ap
 Its analytics correlate data across systems to find patterns, anomalies and potential privacy risks, helping {{customer_short}} refine policies and workflows and put the right controls around sensitive information.
 
 <!-- Diagram guidance: data sources (infrastructure monitoring, applications, HR and access systems) feeding TrueView, which presents business-service and technical dashboards to different audiences. Generic labels only. -->
-[[figure: trueview-dashboard | Business and technical service dashboard]]
-
+[[figure: trueview-dashboard | Business and technical service dashboard | Screenshot | Product team]]
 ## Key Capabilities
 
 - **Comprehensive data aggregation** — integrates infrastructure monitoring, HR systems, access logs and enterprise applications into one dashboard.
@@ -33,6 +32,33 @@ Its analytics correlate data across systems to find patterns, anomalies and pote
 - Receives service health and performance data from StackX Observability & APM. <!-- if module_stackx_observability_apm -->
 - Uses the discovered service model from StackX Operations Monitoring & Configuration Management. <!-- if module_stackx_ops_config_mgmt -->
 - Shows open incidents and service requests from StackX ITSM against each business service. <!-- if module_stackx_itSM -->
+
+<!-- if per_product_sizing -->
+
+## Sizing Basis
+
+| Dimension | Counted As | Confirmed Figure |
+| :--- | :--- | :--- |
+| Business services modelled | Services with roll-up rules | {{sizing_stackx_trueview_business_services}} |
+| Dashboards | Named dashboards | {{sizing_stackx_trueview_dashboards}} |
+| Data sources | Integrated sources | {{sizing_stackx_trueview_data_sources}} |
+
+*[Confirm every figure for this bid against the confirmed requirement. Do not carry numbers forward from a prior engagement.]*
+
+<!-- endif -->
+
+<!-- if services -->
+
+## Acceptance Tests
+
+The tests below are executed jointly and form part of the acceptance test plan for this module.
+
+| Test | Method | Pass Criterion |
+| :--- | :--- | :--- |
+| Roll-up | Fail a component CI in test | Service state changes per rule |
+| Dashboards | Review each named dashboard | All agreed dashboards live |
+
+<!-- endif -->
 
 ---
 

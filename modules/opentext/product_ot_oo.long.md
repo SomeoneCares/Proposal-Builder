@@ -57,8 +57,7 @@ In this project the platform is the execution layer beneath the rest of the solu
 - A run history that records who ran what, when, against which target and with what result — the evidence an auditor asks for after an automated change
 
 
-[[figure: ot-oo-automation | A runbook from trigger to result]]
-
+[[figure: ot-oo-automation | A runbook from trigger to result | Diagram | Architect]]
 ## Integration
 
 The links below are configured only where both platforms are part of this proposal.

@@ -19,8 +19,7 @@ StackX Backup protects {{customer_short}}'s critical data and supports business 
 - **Organized, searchable archives** — support for retention and privacy requirements.
 
 <!-- Diagram guidance: protected sources → backup policies (full, incremental) → immutable repository → recovery path. Retention and recovery targets shown as agreed values, not fixed figures. -->
-[[figure: backup-architecture | Backup and recovery architecture]]
-
+[[figure: backup-architecture | Backup and recovery architecture | Diagram | Architect]]
 ## Value
 
 - **Minimized downtime** — fast restoration so operations resume in minutes rather than days.
@@ -31,6 +30,33 @@ StackX Backup protects {{customer_short}}'s critical data and supports business 
 ## Recovery Targets
 
 Recovery point and recovery time objectives are agreed with {{customer_short}} during the design stage for each protected system; no figure is assumed in advance.
+
+<!-- if per_product_sizing -->
+
+## Sizing Basis
+
+| Dimension | Counted As | Confirmed Figure |
+| :--- | :--- | :--- |
+| Protected data | Front-end TB | {{sizing_stackx_backup_protected_data}} |
+| Protected systems | VMs / physical / databases | {{sizing_stackx_backup_protected_systems}} |
+| Daily change rate | % | {{sizing_stackx_backup_daily_change}} |
+
+*[Confirm every figure for this bid against the confirmed requirement. Do not carry numbers forward from a prior engagement.]*
+
+<!-- endif -->
+
+<!-- if services -->
+
+## Acceptance Tests
+
+The tests below are executed jointly and form part of the acceptance test plan for this module.
+
+| Test | Method | Pass Criterion |
+| :--- | :--- | :--- |
+| Restore | Restore one VM and one database | Within RTO; data verified |
+| Immutability | Attempt deletion of an immutable copy | Deletion refused |
+
+<!-- endif -->
 
 ---
 

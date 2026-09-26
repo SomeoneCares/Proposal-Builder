@@ -25,8 +25,7 @@ It manages physical, virtual, hybrid and cloud network environments, and extends
 - **Regional scale** — global and regional managers consolidate information across locations.
 
 <!-- Diagram guidance: live network topology with health status, traffic heatmap and a drill-down from an incident to the affected interface. No device names or addressing. -->
-[[figure: network-operations | Network operations console and topology]]
-
+[[figure: network-operations | Network operations console and topology | Screenshot | Product team]]
 ## Reporting and Dashboards
 
 - Performance reports scheduled and shared with stakeholders
@@ -45,6 +44,35 @@ It manages physical, virtual, hybrid and cloud network environments, and extends
 - Monitors the DeviceX appliances and overlay alongside the rest of the network. <!-- if devicex -->
 - Raises incidents automatically in StackX ITSM. <!-- if module_stackx_itSM -->
 - Shares network topology with the CMDB. <!-- if module_stackx_ops_config_mgmt -->
+
+<!-- if per_product_sizing -->
+
+## Sizing Basis
+
+| Dimension | Counted As | Confirmed Figure |
+| :--- | :--- | :--- |
+| Monitored devices | Appliances, switches, routers, UPS | {{sizing_stackx_network_ops_monitored_devices}} |
+| Polled interfaces | Active interfaces | {{sizing_stackx_network_ops_polled_interfaces}} |
+| Poll interval | Minutes | {{sizing_stackx_network_ops_poll_interval}} |
+| Trend retention | Days | {{sizing_stackx_network_ops_trend_retention}} |
+
+*[Confirm every figure for this bid against the confirmed requirement. Do not carry numbers forward from a prior engagement.]*
+
+<!-- endif -->
+
+<!-- if services -->
+
+## Acceptance Tests
+
+The tests below are executed jointly and form part of the acceptance test plan for this module.
+
+| Test | Method | Pass Criterion |
+| :--- | :--- | :--- |
+| Discovery | Run discovery on agreed ranges | ≥ 95 % of in-scope devices discovered |
+| Trap handling | Pull a link on a test switch | Problem raised within 60 s |
+| Reports | Generate agreed reports | All agreed reports produced |
+
+<!-- endif -->
 
 ---
 

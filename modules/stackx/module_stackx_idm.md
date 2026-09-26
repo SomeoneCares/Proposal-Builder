@@ -31,8 +31,7 @@ StackX IDM integrates with enterprise directory services, LDAP directories and c
 - Secure authentication for users, devices and services
 
 <!-- Diagram guidance: identity sources and the IDM platform provisioning accounts to target systems, with access reviews and an SSO/MFA login flow. No identity provider or role names. -->
-[[figure: identity-lifecycle | Identity lifecycle and access governance]]
-
+[[figure: identity-lifecycle | Identity lifecycle and access governance | Diagram | Architect]]
 ## Value
 
 - One governance platform for identity and access
@@ -44,6 +43,33 @@ StackX IDM integrates with enterprise directory services, LDAP directories and c
 
 - Provides role and identity data to StackX Operations Integrity for access to operations. <!-- if module_stackx_ops_integrity -->
 - Manages access to the StackX modules themselves through the same roles. <!-- if stackx -->
+
+<!-- if per_product_sizing -->
+
+## Sizing Basis
+
+| Dimension | Counted As | Confirmed Figure |
+| :--- | :--- | :--- |
+| Identities | Employees + contractors + service accounts | {{sizing_stackx_idm_identities}} |
+| Target systems | Connected applications | {{sizing_stackx_idm_target_systems}} |
+| Roles | Business roles | {{sizing_stackx_idm_roles}} |
+
+*[Confirm every figure for this bid against the confirmed requirement. Do not carry numbers forward from a prior engagement.]*
+
+<!-- endif -->
+
+<!-- if services -->
+
+## Acceptance Tests
+
+The tests below are executed jointly and form part of the acceptance test plan for this module.
+
+| Test | Method | Pass Criterion |
+| :--- | :--- | :--- |
+| Leaver | Terminate a test user in HR | All target access removed within target |
+| SoD | Request a conflicting role | Request blocked or escalated |
+
+<!-- endif -->
 
 ---
 

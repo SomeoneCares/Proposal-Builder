@@ -31,8 +31,7 @@ The table below lists what {{customer_short}} receives at each stage of this eng
 | Handover | The operational handover pack. <!-- if services --> |
 
 
-[[figure: deliverables-by-stage | Deliverables by stage]]
-
+[[figure: deliverables-by-stage | Deliverables by stage | Diagram | Architect]]
 ## Acceptance of Deliverables
 
 Professional services deliverables are accepted against the acceptance criteria agreed during the designing and planning stage. <!-- if services -->

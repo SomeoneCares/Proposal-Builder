@@ -63,8 +63,7 @@ In this project the product is the source of that answer for every other platfor
 - Vendor content updates that extend discovery to new device, platform and cloud types between releases
 
 
-[[figure: ot-ucmdb-model | Discovery and the configuration model]]
-
+[[figure: ot-ucmdb-model | Discovery and the configuration model | Diagram | Architect]]
 ## Integration
 
 The links below are configured only where both platforms are part of this proposal.

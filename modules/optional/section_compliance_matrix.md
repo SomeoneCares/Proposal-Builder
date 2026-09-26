@@ -10,9 +10,7 @@
 
 Each requirement is answered with a response code that states how it is met:
 
-[[figure: compliance-summary | Compliance summary by response code]]
-
-
+[[figure: compliance-summary | Compliance summary by response code | Diagram | Architect]]
 | Code | Meaning |
 | :--- | :--- |
 | C-DX | Compliant — delivered natively by DeviceX <!-- if devicex --> |

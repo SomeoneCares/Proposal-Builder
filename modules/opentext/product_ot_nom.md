@@ -20,8 +20,7 @@ OpenText NOM discovers the routed and switched estate, keeps its topology curren
 - Reporting on availability, utilization and the devices that raise the most faults
 
 
-[[figure: ot-nom-topology | Network topology and fault monitoring]]
-
+[[figure: ot-nom-topology | Network topology and fault monitoring | Diagram | Architect]]
 ## Build Activities <!-- if services -->
 
 <!-- if services -->

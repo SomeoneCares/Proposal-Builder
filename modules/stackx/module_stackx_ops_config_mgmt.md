@@ -38,8 +38,7 @@ Starting from a service's entry point, such as its URL, StackX discovers the bus
 The CMDB federates core CI data with related data held elsewhere, so information is shared across the IT ecosystem without copying it. Continuous discovery keeps the CMDB accurate, which supports faster incident diagnosis, change impact assessment and asset management.
 
 <!-- Diagram guidance: discovery feeding the CMDB and service model; events from monitoring tools consolidated into one console with correlation and dashboards. -->
-[[figure: cmdb-operations | Discovery, CMDB and consolidated operations]]
-
+[[figure: cmdb-operations | Discovery, CMDB and consolidated operations | Diagram | Architect]]
 ## Operations Monitoring
 
 Operations monitoring plays two roles. It monitors servers and applications, using agent and agentless methods to collect performance metrics and faults from hardware, operating systems, processes, databases and applications. It also acts as a manager of managers, consolidating events from its own monitoring and from other tools for event management, correlation and dashboards.
@@ -63,6 +62,36 @@ Operations monitoring plays two roles. It monitors servers and applications, usi
 - Provides CI and service context to StackX ITSM for incident, problem and change management. <!-- if module_stackx_itSM -->
 - Supplies the service model to StackX TrueView dashboards. <!-- if module_stackx_trueview -->
 - Hands events to StackX Automation & Orchestration for automated remediation. <!-- if module_stackx_automation_orchestration -->
+
+<!-- if per_product_sizing -->
+
+## Sizing Basis
+
+| Dimension | Counted As | Confirmed Figure |
+| :--- | :--- | :--- |
+| Discovery ranges | IP ranges / cloud accounts | {{sizing_stackx_ops_config_mgmt_discovery_ranges}} |
+| CIs | Expected CIs | {{sizing_stackx_ops_config_mgmt_cis}} |
+| Monitored servers | Agent / agentless | {{sizing_stackx_ops_config_mgmt_monitored_servers}} |
+| Event sources | Third-party tools integrated | {{sizing_stackx_ops_config_mgmt_event_sources}} |
+| Services modelled | Top-down service models | {{sizing_stackx_ops_config_mgmt_services_modelled}} |
+
+*[Confirm every figure for this bid against the confirmed requirement. Do not carry numbers forward from a prior engagement.]*
+
+<!-- endif -->
+
+<!-- if services -->
+
+## Acceptance Tests
+
+The tests below are executed jointly and form part of the acceptance test plan for this module.
+
+| Test | Method | Pass Criterion |
+| :--- | :--- | :--- |
+| Discovery coverage | Run discovery on agreed ranges | ≥ 95 % of in-scope ranges discovered |
+| CMDB quality | Duplicate CI report | < 2 % duplicate CIs |
+| Correlation | Fail an upstream device in test | One correlated event, not one per downstream CI |
+
+<!-- endif -->
 
 ---
 

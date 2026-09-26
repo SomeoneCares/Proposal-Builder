@@ -90,6 +90,9 @@ NAMING_PREFIX = "named_"
 def naming_token(token: str) -> str:
     return NAMING_PREFIX + token
 OFFERINGS = ("licenses", "services", "managed_services", "premier_support")
+# Options that change the shape of the document rather than what it contains.
+# A build option is a condition name like any other, so modules switch on it.
+BUILD_OPTIONS = ("per_product_sizing",)
 DEFAULT_OFFERING = ("licenses", "services")
 # Sections placed before the table of contents, in this order.
 FRONT_MATTER = ("section_cover_execsummary", "section_document_control")
@@ -222,6 +225,18 @@ def resolve_module_file(token: str, index: dict, root: Path = SCRIPT_DIR, librar
     return None
 
 
+
+def parse_figure(arg: str) -> tuple[str, str, str, str]:
+    """Split a figure directive into slug, caption, image type and who supplies it.
+
+    Only the slug is required. The type and owner are bid-team information: they
+    say what the image has to show and who to ask for it, and never reach the page.
+    """
+    parts = [p.strip() for p in arg.split("|")]
+    parts += [""] * (4 - len(parts))
+    return parts[0], parts[1], parts[2], parts[3]
+
+
 def resolve_figure(slug: str, root: Path = SCRIPT_DIR, library: Path | None = None) -> Path | None:
     for folder in ([Path(library) / "figures"] if library else []) + [root / "assets" / "figures"]:
         for ext in FIGURE_EXTENSIONS:
@@ -305,7 +320,8 @@ def condition_names(tree) -> set[str]:
 
 
 def known_condition_names(index: dict) -> set[str]:
-    return ({mod["token"] for mod in iter_modules(index)} | set(OFFERINGS) | set(FAMILY_FLAGS.values())
+    return ({mod["token"] for mod in iter_modules(index)} | set(OFFERINGS) | set(BUILD_OPTIONS)
+            | set(FAMILY_FLAGS.values())
             | {naming_token(mod["token"]) for mod in iter_modules(index) if mod.get("vendor_name")})
 
 
@@ -349,8 +365,9 @@ def apply_conditions(text: str, context: set[str]) -> str:
 
 
 def build_context(index: dict, selected: list[str], offering: list[str],
-                  named_products: set[str] | list[str] | None = None) -> set[str]:
-    context = set(selected) | set(offering)
+                  named_products: set[str] | list[str] | None = None,
+                  options: set[str] | list[str] | None = None) -> set[str]:
+    context = set(selected) | set(offering) | {o for o in (options or ()) if o in BUILD_OPTIONS}
     for token in set(named_products or ()):
         if token in context:
             context.add(naming_token(token))
@@ -803,10 +820,11 @@ class Renderer:
         return natural_w * scale, natural_h * scale
 
     def _figure(self, arg: str) -> None:
-        slug, _, caption = (part.strip() for part in arg.partition("|"))
+        slug, caption, kind, owner = parse_figure(arg)
         image = resolve_figure(slug, self.root, self.library)
         if image is None:
-            self.missing_figures.append(f"{caption or slug} ({slug})")
+            asked = " \u2014 ".join(x for x in (kind, f"from {owner}" if owner else "") if x)
+            self.missing_figures.append(f"{caption or slug} ({slug})" + (f" [{asked}]" if asked else ""))
             return
         self.figure_count += 1
         label = f"Figure {self.figure_count}: {caption or slug}"
@@ -1198,16 +1216,17 @@ def _new_document(values: dict, template: bool):
 
 
 def plan_modules(index: dict, selected: list[str], offering: list[str],
-                 named_products: set[str] | list[str] | None = None) -> tuple[list[str], list[str], set[str]]:
+                 named_products: set[str] | list[str] | None = None,
+                 options: set[str] | list[str] | None = None) -> tuple[list[str], list[str], set[str]]:
     """Return (included tokens in document order, skipped tokens, condition context)."""
-    context = build_context(index, selected, offering, named_products)
+    context = build_context(index, selected, offering, named_products, options)
     included, skipped = [], []
     for token in document_order(index):
         if token not in selected:
             continue
         (included if module_applies(find_module(index, token) or {}, context) else skipped).append(token)
     # Modules that were left out no longer count for conditions.
-    context = build_context(index, included, offering, named_products)
+    context = build_context(index, included, offering, named_products, options)
     return included, skipped, context
 
 
@@ -1223,10 +1242,11 @@ def assemble_complete_document(
     library: Path | None = None,
     named_products: set[str] | list[str] | None = None,
     long_writeups: bool = False,
+    options: set[str] | list[str] | None = None,
 ):
     offering = list(offering or DEFAULT_OFFERING)
     doc = _new_document(values, template=False)
-    included, skipped, context = plan_modules(index, selected_tokens, offering, named_products)
+    included, skipped, context = plan_modules(index, selected_tokens, offering, named_products, options)
     renderer = Renderer(doc, draft=not issue, context=context, index=index, values=values,
                         root=root, library=library)
     names = display_names(index, named_products)
@@ -1372,6 +1392,9 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     p.add_argument("--named-products", default="",
                    help="Comma-separated product tokens to name (for example product_ot_smax). Any vendor "
                         "product not listed is described by function only, and its product names stay refused.")
+    p.add_argument("--sizing", choices=("generic", "per-product"), default="generic",
+                   help="Scope numbers: one shared table in the professional services section "
+                        "(default), or a sizing basis table inside each product section.")
     p.add_argument("--writeups", choices=("short", "long"), default="short",
                    help="Vendor product write-up length: the short original (default), or the long form "
                         "carrying components, integration, exclusions, acceptance and its own hardware.")
@@ -1426,7 +1449,8 @@ def main(argv: list[str] | None = None) -> int:
         if args.mode == "complete":
             doc, warnings = assemble_complete_document(index, selected, values, args.logo, args.issue, root,
                                                        offering, args.toc_levels, library, named_products,
-                                                       args.writeups == "long")
+                                                       args.writeups == "long",
+                                                       {"per_product_sizing"} if args.sizing == "per-product" else set())
         else:
             doc, warnings = assemble_template_document(index, selected, values, args.logo, root, library)
     except ValueError as exc:

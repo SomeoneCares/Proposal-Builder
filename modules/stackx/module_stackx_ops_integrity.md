@@ -37,8 +37,7 @@ Access to operational interfaces is brokered through an identity-aware access la
 Integrity events — drift, unapproved changes, unusual administrative behavior — are raised as cases with their evidence attached, assigned to an owner and tracked to closure, with role-based access for handlers.
 
 <!-- Diagram guidance: approved baseline vs running configuration with drift alerts; administrators reaching systems only through the identity-aware access layer; every action linked to a change record. -->
-[[figure: operations-integrity | Baselines, controlled access and verified operations]]
-
+[[figure: operations-integrity | Baselines, controlled access and verified operations | Diagram | Architect]]
 ## Value
 
 - Configuration errors and unauthorized changes found in minutes, not at the next outage
@@ -50,6 +49,33 @@ Integrity events — drift, unapproved changes, unusual administrative behavior 
 - Uses identities and roles from StackX Identity Management. <!-- if module_stackx_idm -->
 - Checks operational changes against approved change records in StackX ITSM. <!-- if module_stackx_itSM -->
 - Shares integrity events with StackX Security for correlation with other threats. <!-- if module_stackx_security -->
+
+<!-- if per_product_sizing -->
+
+## Sizing Basis
+
+| Dimension | Counted As | Confirmed Figure |
+| :--- | :--- | :--- |
+| Systems under baseline | Devices / servers | {{sizing_stackx_ops_integrity_systems_under}} |
+| Privileged users | Named administrators | {{sizing_stackx_ops_integrity_privileged_users}} |
+| Brokered targets | Systems accessed through the broker | {{sizing_stackx_ops_integrity_brokered_targets}} |
+
+*[Confirm every figure for this bid against the confirmed requirement. Do not carry numbers forward from a prior engagement.]*
+
+<!-- endif -->
+
+<!-- if services -->
+
+## Acceptance Tests
+
+The tests below are executed jointly and form part of the acceptance test plan for this module.
+
+| Test | Method | Pass Criterion |
+| :--- | :--- | :--- |
+| Drift | Change a baselined setting | Alert with diff raised |
+| Brokered access | Admin connects to a target | Session recorded; no direct route permitted |
+
+<!-- endif -->
 
 ---
 

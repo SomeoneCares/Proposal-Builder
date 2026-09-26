@@ -52,8 +52,7 @@ A modern service portal gives business users one place to request services, trac
 <!-- endif -->
 
 <!-- Diagram guidance: monitoring → alert → triage → investigation → resolution → closure, plus the request fulfilment and change workflows. Generic labels only. -->
-[[figure: itsm-workflow | Incident, request and change workflows]]
-
+[[figure: itsm-workflow | Incident, request and change workflows | Diagram | Architect]]
 ## Operating Workflows
 
 - **Request fulfilment.** A requester selects a catalog service and submits it; StackX ITSM validates eligibility, applies any approval path, assigns the task, tracks fulfilment and closes the request after confirmation.
@@ -69,6 +68,35 @@ A modern service portal gives business users one place to request services, trac
 ## Reference Screenshots (for the bid team)
 
 Equivalent platform reference screenshots may be included to illustrate the underlying technology. In the StackX ITSM service, screens are presented under the StackX brand and configured with {{customer_short}}'s entities, categories, workflows, assets and service catalog. Screenshots are included transparently and are not represented as screenshots of a separately developed product.
+
+<!-- if per_product_sizing -->
+
+## Sizing Basis
+
+| Dimension | Counted As | Confirmed Figure |
+| :--- | :--- | :--- |
+| Agents | Named / concurrent | {{sizing_stackx_itsm_agents}} |
+| Catalog items | Request types | {{sizing_stackx_itsm_catalog_items}} |
+| CIs | Configuration items | {{sizing_stackx_itsm_cis}} |
+
+*[Confirm every figure for this bid against the confirmed requirement. Do not carry numbers forward from a prior engagement.]*
+
+<!-- endif -->
+
+<!-- if services -->
+
+## Acceptance Tests
+
+The tests below are executed jointly and form part of the acceptance test plan for this module.
+
+| Test | Method | Pass Criterion |
+| :--- | :--- | :--- |
+| Ticket lifecycle | Raise, assign, resolve and close one of each record type | Each transition recorded with its timestamps |
+| Catalog | Order each agreed catalog item | Routed for approval and fulfilled |
+| Service targets | Raise a ticket at each priority | The agreed target applied and the timer visible |
+| Monitoring to incident | Trigger a monitored fault | Incident created with the event reference and affected item |
+
+<!-- endif -->
 
 ---
 

@@ -20,8 +20,7 @@ OpenText Universal Discovery finds what is deployed, and OpenText UCMDB keeps th
 - Impact views used when a change is approved or an incident is triaged
 
 
-[[figure: ot-ucmdb-model | Discovery and the configuration model]]
-
+[[figure: ot-ucmdb-model | Discovery and the configuration model | Diagram | Architect]]
 ## Build Activities <!-- if services -->
 
 <!-- if services -->

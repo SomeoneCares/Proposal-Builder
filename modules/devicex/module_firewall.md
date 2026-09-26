@@ -54,7 +54,34 @@ A typical segmentation model separates:
 The least-trusted device on a site is often the most common entry point. Under this model, a compromised peripheral or camera can reach neither the application segment nor the central site.
 
 <!-- Diagram guidance: the site's security zones with allow-list boundaries between them and no unwanted paths. No device names, site names or addressing. -->
-[[figure: firewall-segmentation | In-site micro-segmentation zones]]
+[[figure: firewall-segmentation | In-site micro-segmentation zones | Diagram | Architect]]
+<!-- if per_product_sizing -->
+
+## Sizing Basis
+
+| Dimension | Counted As | Confirmed Figure |
+| :--- | :--- | :--- |
+| Firewall policies | Rules in the class template | {{sizing_firewall_firewall_policies}} |
+| Zones per site | Per 6.6 | {{sizing_firewall_zones_site}} |
+| Inspection | IPS / URL / TLS enabled? | {{sizing_firewall_inspection}} |
+
+*[Confirm every figure for this bid against the confirmed requirement. Do not carry numbers forward from a prior engagement.]*
+
+<!-- endif -->
+
+<!-- if services -->
+
+## Acceptance Tests
+
+The tests below are executed jointly and form part of the acceptance test plan for this module.
+
+| Test | Method | Pass Criterion |
+| :--- | :--- | :--- |
+| Inter-zone deny | Attempt camera → user zone connection | Blocked and logged centrally |
+| IPS | Replay a test signature | Detected, blocked and logged |
+| Template consistency | Compare site policy hash with template | Hashes match |
+
+<!-- endif -->
 
 ---
 

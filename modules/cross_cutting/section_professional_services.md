@@ -12,6 +12,8 @@ This section defines the professional services for the architecture, design, imp
 
 *[Author per bid: fill every scope number in the proposal values with the figures confirmed for this engagement. Do not carry numbers forward from a prior engagement.]*
 
+<!-- if not per_product_sizing -->
+
 ## Scope Numbers
 
 | # | Dimension | Confirmed figure |
@@ -40,6 +42,16 @@ This section defines the professional services for the architecture, design, imp
 | 22 | Acceptance-test sites | {{services_acceptance_sites}} <!-- if devicex --> |
 | 23 | Architecture and design workshops | {{services_arch_workshops}} |
 | 24 | Architecture diagrams to be produced | {{services_arch_diagrams}} |
+
+<!-- endif -->
+
+<!-- if per_product_sizing -->
+
+## Scope Numbers
+
+The figures that bound this engagement are stated in the sizing basis of each product section, against the dimension each product is actually counted by. Every figure there is confirmed for this bid and bounds the work in the phases below.
+
+<!-- endif -->
 
 ## Phase 1 — Architecture
 
@@ -150,8 +162,7 @@ This section defines the professional services for the architecture, design, imp
 - As-built documentation.
 
 
-[[figure: services-scope-overview | Scope at a glance]]
-
+[[figure: services-scope-overview | Scope at a glance | Diagram | Architect]]
 ## Acceptance
 
 Each phase is accepted against the acceptance criteria agreed in the design stage. Acceptance tests are executed jointly, and the signed acceptance record closes the phase or site.

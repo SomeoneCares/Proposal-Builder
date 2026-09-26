@@ -21,6 +21,8 @@ from pathlib import Path
 
 import combine
 
+# [[figure: slug | Caption | Type | Owner]] — only the slug is required, and the
+# type and owner are bid-team information that never reaches the document.
 FIGURE_RE = re.compile(r"^\[\[\s*figure\s*:\s*([^|\]]+?)\s*(?:\|\s*(.*?))?\s*\]\]\s*$", re.M)
 
 

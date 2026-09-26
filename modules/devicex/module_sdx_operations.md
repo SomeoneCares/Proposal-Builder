@@ -46,8 +46,7 @@ Zero-touch provisioning is an advantage only if it does not create a security we
 4. **Mesh join.** The appliance establishes its IPsec tunnels with certificate authentication and enters service under its policy template. Private keys never leave the hardware root of trust.
 
 <!-- Diagram guidance: the four provisioning stages as a sequence between the appliance, the registration service and the certificate authority. No service or site names. -->
-[[figure: ztp-flow | Zero-touch provisioning and attestation]]
-
+[[figure: ztp-flow | Zero-touch provisioning and attestation | Diagram | Architect]]
 ## Attestation and Short-Lived Credentials
 
 Long-lived certificates create a long-lived risk: a stolen credential can stay valid for years. The platform instead issues credentials that expire within hours and are renewed only on proof of continuing integrity.
@@ -69,6 +68,35 @@ Long-lived certificates create a long-lived risk: a stolen credential can stay v
 
 - Appliance provisioning and lifecycle are handled centrally from the management platform.
 - Technical support is provided by certified network operations engineers. <!-- if managed_services -->
+
+<!-- if per_product_sizing -->
+
+## Sizing Basis
+
+| Dimension | Counted As | Confirmed Figure |
+| :--- | :--- | :--- |
+| Appliances managed | Appliances under central management | {{sizing_sdx_operations_appliances_managed}} |
+| Configuration templates | Templates, one per site class | {{sizing_sdx_operations_configuration_templates}} |
+| Roll-out waves | Sites per wave | {{sizing_sdx_operations_roll_out}} |
+| Attestation cycle | Credential lifetime in hours | {{sizing_sdx_operations_attestation_cycle}} |
+
+*[Confirm every figure for this bid against the confirmed requirement. Do not carry numbers forward from a prior engagement.]*
+
+<!-- endif -->
+
+<!-- if services -->
+
+## Acceptance Tests
+
+The tests below are executed jointly and form part of the acceptance test plan for this module.
+
+| Test | Method | Pass Criterion |
+| :--- | :--- | :--- |
+| Zero-touch adoption | Power a pre-registered appliance at the pilot site | In service within bring-up target |
+| Tamper response | Boot from altered media in the lab | Attestation fails; node refused |
+| Rollback | Push and roll back a test change | Previous version restored at all targets |
+
+<!-- endif -->
 
 ---
 

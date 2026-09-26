@@ -57,8 +57,7 @@ In this project the platform covers the routed and switched estate agreed during
 - Reporting on availability, utilization, capacity trend and the devices that raise the most faults
 
 
-[[figure: ot-nom-topology | Network topology and fault monitoring]]
-
+[[figure: ot-nom-topology | Network topology and fault monitoring | Diagram | Architect]]
 ## Integration
 
 The links below are configured only where both platforms are part of this proposal.

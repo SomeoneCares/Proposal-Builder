@@ -10,9 +10,7 @@
 
 The engagement is governed through a joint Verto Wave and {{customer_short}} structure.
 
-[[figure: roles-raci | Roles across Verto Wave and {{customer_short}}]]
-
-
+[[figure: roles-raci | Roles across Verto Wave and {{customer_short}} | Diagram | Architect]]
 *[Populate named roles and contacts per bid as agreed.]*
 
 | Layer | Verto Wave | {{customer_short}} |

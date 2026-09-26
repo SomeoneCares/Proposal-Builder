@@ -68,11 +68,11 @@ class without_corporate_base:
 
 
 def build(values: dict, tokens=None, issue: bool = False, logo=LOGO, offering=None, library_dir=None, toc_levels=2,
-          named_products=None, long_writeups=False):
+          named_products=None, long_writeups=False, options=None):
     doc, warnings = combine.assemble_complete_document(
         INDEX, tokens or ALL_TOKENS, values, str(logo) if logo else None, issue,
         offering=offering or FULL_OFFERING, toc_levels=toc_levels, library=library_dir,
-        named_products=named_products, long_writeups=long_writeups,
+        named_products=named_products, long_writeups=long_writeups, options=options,
     )
     problems, unconfirmed = combine.check_document(doc, values, INDEX["banned_terms"], "complete", issue,
                                                    INDEX["third_party_terms"],
@@ -432,6 +432,47 @@ class OfferingTests(unittest.TestCase):
         for phrase in ("Hardware Requirements", "vCPU"):
             self.assertIn(phrase.lower(), long_text.lower(), phrase)
             self.assertNotIn(phrase.lower(), short_text.lower(), phrase)
+
+    def test_scope_numbers_are_shared_or_per_product(self):
+        """One table in professional services, or a sizing basis inside each product."""
+        tokens = CORE + ["module_stackx_network_ops", "module_nvr"]
+        shared = self.issue_text(tokens, FULL_OFFERING).lower()
+        self.assertIn("scope numbers", shared)
+        self.assertNotIn("sizing basis", shared)
+        per_product = text(build(full_values(), tokens=tokens, issue=True,
+                                options={"per_product_sizing"})[0]).lower()
+        self.assertIn("sizing basis", per_product)
+        # the shared table's own rows are stood down, not duplicated
+        self.assertNotIn("| branches / sites |", per_product)
+        self.assertIn("polled interfaces", per_product)
+
+    def test_acceptance_tests_belong_to_the_services_offering(self):
+        """Acceptance covers service delivery; a licence-only bid carries none."""
+        tokens = CORE + ["module_stackx_network_ops"]
+        with_services = self.issue_text(tokens, ["licenses", "services"]).lower()
+        self.assertIn("acceptance tests", with_services)
+        self.assertIn("pass criterion", with_services)
+        licences_only = self.issue_text(tokens, ["licenses"]).lower()
+        self.assertNotIn("acceptance tests", licences_only)
+        self.assertNotIn("pass criterion", licences_only)
+
+    def test_a_figure_says_what_it_is_and_who_supplies_it(self):
+        """The type and owner guide the bid team and never reach the document."""
+        slug, caption, kind, owner = combine.parse_figure("net-map | Topology | Diagram | Architect")
+        self.assertEqual((slug, caption, kind, owner), ("net-map", "Topology", "Diagram", "Architect"))
+        self.assertEqual(combine.parse_figure("old-style | Just a caption")[2:], ("", ""))
+        body = self.issue_text(CORE + ["module_stackx_network_ops"], FULL_OFFERING)
+        for absent in ("Diagram | Architect", "Product team", "Supplied by"):
+            self.assertNotIn(absent, body, absent)
+
+    def test_capability_ownership_names_one_owner_and_the_fallback(self):
+        """A capability is owned by one module, and the section says what happens without it."""
+        tokens = CORE + ["section_capability_ownership", "module_stackx_network_ops"]
+        body = self.issue_text(tokens, FULL_OFFERING).lower()
+        self.assertIn("capability ownership", body)
+        self.assertIn("network operations", body)
+        # the service desk is not selected, so the fallback is stated instead of an owner
+        self.assertIn("manually maintained asset register", body)
 
     def test_vendor_product_named_or_described_by_function(self):
         """The same module ships named or functional, and the check follows the choice."""

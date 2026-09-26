@@ -10,9 +10,7 @@
 
 ## Company Profile
 
-[[figure: about-vertowave | Verto Wave at a glance]]
-
-
+[[figure: about-vertowave | Verto Wave at a glance | Diagram | Architect]]
 Verto Wave brings over 25 years of expertise and more than 500 successful engagements to its customers. The company helps organizations strategize, build and operate their IT, paving the road for digital transformation and sustainable growth.
 
 Verto Wave works across three pillars:

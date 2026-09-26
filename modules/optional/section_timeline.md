@@ -21,8 +21,7 @@ The schedule below runs from project kick-off. Durations are indicative and are 
 | Managed operations | From handover | Operations running under the Operations Level Agreement <!-- if managed_services --> |
 
 <!-- Diagram guidance: a Gantt-style bar chart of the phases above with the key milestones; week numbers only, no dates. -->
-[[figure: implementation-timeline | Indicative implementation timeline]]
-
+[[figure: implementation-timeline | Indicative implementation timeline | Graph | Architect]]
 ## Schedule Dependencies
 
 - The schedule assumes the prerequisites in the Assumptions section are met on time, including access, credentials and firewall changes.

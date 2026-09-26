@@ -21,8 +21,7 @@ Every change request must be submitted in writing. This includes changes to plan
 5. **Execute and report.** Approved changes are implemented according to the agreed plan, and their status is included in the progress reports.
 
 <!-- Diagram guidance: request → impact assessment → approval gate → implementation → validation → closure. Generic labels only. -->
-[[figure: change-request-flow | Change request process]]
-
+[[figure: change-request-flow | Change request process | Diagram | Architect]]
 ## Review and Approval
 
 If both parties approve a full change request analysis, Verto Wave prepares a change request form with the justification, estimated cost, schedule and resource requirements, technical feasibility and a recommendation:

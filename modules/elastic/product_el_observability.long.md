@@ -52,8 +52,7 @@ This module covers the server and infrastructure layer of {{customer_short}}'s e
 
 *[Restate the specific requirement this module answers in {{customer_short}}'s own terms per bid, using the requirement list agreed in the understanding section. Do not leave this paragraph generic in a competitive bid.]*
 
-[[figure: el-observability-collection | Metric collection and health views]]
-
+[[figure: el-observability-collection | Metric collection and health views | Diagram | Architect]]
 ## Deployment Model
 
 The platform is deployed either on infrastructure under {{customer_short}}'s control or consumed as a managed cloud service. The choice is made in the design stage and it determines the licensing basis, the node sizing below, and which party operates the platform itself. The proposal assumes one production deployment; a separate non-production deployment is a separate line of scope.

@@ -50,8 +50,7 @@ Where {{customer_short}} requires central monitoring, the platform can present m
 - Monitoring-site bandwidth is sized against the agreed camera count, resolution and display configuration.
 
 <!-- Diagram guidance: cameras recording locally on the appliance; only alerts, metadata and requested playback crossing the WAN to a central monitoring view. Show camera count as N. -->
-[[figure: nvr-architecture | Local recording with central monitoring]]
-
+[[figure: nvr-architecture | Local recording with central monitoring | Diagram | Architect]]
 ## Camera Support
 
 - IP cameras are supported by default.
@@ -64,6 +63,34 @@ Where {{customer_short}} requires central monitoring, the platform can present m
 - Average bitrate per stream
 - Central monitoring sizing (displays, camera grid, bandwidth)
 - Archive synchronization schedule and rate limits
+
+<!-- if per_product_sizing -->
+
+## Sizing Basis
+
+| Dimension | Counted As | Confirmed Figure |
+| :--- | :--- | :--- |
+| Cameras | Per site and total | {{sizing_nvr_cameras}} |
+| Recording profile | Resolution / fps / codec / Mbps | {{sizing_nvr_recording_profile}} |
+| Retention | Days, continuous or motion | {{sizing_nvr_retention}} |
+
+*[Confirm every figure for this bid against the confirmed requirement. Do not carry numbers forward from a prior engagement.]*
+
+<!-- endif -->
+
+<!-- if services -->
+
+## Acceptance Tests
+
+The tests below are executed jointly and form part of the acceptance test plan for this module.
+
+| Test | Method | Pass Criterion |
+| :--- | :--- | :--- |
+| Recording | Review 24 h of footage from each camera | No gaps above 1 minute |
+| Retention | Check calculated vs configured retention | Configured ≥ agreed days |
+| Alert forwarding | Trigger a motion or analytic event | Alert visible centrally |
+
+<!-- endif -->
 
 ---
 

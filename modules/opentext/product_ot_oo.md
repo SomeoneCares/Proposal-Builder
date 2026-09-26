@@ -20,8 +20,7 @@ OpenText Operations Orchestration runs repeatable operational work as a governed
 - A credential store, so flows run without passwords held in the flow itself
 
 
-[[figure: ot-oo-automation | A runbook from trigger to result]]
-
+[[figure: ot-oo-automation | A runbook from trigger to result | Diagram | Architect]]
 ## Build Activities <!-- if services -->
 
 <!-- if services -->

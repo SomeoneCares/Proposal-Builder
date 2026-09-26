@@ -38,8 +38,7 @@ Each path is measured continuously for one-way latency, jitter and packet loss u
 | Total outage | The site continues on local services — internal voice, local recording, locally hosted workloads — and queued data synchronizes when the link returns. |
 
 <!-- Diagram guidance: hub (or dual hubs) with sites connected over an encrypted overlay; diverse underlays converging at each site; optionally the steering decision logic. No carrier branding, site names or addressing. -->
-[[figure: sdwan-topology | SD-WAN overlay with diverse underlays]]
-
+[[figure: sdwan-topology | SD-WAN overlay with diverse underlays | Diagram | Architect]]
 ### Service-Quality Targets
 
 The targets below are used to validate the overlay design and to configure quality-based steering. They are confirmed against {{customer_short}}'s traffic profile and access services; end-to-end performance also depends on the access services {{customer_short}} provides.
@@ -71,6 +70,37 @@ Point-to-point, hub-and-spoke and site-to-site topologies are supported and sele
 ## Integration with the Firewall <!-- if module_firewall -->
 
 SD-WAN tunnels work together with the DeviceX firewall: encrypted transport is complemented by policy-based inspection at the edge, so traffic reaching each site is both routed optimally and filtered according to security policy. <!-- if module_firewall -->
+
+<!-- if per_product_sizing -->
+
+## Sizing Basis
+
+| Dimension | Counted As | Confirmed Figure |
+| :--- | :--- | :--- |
+| Sites / spokes | Number of DeviceX appliances | {{sizing_sdwan_sites_spokes}} |
+| Tunnels | Spokes × hubs × underlays | {{sizing_sdwan_tunnels}} |
+| Underlays per site | Customer-provided services | {{sizing_sdwan_underlays_site}} |
+| Probe interval / loss threshold | Drives failover time | {{sizing_sdwan_probe_interval}} |
+| Traffic classes | Per Section 4.4 | {{sizing_sdwan_traffic_classes}} |
+
+*[Confirm every figure for this bid against the confirmed requirement. Do not carry numbers forward from a prior engagement.]*
+
+<!-- endif -->
+
+<!-- if services -->
+
+## Acceptance Tests
+
+The tests below are executed jointly and form part of the acceptance test plan for this module.
+
+| Test | Method | Pass Criterion |
+| :--- | :--- | :--- |
+| Overlay establishment | Bring up tunnels from spoke to both hubs | Both tunnels up, certificate-authenticated |
+| Failover | Disconnect primary underlay during a test call | Call continues; switch within agreed target |
+| Steering | Inject jitter/loss above threshold on primary | Priority flows move to alternative path |
+| QoS | Saturate link with bulk traffic during a call | MOS remains ≥ agreed target |
+
+<!-- endif -->
 
 ---
 
