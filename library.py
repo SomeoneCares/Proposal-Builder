@@ -5,6 +5,10 @@ Layout under the library folder ($PROPOSAL_LIBRARY_DIR on the host):
   modules/<token>/v0001.md, v0002.md ...   every saved version
   modules/<token>/current.md               the active version (combine.py uses it)
   modules/<token>/history.json             who saved what, when and why
+
+A product that ships two write-ups keeps them apart, each with its own history,
+by adding .long before the extension: current.long.md, v0001.long.md,
+history.long.json. Editing one never touches the other.
   figures/<slug>.png|jpg                   uploaded diagrams for [[figure: slug | ...]]
 
 The repo copy of a module is the baseline; a library version overrides it until
@@ -77,69 +81,89 @@ class Library:
         self.repo = Path(repo)
 
     # -- modules ---------------------------------------------------------------
+    @staticmethod
+    def _variant(long: bool) -> str:
+        return ".long" if long else ""
+
+    def has_long(self, token: str) -> bool:
+        """Whether this module ships a long write-up as well as a short one."""
+        mod = combine.find_module(self.index, token) or {}
+        return bool(mod.get("long_file")) or (self.module_dir(token) / "current.long.md").is_file()
+
     def module_dir(self, token: str) -> Path:
         if not combine.find_module(self.index, token):
             raise KeyError(f"unknown module {token}")
         return self.root / "modules" / token
 
-    def history(self, token: str) -> list[dict]:
-        path = self.module_dir(token) / "history.json"
+    def history(self, token: str, long: bool = False) -> list[dict]:
+        path = self.module_dir(token) / f"history{self._variant(long)}.json"
         return json.loads(path.read_text(encoding="utf-8")) if path.exists() else []
 
-    def is_overridden(self, token: str) -> bool:
-        return (self.module_dir(token) / "current.md").is_file()
+    def is_overridden(self, token: str, long: bool = False) -> bool:
+        return (self.module_dir(token) / f"current{self._variant(long)}.md").is_file()
 
-    def baseline_text(self, token: str) -> str:
+    def baseline_text(self, token: str, long: bool = False) -> str:
         mod = combine.find_module(self.index, token) or {}
-        path = self.repo / mod.get("file", "")
+        rel = (mod.get("long_file") if long else "") or mod.get("file", "")
+        path = self.repo / rel
         return path.read_text(encoding="utf-8") if path.is_file() else ""
 
-    def current_text(self, token: str) -> str:
-        current = self.module_dir(token) / "current.md"
-        return current.read_text(encoding="utf-8") if current.is_file() else self.baseline_text(token)
+    def current_text(self, token: str, long: bool = False) -> str:
+        current = self.module_dir(token) / f"current{self._variant(long)}.md"
+        return current.read_text(encoding="utf-8") if current.is_file() else self.baseline_text(token, long)
 
-    def version_text(self, token: str, version: int) -> str:
-        return (self.module_dir(token) / f"v{version:04d}.md").read_text(encoding="utf-8")
+    def version_text(self, token: str, version: int, long: bool = False) -> str:
+        return (self.module_dir(token) / f"v{version:04d}{self._variant(long)}.md").read_text(encoding="utf-8")
 
-    def _record(self, token: str, entry: dict) -> None:
-        history = self.history(token)
+    def _record(self, token: str, entry: dict, long: bool = False) -> None:
+        history = self.history(token, long)
         history.append(entry)
-        (self.module_dir(token) / "history.json").write_text(json.dumps(history, indent=2), encoding="utf-8")
+        (self.module_dir(token) / f"history{self._variant(long)}.json").write_text(
+            json.dumps(history, indent=2), encoding="utf-8")
 
-    def save(self, token: str, text: str, author: str, note: str, source: str = "editor") -> dict:
+    def save(self, token: str, text: str, author: str, note: str, source: str = "editor",
+             long: bool = False) -> dict:
         problems = validate_module_text(text, self.index, token)
         if problems:
             raise ValueError("; ".join(problems))
         folder = self.module_dir(token)
         folder.mkdir(parents=True, exist_ok=True)
+        suffix = self._variant(long)
         text = text.replace("\r\n", "\n")
-        version = max((e["version"] for e in self.history(token) if "version" in e), default=0) + 1
-        (folder / f"v{version:04d}.md").write_text(text, encoding="utf-8", newline="\n")
-        (folder / "current.md").write_text(text, encoding="utf-8", newline="\n")
+        version = max((e["version"] for e in self.history(token, long) if "version" in e), default=0) + 1
+        (folder / f"v{version:04d}{suffix}.md").write_text(text, encoding="utf-8", newline="\n")
+        (folder / f"current{suffix}.md").write_text(text, encoding="utf-8", newline="\n")
         entry = {"version": version, "saved_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
-                 "author": author.strip() or "unknown", "note": note.strip(), "source": source}
-        self._record(token, entry)
+                 "author": author.strip() or "unknown", "note": note.strip(), "source": source,
+                 "writeup": "long" if long else "short"}
+        self._record(token, entry, long)
         return entry
 
-    def restore(self, token: str, version: int, author: str) -> dict:
-        return self.save(token, self.version_text(token, version), author, f"Restored version {version}", "restore")
+    def restore(self, token: str, version: int, author: str, long: bool = False) -> dict:
+        return self.save(token, self.version_text(token, version, long), author,
+                         f"Restored version {version}", "restore", long)
 
-    def revert_to_baseline(self, token: str, author: str) -> None:
-        current = self.module_dir(token) / "current.md"
+    def revert_to_baseline(self, token: str, author: str, long: bool = False) -> None:
+        current = self.module_dir(token) / f"current{self._variant(long)}.md"
         if current.exists():
             current.unlink()
         self._record(token, {"saved_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
                              "author": author.strip() or "unknown", "note": "Reverted to the deployed baseline",
-                             "source": "revert"})
+                             "source": "revert"}, long)
 
     # -- figures ---------------------------------------------------------------
     def figure_references(self) -> list[dict]:
-        refs = []
+        refs, seen = [], set()
         for mod in combine.iter_modules(self.index):
-            for slug, caption in FIGURE_RE.findall(self.current_text(mod["token"])):
-                image = combine.resolve_figure(slug, self.repo, self.root)
-                refs.append({"slug": slug, "caption": caption, "token": mod["token"], "module": mod.get("name", ""),
-                             "image": str(image) if image else ""})
+            token = mod["token"]
+            for long in (False, True) if self.has_long(token) else (False,):
+                for slug, caption in FIGURE_RE.findall(self.current_text(token, long)):
+                    if (token, slug) in seen:
+                        continue
+                    seen.add((token, slug))
+                    image = combine.resolve_figure(slug, self.repo, self.root)
+                    refs.append({"slug": slug, "caption": caption, "token": token,
+                                 "module": mod.get("name", ""), "image": str(image) if image else ""})
         return refs
 
     def save_figure(self, slug: str, data: bytes, suffix: str) -> Path:

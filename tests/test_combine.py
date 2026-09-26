@@ -603,6 +603,29 @@ class LibraryTests(unittest.TestCase):
     def tearDown(self):
         self.tmp.cleanup()
 
+    def test_each_write_up_is_edited_and_versioned_on_its_own(self):
+        """A library edit reaches the build, and editing one length never changes the other."""
+        token = "product_ot_smax"
+        self.assertTrue(self.lib.has_long(token))
+        for long, marker in ((False, "Short edit."), (True, "Long edit.")):
+            base = self.lib.current_text(token, long)
+            self.lib.save(token, f"{base}\n\n{marker}\n", "Basem", "wording", long=long)
+        library_dir = Path(self.tmp.name)
+        tokens = CORE + [token]
+        short_doc = text(build(full_values(), tokens=tokens, issue=True, library_dir=library_dir)[0])
+        long_doc = text(build(full_values(), tokens=tokens, issue=True, library_dir=library_dir,
+                              long_writeups=True)[0])
+        self.assertIn("Short edit.", short_doc)
+        self.assertNotIn("Long edit.", short_doc)
+        self.assertIn("Long edit.", long_doc)
+        self.assertNotIn("Short edit.", long_doc)
+        # separate histories, so reverting one leaves the other in place
+        self.assertEqual(len(self.lib.history(token)), 1)
+        self.assertEqual(len(self.lib.history(token, True)), 1)
+        self.lib.revert_to_baseline(token, "Basem", long=True)
+        self.assertTrue(self.lib.is_overridden(token))
+        self.assertFalse(self.lib.is_overridden(token, True))
+
     def test_saved_version_overrides_the_repo_copy_until_reverted(self):
         edited = self.lib.current_text("section_validity").replace("## Validity", "## Validity\n\nEdited in the portal.")
         entry = self.lib.save("section_validity", edited, "Basem", "wording")
